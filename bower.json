@@ -1,0 +1,14 @@
+{
+  "name": "kanboard",
+  "version": "0.0.0",
+  "dependencies": {
+    "jquery": "2.x.x",
+    "flight": "1.x.x",
+    "requirejs": "~2.1.5",
+    "components-bootstrap": "3.x.x",
+    "hogan": "~3.0.2"
+  },
+  "devDependencies": {
+    "jasmine-flight": "3.x.x"
+  }
+}
