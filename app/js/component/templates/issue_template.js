@@ -35,7 +35,6 @@ define([],
         this.template = Hogan.compile(
           '<div class="issue list-group-item {{repoName}}" id="{{id}}" data-toggle="tooltip" title="{{body}}">' +
             '<h4 class="title list-group-item-heading">{{title}}</h4>' +
-            //'<p class="description list-group-item-text">{{body}}</p>' +
             '<span class="assignee">{{assignee.login}}</span>' +
           '</div>'
         );

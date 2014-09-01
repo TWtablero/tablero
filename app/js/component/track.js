@@ -30,12 +30,23 @@ define(
         return issue.labels[0].name === this.attr.trackType;
       };
 
-      this.displayIssues = function (ev, data) {
-        data.issues.forEach(function (issue) {
-          if (this.isIssueOnThisTrack(issue)) {
-            this.$node.append(this.renderIssue(issue));
-            //$("#" + issue.id).tooltip(issue.body);
+      this.filterAndReorderIssues = function (issues) {
+        var filteredIssues;
+        filteredIssues = _.filter(issues, this.isIssueOnThisTrack, this);
+        return _.sortBy(filteredIssues, function (issue) {
+          var match;
+          var regexp = /@huboard:{.*"order":([0-9e.-]+).*}/;
+          if (match = regexp.exec(issue.body)) {
+            return Number(match[1] || 0);
           }
+          return 0;
+        });
+      };
+
+      this.displayIssues = function (ev, data) {
+        var issues = this.filterAndReorderIssues(data.issues);
+        issues.forEach(function (issue) {
+          this.$node.append(this.renderIssue(issue));
         }.bind(this));
       };
 
