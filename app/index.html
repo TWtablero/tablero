@@ -14,13 +14,31 @@
   </head>
   <body role="document">
 
-    <div class="container">
+    <div class="container-fluid">
 
-      <div class="col-sm-4">
-
-        <div class="issue-track list-group" id="all">
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Backlog</h4></div>
+          <div class="panel-body issue-track backlog list-group" id="all"></div>
         </div>
-
+      </div>
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Ready</h4></div>
+          <div class="panel-body issue-track ready list-group" id="all"> </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Development</h4></div>
+          <div class="panel-body issue-track development list-group" id="all"> </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Quality Assurance</h4></div>
+          <div class="panel-body issue-track quality-assurance list-group" id="all"> </div>
+        </div>
       </div>
 
     </div>

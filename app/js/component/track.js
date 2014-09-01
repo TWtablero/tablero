@@ -26,9 +26,16 @@ define(
         issueItemSelector: '.issue'
       });
 
+      this.isIssueOnThisTrack = function (issue) {
+        return issue.labels[0].name === this.attr.trackType;
+      };
+
       this.displayIssues = function (ev, data) {
         data.issues.forEach(function (issue) {
-          this.$node.append(this.renderIssue(issue));
+          if (this.isIssueOnThisTrack(issue)) {
+            this.$node.append(this.renderIssue(issue));
+            //$("#" + issue.id).tooltip(issue.body);
+          }
         }.bind(this));
       };
 

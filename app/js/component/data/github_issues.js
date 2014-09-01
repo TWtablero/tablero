@@ -26,20 +26,31 @@ define(['flight/lib/component', 'flight/lib/utils'],
         return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues');
       };
 
+      this.fetchPlatformIssues = function () {
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-platform/issues');
+      };
+
       this.fetchIssues = function (ev, data) {
-        this.retrievedIssues = {};
-        var userAgentIssuesDeferred, dispatcherIssuesDeferred;
+        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
 
         userAgentIssuesDeferred = $.Deferred();
         dispatcherIssuesDeferred = $.Deferred();
+        platformIssuesDeferred = $.Deferred();
 
-        var f1 = this.fetchUserAgentIssues().complete(userAgentIssuesDeferred.resolve);
-        var f2 = this.fetchDispatcherIssues().complete(dispatcherIssuesDeferred.resolve);
+        this.fetchUserAgentIssues().complete(userAgentIssuesDeferred.resolve);
+        this.fetchDispatcherIssues().complete(dispatcherIssuesDeferred.resolve);
+        this.fetchPlatformIssues().complete(platformIssuesDeferred.resolve);
 
-        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred).done(function (userAgentIssues, dispatcherIssues) {
-          var allIssues = userAgentIssues[0].responseJSON.concat(dispatcherIssues[0].responseJSON);
-          this.trigger(document, 'data:issues:refreshed', {issues: allIssues});
-        }.bind(this));
+        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
+          function (userAgentIssues, dispatcherIssues, platformIssues) {
+            var allIssues = [];
+            allIssues = allIssues.concat(userAgentIssues[0].responseJSON);
+            allIssues = allIssues.concat(dispatcherIssues[0].responseJSON);
+            allIssues = allIssues.concat(platformIssues[0].responseJSON);
+
+            this.trigger(document, 'data:issues:refreshed', {issues: allIssues});
+          }.bind(this)
+        );
       };
 
       this.after('initialize', function () {

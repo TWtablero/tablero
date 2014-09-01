@@ -25,7 +25,10 @@ define(
 
   function initialize() {
     githubIssues.attachTo(document);
-    track.attachTo('.issue-track');
+    track.attachTo('.issue-track.backlog', {trackType: '0 - Backlog'});
+    track.attachTo('.issue-track.ready', {trackType: '1 - Ready'});
+    track.attachTo('.issue-track.development', {trackType: '2 - Development'});
+    track.attachTo('.issue-track.quality-assurance', {trackType: '3 - Quality Assurance'});
     $(document).trigger('ui:needs:issues')
   }
 

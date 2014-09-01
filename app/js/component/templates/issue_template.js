@@ -18,15 +18,24 @@ define([],
     return issueTemplate;
 
     function issueTemplate() {
+      this.getRepoName = function (issue) {
+        var repoNameRegExp = /pixelated-project\/(pixelated-[a-z-]+)/;
+
+        return repoNameRegExp.exec(issue.url)[1];
+      };
+
       this.render = function (issue) {
-        return this.template.render(issue);
+        var renderedIssue;
+        issue.repoName = this.getRepoName(issue);
+        renderedIssue = this.template.render(issue);
+        return renderedIssue;
       };
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
-          '<div class="issue list-group-item">' +
+          '<div class="issue list-group-item {{repoName}}" id="{{id}}" data-toggle="tooltip" title="{{body}}">' +
             '<h4 class="title list-group-item-heading">{{title}}</h4>' +
-            '<p class="description list-group-item-text">{{body}}</p>' +
+            //'<p class="description list-group-item-text">{{body}}</p>' +
             '<span class="assignee">{{assignee.login}}</span>' +
           '</div>'
         );
