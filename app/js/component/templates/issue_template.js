@@ -27,7 +27,7 @@ define([],
           '<div class="issue list-group-item">' +
             '<h4 class="title list-group-item-heading">{{title}}</h4>' +
             '<p class="description list-group-item-text">{{body}}</p>' +
-            '<span class="assignee">{{assignee}}</span>' +
+            '<span class="assignee">{{assignee.login}}</span>' +
           '</div>'
         );
       });

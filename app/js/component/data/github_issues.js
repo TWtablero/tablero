@@ -13,14 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component'],
-  function (defineComponent) {
+define(['flight/lib/component', 'flight/lib/utils'],
+  function (defineComponent, utils) {
     return defineComponent(githubIssues);
 
     function githubIssues() {
+      this.fetchUserAgentIssues = function () {
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues');
+      };
+
+      this.fetchDispatcherIssues = function () {
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues');
+      };
+
       this.fetchIssues = function (ev, data) {
-        $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues', null, function(issuesData) {
-          this.trigger(document, 'data:issues:refreshed', {issues: issuesData});
+        this.retrievedIssues = {};
+        var userAgentIssuesDeferred, dispatcherIssuesDeferred;
+
+        userAgentIssuesDeferred = $.Deferred();
+        dispatcherIssuesDeferred = $.Deferred();
+
+        var f1 = this.fetchUserAgentIssues().complete(userAgentIssuesDeferred.resolve);
+        var f2 = this.fetchDispatcherIssues().complete(dispatcherIssuesDeferred.resolve);
+
+        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred).done(function (userAgentIssues, dispatcherIssues) {
+          var allIssues = userAgentIssues[0].responseJSON.concat(dispatcherIssues[0].responseJSON);
+          this.trigger(document, 'data:issues:refreshed', {issues: allIssues});
         }.bind(this));
       };
 
