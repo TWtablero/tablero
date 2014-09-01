@@ -15,9 +15,13 @@
     "node-static": "~0.7.3",
     "tiny-lr": "~0.0.5"
   },
+  "engines": {
+    "node": "0.10.x"
+  },
   "scripts": {
     "livereload": "gulp",
     "server": "static app",
+    "start": "node app.js",
     "test": "karma start --single-run",
     "watch": "npm run server > server.log & npm run livereload",
     "watch-test": "karma start"
