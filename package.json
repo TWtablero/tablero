@@ -18,6 +18,10 @@
   "engines": {
     "node": "0.10.x"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apretto/kanboard"
+  },
   "scripts": {
     "livereload": "gulp",
     "server": "static app",
