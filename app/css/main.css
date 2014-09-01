@@ -9,3 +9,7 @@
 .pixelated-platform {
   background-color: #d0e0f0;
 }
+
+.issue.list-group-item {
+  border-color: #aaa;
+}

@@ -24,16 +24,26 @@ define([],
         return repoNameRegExp.exec(issue.url)[1];
       };
 
+      this.clearHuboardInfo = function (issue) {
+        var clearedIssue, issueParts;
+        clearedIssue = _.clone(issue);
+
+        clearedIssue.body = issue.body.slice(0, issue.body.indexOf("<!---")-2);
+
+        return clearedIssue;
+      }
+
       this.render = function (issue) {
         var renderedIssue;
         issue.repoName = this.getRepoName(issue);
-        renderedIssue = this.template.render(issue);
+        renderedIssue = this.template.render(this.clearHuboardInfo(issue));
         return renderedIssue;
       };
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
           '<div class="issue list-group-item {{repoName}}" id="{{id}}" data-toggle="tooltip" title="{{body}}">' +
+            '<span class="label label-default">{{number}}</span>' +
             '<h4 class="title list-group-item-heading">{{title}}</h4>' +
             '<span class="assignee">{{assignee.login}}</span>' +
           '</div>'
