@@ -1,1 +1,1 @@
-web: static app
+web: node app
