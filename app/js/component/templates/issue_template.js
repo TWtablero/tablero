@@ -46,7 +46,8 @@ define([],
             '<h4 class="title list-group-item-heading">{{title}}</h4>' +
             '<span class="assignee">{{assignee.login}}&nbsp;</span>' +
             '<span class="label label-default issue-number">{{number}}</span>' +
-          '</a>'
+          '</a>' +
+          '<button class="assigns-myself" type="button">Assign me</button>'
         );
       });
     }

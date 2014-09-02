@@ -51,11 +51,25 @@ define(
       };
 
       this.renderIssue = function (issue) {
-        return this.render(issue);
+        var renderedIssue = $(this.render(issue));
+        renderedIssue.find('.assigns-myself').on('click', function () {
+          this.trigger('ui:updates:assignee', {issue: issue});
+        }.bind(this));
+        return renderedIssue;
+      };
+
+      this.willUpdateAssignee = function (ev, issueData) {
+        this.trigger('ui:needs:githubUser', issueData);
+      };
+
+      this.updateAssignee = function (ev, updateData) {
+        this.trigger('ui:assigns:user', updateData);
       };
 
       this.after('initialize', function () {
         this.on(document, 'data:issues:refreshed', this.displayIssues);
+        this.on('ui:updates:assignee', this.willUpdateAssignee);
+        this.on('data:githubUser:here', this.updateAssignee);
       });
     }
   }

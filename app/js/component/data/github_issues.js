@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component', 'flight/lib/utils'],
-  function (defineComponent, utils) {
+define(['flight/lib/component'],
+  function (defineComponent) {
     return defineComponent(githubIssues);
 
     function githubIssues() {
@@ -53,8 +53,24 @@ define(['flight/lib/component', 'flight/lib/utils'],
         );
       };
 
+      this.assignMyselfToIssue = function (ev, assignData) {
+        var user, issue;
+        user = assignData.user;
+        issue = assignData.issue;
+
+        $.ajax({
+          type: 'PATCH',
+          url: issue.url,
+          data: JSON.stringfy({assignee: user.id}),
+          success: function (response, status, xhr) {
+            console.log('User ' + user.id + ' assigned to issue ' + issue.title);
+          }
+        });
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:assigns:user', this.assignMyselfToIssue);
       });
     }
   }

@@ -15,16 +15,18 @@
  */
 define(
   [
+    'component/data/github_user',
     'component/data/github_issues',
-    'component/track',
+    'component/track'
   ],
-  function (githubIssues, track) {
+  function (githubUser, githubIssues, track) {
   'use strict';
 
   return initialize;
 
   function initialize() {
     githubIssues.attachTo(document);
+    githubUser.attachTo(document);
     track.attachTo('.issue-track.backlog', {trackType: '0 - Backlog'});
     track.attachTo('.issue-track.ready', {trackType: '1 - Ready'});
     track.attachTo('.issue-track.development', {trackType: '2 - Development'});
