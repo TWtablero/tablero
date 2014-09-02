@@ -42,11 +42,11 @@ define([],
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
-          '<div class="issue list-group-item {{repoName}}" id="{{id}}" data-toggle="tooltip" title="{{body}}">' +
-            '<span class="label label-default">{{number}}</span>' +
-            '<h4 class="title list-group-item-heading"><a href="{{html_url}}" target="_blank">{{title}}</a></h4>' +
-            '<span class="assignee">{{assignee.login}}</span>' +
-          '</div>'
+          '<a href="{{html_url}}" target="_blank" class="issue list-group-item {{repoName}}" id="{{id}}" data-toggle="tooltip" title="{{body}}">' +
+            '<h4 class="title list-group-item-heading">{{title}}</h4>' +
+            '<span class="assignee">{{assignee.login}}&nbsp;</span>' +
+            '<span class="label label-default issue-number">{{number}}</span>' +
+          '</a>'
         );
       });
     }

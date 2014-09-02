@@ -13,3 +13,7 @@
 .issue.list-group-item {
   border-color: #aaa;
 }
+
+.issue-number {
+  float: right;
+}
