@@ -33,6 +33,8 @@ define(
       this.filterAndReorderIssues = function (issues) {
         var filteredIssues;
         filteredIssues = _.filter(issues, this.isIssueOnThisTrack, this);
+        this.attr.issues = filteredIssues;
+
         return _.sortBy(filteredIssues, function (issue) {
           var match;
           var regexp = /@huboard:{.*"order":([0-9e.-]+).*}/;
@@ -52,24 +54,14 @@ define(
 
       this.renderIssue = function (issue) {
         var renderedIssue = $(this.render(issue));
-        renderedIssue.find('.assigns-myself').on('click', function () {
-          this.trigger('ui:updates:assignee', {issue: issue});
+        renderedIssue.last().click(function () {
+          this.trigger('ui:assigns:user', {issue: issue});
         }.bind(this));
         return renderedIssue;
       };
 
-      this.willUpdateAssignee = function (ev, issueData) {
-        this.trigger('ui:needs:githubUser', issueData);
-      };
-
-      this.updateAssignee = function (ev, updateData) {
-        this.trigger('ui:assigns:user', updateData);
-      };
-
       this.after('initialize', function () {
         this.on(document, 'data:issues:refreshed', this.displayIssues);
-        this.on('ui:updates:assignee', this.willUpdateAssignee);
-        this.on('data:githubUser:here', this.updateAssignee);
       });
     }
   }

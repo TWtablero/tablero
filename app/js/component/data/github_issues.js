@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component'],
-  function (defineComponent) {
-    return defineComponent(githubIssues);
+define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
+  function (defineComponent, withAuthTokeFromHash) {
+    return defineComponent(githubIssues, withAuthTokeFromHash);
 
     function githubIssues() {
       this.fetchUserAgentIssues = function () {
@@ -48,20 +48,31 @@ define(['flight/lib/component'],
             allIssues = allIssues.concat(dispatcherIssues[0].responseJSON);
             allIssues = allIssues.concat(platformIssues[0].responseJSON);
 
-            this.trigger(document, 'data:issues:refreshed', {issues: allIssues});
+            this.trigger('data:issues:refreshed', {issues: allIssues});
           }.bind(this)
         );
       };
 
       this.assignMyselfToIssue = function (ev, assignData) {
-        var user, issue;
+        var user, issue, url;
         user = assignData.user;
         issue = assignData.issue;
 
+        if (!issue) {
+          return;
+        }
+
+        if (!user) {
+          this.trigger(document, 'ui:needs:githubUser', assignData);
+          return;
+        }
+
+        url = issue.url + "?access_token=" + this.getCurrentAuthToken();
+
         $.ajax({
           type: 'PATCH',
-          url: issue.url,
-          data: JSON.stringfy({assignee: user.id}),
+          url: url,
+          data: JSON.stringify({assignee: user.id}),
           success: function (response, status, xhr) {
             console.log('User ' + user.id + ' assigned to issue ' + issue.title);
           }
@@ -71,6 +82,7 @@ define(['flight/lib/component'],
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
+        this.on('data:githubUser:here', this.assignMyselfToIssue);
       });
     }
   }
