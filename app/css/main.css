@@ -17,3 +17,11 @@
 .issue-number {
   float: right;
 }
+
+.issue {
+  z-index: 1;
+}
+
+.assigns-myself {
+  z-index: 2;
+}

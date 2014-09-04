@@ -33,5 +33,4 @@ define(
     track.attachTo('.issue-track.quality-assurance', {trackType: '3 - Quality Assurance'});
     $(document).trigger('ui:needs:issues');
   }
-
 });

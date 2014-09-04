@@ -48,6 +48,7 @@
     <script src="/bower_components/es5-shim/es5-sham.js"></script>
     <![endif]-->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
     <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
 
@@ -63,5 +64,13 @@
     </script>
     -->
 
+<script>
+  $(function() {
+    console.log('link =>', $('a.issue'));
+    $('.backlog, .ready, .development, .quality-assurance').sortable({
+      connectWith: '.list-group'
+    }).disableSelection();
+  });
+</script>
   </body>
 </html>
