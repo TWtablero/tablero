@@ -29,4 +29,6 @@ app.get('/request_auth_token', function (req, res) {
   res.redirect('/#' + url.parse(fakeUrl, true).query['access_token']);
 });
 
-app.listen(process.env.PORT || 3000);
+port = process.env.PORT || 3000;
+app.listen(port);
+console.log('Server started. Running on port', port);
