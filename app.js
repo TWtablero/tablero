@@ -8,7 +8,7 @@ var app = express();
 app.use(express.static('app'));
 
 app.get('/request_code', function (req, res) {
-  res.redirect('https://github.com/login/oauth/authorize?client_id=' + config.clientId);
+  res.redirect('https://github.com/login/oauth/authorize?client_id=' + config.clientId + '&scope=public_repo');
 });
 
 app.get('/request_auth_token', function (req, res) {
