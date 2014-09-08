@@ -75,6 +75,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
           data: JSON.stringify({assignee: user.login}),
           success: function (response, status, xhr) {
             console.log('User ' + user.id + ' assigned to issue ' + issue.title);
+			$('#' + issue.id + ' > .assignee').text(user.login);
           }
         });
       };
