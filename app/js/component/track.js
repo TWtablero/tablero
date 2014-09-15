@@ -54,7 +54,7 @@ define(
 
       this.renderIssue = function (issue) {
         var renderedIssue = $(this.render(issue));
-        renderedIssue.last().click(function () {
+        renderedIssue.find('a.assigns-myself').click(function () {
           this.trigger('ui:assigns:user', {issue: issue});
         }.bind(this));
         return renderedIssue;

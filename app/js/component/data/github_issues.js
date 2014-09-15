@@ -112,7 +112,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
             });
           }.bind(this)
         }).disableSelection();
-      };  
+      };
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
