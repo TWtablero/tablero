@@ -79,16 +79,16 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
           }
         });
       };
-
-      this.draggable = function (ev, data) { 
+ 
+      this.draggable = function (ev, data) {
+     
         $('.backlog, .ready, .development, .quality-assurance').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
-            alert(this.attr.trackType);
             var label = '';
             var labels, url;
 
-            if (!this.getCurrentAuthToken()) {
+            if(!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
@@ -101,7 +101,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
             }
 
             label = labels[0] + ' - ' + label;        
-            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + token;
+            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
             
             $.ajax({
               type: 'PATCH',
