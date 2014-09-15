@@ -75,15 +75,49 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
           data: JSON.stringify({assignee: user.login}),
           success: function (response, status, xhr) {
             console.log('User ' + user.id + ' assigned to issue ' + issue.title);
-			$('#' + issue.id + ' > .assignee').text(user.login);
+			      $('#' + issue.id + ' > .assignee').text(user.login);
           }
         });
       };
+
+      this.draggable = function (ev, data) { 
+        var token = this.getCurrentAuthToken();
+        $('.backlog, .ready, .development, .quality-assurance').sortable({
+          connectWith: '.list-group',
+          receive: function(event, ui) {
+            var label = '';
+            var labels, url;
+           
+            if(!token)
+                window.location.replace("/request_code");
+
+            labels = event.target.id.split('-');
+
+            for(i = 1; i < labels.length; i++) {
+              var firstLetter = labels[i][0];
+              label = label +  firstLetter.toUpperCase() + labels[i].substring(i) + ' ';
+            }
+
+            label = labels[0] + ' - ' + label;        
+            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + token;
+            
+            $.ajax({
+              type: 'PATCH',
+              url: url,
+              data: JSON.stringify({labels: [label.trim()]}),
+              success: function (response, status, xhr) {
+                console.log('Issue label  updated to ' + label);
+              }
+            });
+          }
+        }).disableSelection();
+      };	   
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:draggable', this.draggable);
       });
     }
   }

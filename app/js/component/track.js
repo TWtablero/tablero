@@ -1,4 +1,4 @@
-/*
+  /*
  * Copyright 2014 Thoughtworks Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ define(
       });
 
       this.isIssueOnThisTrack = function (issue) {
-        return issue.labels[0].name === this.attr.trackType;
+        return issue.labels[0] != undefined && issue.labels[0].name === this.attr.trackType;
       };
 
       this.filterAndReorderIssues = function (issues) {

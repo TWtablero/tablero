@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -20,25 +19,25 @@
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading"><h4>Backlog</h4></div>
-          <div class="panel-body issue-track backlog list-group" id="all"></div>
+          <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading"><h4>Ready</h4></div>
-          <div class="panel-body issue-track ready list-group" id="all"> </div>
+          <div class="panel-body issue-track ready list-group" id="1-ready"> </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading"><h4>Development</h4></div>
-          <div class="panel-body issue-track development list-group" id="all"> </div>
+          <div class="panel-body issue-track development list-group" id="2-development"> </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading"><h4>Quality Assurance</h4></div>
-          <div class="panel-body issue-track quality-assurance list-group" id="all"> </div>
+          <div class="panel-body issue-track quality-assurance list-group" id="3-quality-assurance"> </div>
         </div>
       </div>
 
@@ -63,13 +62,5 @@
       ga('create','');ga('send','pageview');
     </script>
     -->
-
-<script>
-  $(function() {
-    $('.backlog, .ready, .development, .quality-assurance').sortable({
-      connectWith: '.list-group'
-    }).disableSelection();
-  });
-</script>
   </body>
 </html>
