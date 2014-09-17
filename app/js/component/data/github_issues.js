@@ -81,47 +81,24 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
       };
  
       this.draggable = function (ev, data) {   
-        $('.backlog, .ready, .development, .quality-assurance').sortable({
+        $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
-            var label, labels, url;
+            var label, url;
 
             if(!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
 
-            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
+            url = this.getIssueUrlFromDraggable(ui);
             label = this.parseLabel(event.target.id);
+            state = this.getState(event.target.className);
 
             $.ajax({
               type: 'PATCH',
               url: url,
-              data: JSON.stringify({labels: [label]}),
-              success: function (response, status, xhr) {
-                console.log('Issue label  updated to ' + label);
-              }
-            });
-          }.bind(this)
-        }).disableSelection();
-
-      $('.done').sortable({
-          connectWith: '.list-group',
-          receive: function(event, ui) {
-            var url, label;
-
-            if(!this.getCurrentAuthToken()) {
-              this.trigger(document, 'ui:needs:githubUser');
-              return;
-            }
-     
-            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
-            label = this.parseLabel(event.target.id);
-
-            $.ajax({
-              type: 'PATCH',
-              url: url,
-              data: JSON.stringify({labels: [label], state: 'closed'}),
+              data: JSON.stringify({labels: [label], state: state}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
               }
@@ -136,12 +113,20 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
 
         for(i = 1; i < label.length; i++) {
           var firstLetter = label[i][0];
-          fullLabel = fullLabel +  firstLetter.toUpperCase() + label[i].substring(i) + ' ';
+          fullLabel = fullLabel +  firstLetter.toUpperCase() + label[i].substring(1) + ' ';
         }
 
         fullLabel = label[0] + ' - ' + fullLabel;
         return fullLabel.trim();   
-      };	   
+      };
+
+      this.getIssueUrlFromDraggable = function(ui) {
+        return ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
+      };    
+
+      this.getState = function(className) {        
+        return className.search('done') != -1 ? 'closed' : 'open';
+      };    
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
