@@ -19,7 +19,7 @@ define([],
 
     function issueTemplate() {
       this.getRepoName = function (issue) {
-        var repoNameRegExp = /oliviagj\/(kanboard)/;
+        var repoNameRegExp = /pixelated-project\/(pixelated-[a-z-]+)/;
 
         return repoNameRegExp.exec(issue.url)[1];
       };
