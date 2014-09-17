@@ -31,6 +31,8 @@ define(
     track.attachTo('.issue-track.ready', {trackType: '1 - Ready'});
     track.attachTo('.issue-track.development', {trackType: '2 - Development'});
     track.attachTo('.issue-track.quality-assurance', {trackType: '3 - Quality Assurance'});
+    track.attachTo('.issue-track.done', {trackType: '4 - Done'});
+
     $(document).trigger('ui:needs:issues');
     $(document).trigger('ui:draggable');
   }

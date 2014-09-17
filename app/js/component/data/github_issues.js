@@ -19,15 +19,15 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
 
     function githubIssues() {
       this.fetchUserAgentIssues = function () {
-        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100&state=all');
       };
 
       this.fetchDispatcherIssues = function () {
-        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100&state=all');
       };
 
       this.fetchPlatformIssues = function () {
-        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/oliviagj/kanboard/issues?per_page=100&state=all');
       };
 
       this.fetchIssues = function (ev, data) {
@@ -80,8 +80,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
         });
       };
  
-      this.draggable = function (ev, data) {
-     
+      this.draggable = function (ev, data) {   
         $('.backlog, .ready, .development, .quality-assurance').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
@@ -107,6 +106,38 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
               type: 'PATCH',
               url: url,
               data: JSON.stringify({labels: [label.trim()]}),
+              success: function (response, status, xhr) {
+                console.log('Issue label  updated to ' + label);
+              }
+            });
+          }.bind(this)
+        }).disableSelection();
+
+      $('.done').sortable({
+          connectWith: '.list-group',
+          receive: function(event, ui) {
+            var label = '';
+            var labels, url;
+
+            if(!this.getCurrentAuthToken()) {
+              this.trigger(document, 'ui:needs:githubUser');
+              return;
+            }
+
+            labels = event.target.id.split('-');
+
+            for(i = 1; i < labels.length; i++) {
+              var firstLetter = labels[i][0];
+              label = label +  firstLetter.toUpperCase() + labels[i].substring(i) + ' ';
+            }
+
+            label = labels[0] + ' - ' + label;        
+            url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
+            
+            $.ajax({
+              type: 'PATCH',
+              url: url,
+              data: JSON.stringify({labels: [label.trim()], state: 'closed'}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
               }
