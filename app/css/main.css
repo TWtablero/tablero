@@ -25,3 +25,11 @@
 .assigns-myself {
   z-index: 2;
 }
+
+.col-md-3 {
+  width: 20%;
+}
+
+.container {
+  width: 1670px;
+}
