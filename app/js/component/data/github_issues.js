@@ -116,22 +116,13 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
       $('.done').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
-            var label = '';
-            var labels, url;
+            var url;
 
             if(!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
-
-            labels = event.target.id.split('-');
-
-            for(i = 1; i < labels.length; i++) {
-              var firstLetter = labels[i][0];
-              label = label +  firstLetter.toUpperCase() + labels[i].substring(i) + ' ';
-            }
-
-            label = labels[0] + ' - ' + label;        
+     
             url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
             
             $.ajax({
@@ -144,6 +135,19 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
             });
           }.bind(this)
         }).disableSelection();
+      };
+
+      this.parseLabel = function(label){
+        label = label.split('-');
+        
+        for(i = 1; i < labels.length; i++) {
+          var firstLetter = label[i][0];
+          labelCapitalized = label +  firstLetter.toUpperCase() + label[i].substring(i) + ' ';
+        }
+
+        label = label[0] + ' - ' + label;   
+        
+        return label.trim();
       };	   
 
       this.after('initialize', function () {
