@@ -84,28 +84,20 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
         $('.backlog, .ready, .development, .quality-assurance').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
-            var label = '';
-            var labels, url;
+            var label, labels, url;
 
             if(!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
 
-            labels = event.target.id.split('-');
-
-            for(i = 1; i < labels.length; i++) {
-              var firstLetter = labels[i][0];
-              label = label +  firstLetter.toUpperCase() + labels[i].substring(i) + ' ';
-            }
-
-            label = labels[0] + ' - ' + label;        
             url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
-            
+            label = this.parseLabel(event.target.id);
+
             $.ajax({
               type: 'PATCH',
               url: url,
-              data: JSON.stringify({labels: [label.trim()]}),
+              data: JSON.stringify({labels: [label]}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
               }
@@ -116,7 +108,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
       $('.done').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
-            var url;
+            var url, label;
 
             if(!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
@@ -124,11 +116,12 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
             }
      
             url = ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
-            
+            label = this.parseLabel(event.target.id);
+
             $.ajax({
               type: 'PATCH',
               url: url,
-              data: JSON.stringify({labels: [label.trim()], state: 'closed'}),
+              data: JSON.stringify({labels: [label], state: 'closed'}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
               }
@@ -138,16 +131,16 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
       };
 
       this.parseLabel = function(label){
+        var fullLabel = '';
         label = label.split('-');
-        
-        for(i = 1; i < labels.length; i++) {
+
+        for(i = 1; i < label.length; i++) {
           var firstLetter = label[i][0];
-          labelCapitalized = label +  firstLetter.toUpperCase() + label[i].substring(i) + ' ';
+          fullLabel = fullLabel +  firstLetter.toUpperCase() + label[i].substring(i) + ' ';
         }
 
-        label = label[0] + ' - ' + label;   
-        
-        return label.trim();
+        fullLabel = label[0] + ' - ' + fullLabel;
+        return fullLabel.trim();   
       };	   
 
       this.after('initialize', function () {
