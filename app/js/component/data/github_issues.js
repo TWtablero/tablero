@@ -45,8 +45,8 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
           function (userAgentIssues, dispatcherIssues, platformIssues) {
             var allIssues = [];
             allIssues = allIssues.concat(userAgentIssues[0].responseJSON);
-            allIssues = allIssues.concat(dispatcherIssues[0].responseJSON);
-            allIssues = allIssues.concat(platformIssues[0].responseJSON);
+            //allIssues = allIssues.concat(dispatcherIssues[0].responseJSON);
+            //allIssues = allIssues.concat(platformIssues[0].responseJSON);
 
             this.trigger('data:issues:refreshed', {issues: allIssues});
           }.bind(this)
