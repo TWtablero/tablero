@@ -19,16 +19,16 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
 
     function githubIssues() {
       this.fetchUserAgentIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues?per_page=100&state=all');
       };
       
 
       this.fetchDispatcherIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues?per_page=100&state=all');
       };
 
       this.fetchPlatformIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-platform/issues?per_page=100');
+        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-platform/issues?per_page=100&state=all');
       };
 
       this.fetchIssues = function (ev, data) {
