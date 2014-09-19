@@ -35,5 +35,6 @@ define(
 
     $(document).trigger('ui:needs:issues');
     $(document).trigger('ui:draggable');
+    $(document).trigger('ui:needs:githubUser');
   }
 });
