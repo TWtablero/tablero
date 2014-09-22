@@ -38,9 +38,11 @@ define(
     $("#create_issue").click(function() {
       $(document).trigger('ui:create:issue',
         { 'issueTitle': $("#issueTitle").val(),
-          'issueBody':  $("#issueBody").val() });
+          'issueBody':  $("#issueBody").val(),
+          'projectName': $("#projects").val() });
 
       $("#myModal").modal('hide')
+      $("#myModal input, textarea").val('')
     });
 
     $(document).trigger('ui:draggable');

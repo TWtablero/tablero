@@ -49,7 +49,7 @@ define([],
             '<span class="assignee">{{assignee.login}}&nbsp;</span>' +
             '<span class="label label-default issue-number">{{number}}</span>' +
             '<a class="assigns-myself btn btn-success btn-xs">Assign me</a>' +
-          '</div>' 
+          '</div>'
         );
       });
     }

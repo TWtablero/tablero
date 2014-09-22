@@ -13,20 +13,26 @@
     <script src="/bower_components/underscore/underscore.js"></script>
   </head>
   <body role="document">
-    <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            <h4 class="modal-title" id="myModalLabel">Create Issue</h4>
           </div>
           <div class="modal-body">
-           <label for="issueTitle">Issue title</label>
-           <input type="text" id="issueTitle" class="form-control">
+           <label for="issueTitle">Title</label>
+           <input type="text" id="issueTitle" class="form-control field">
            <br/>
-           <label for="issueTitle">Issue body</label>
-           <textarea id="issueBody" class="form-control" rows="3"></textarea>
+           <label for="issueTitle">Body</label>
+           <textarea id="issueBody" class="form-control field" rows="3"></textarea>
+           <br/>
+           <label for="projects">Project</label>
+           <select id="projects" class="form-control">
+             <option value="user-agent">User Agent</option>
+             <option value="dispatcher">Dispatcher</option>
+             <option value="platform">Platform</option>
+           </select>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -36,7 +42,6 @@
       </div>
     </div>
     <div class="container">
-
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading">

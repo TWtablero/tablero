@@ -99,8 +99,8 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
           }
         });
       };
- 
-      this.draggable = function (ev, data) {   
+
+      this.draggable = function (ev, data) {
         $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
           connectWith: '.list-group',
           receive: function(event, ui) {
@@ -137,16 +137,16 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
         }
 
         fullLabel = label[0] + ' - ' + fullLabel;
-        return fullLabel.trim();   
+        return fullLabel.trim();
       };
 
       this.getIssueUrlFromDraggable = function(ui) {
         return ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
-      };    
+      };
 
-      this.getState = function(className) {        
+      this.getState = function(className) {
         return className.search('done') != -1 ? 'closed' : 'open';
-      };    
+      };
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
