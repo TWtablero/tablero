@@ -35,20 +35,13 @@ define(
         filteredIssues = _.filter(issues, this.isIssueOnThisTrack, this);
         this.attr.issues = filteredIssues;
 
-        return _.sortBy(filteredIssues, function (issue) {
-          var match;
-          var regexp = /@huboard:{.*"order":([0-9e.-]+).*}/;
-          if (match = regexp.exec(issue.body)) {
-            return Number(match[1] || 0);
-          }
-          return 0;
-        });
+        return _.sortBy(filteredIssues.reverse(), function (issue) { issue.number });
       };
 
       this.displayIssues = function (ev, data) {
         var issues = this.filterAndReorderIssues(data.issues);
         issues.forEach(function (issue) {
-          this.$node.append(this.renderIssue(issue));
+          this.$node.prepend(this.renderIssue(issue));
         }.bind(this));
       };
 

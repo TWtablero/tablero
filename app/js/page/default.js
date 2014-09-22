@@ -34,6 +34,15 @@ define(
     track.attachTo('.issue-track.done', {trackType: '4 - Done'});
 
     $(document).trigger('ui:needs:issues');
+
+    $("#create_issue").click(function() {
+      $(document).trigger('ui:create:issue',
+        { 'issueTitle': $("#issueTitle").val(),
+          'issueBody':  $("#issueBody").val() });
+
+      $("#myModal").modal('hide')
+    });
+
     $(document).trigger('ui:draggable');
     $(document).trigger('ui:needs:githubUser');
   }

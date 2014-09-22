@@ -31,6 +31,25 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
         return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-platform/issues?per_page=100&state=all');
       };
 
+      this.createIssue = function (ev, data) {
+        var url = 'https://api.github.com/repos/guipdutra/test_issues_kanboard/issues' + "?access_token=" + this.getCurrentAuthToken();
+
+        $.ajax({
+          type: 'POST',
+          url: url,
+          data: JSON.stringify({'title': data.issueTitle,
+                                'body': data.issueBody,
+                                'labels': ["0 - Backlog"] }),
+          success: function (response, status, xhr) {
+            this.trigger("ui:add:issue", {"issue": response})
+          }.bind(this)
+        });
+      };
+
+      this.addIssue = function (ev, data) {
+        this.trigger('data:issues:refreshed', {issues: data});
+      }
+
       this.fetchIssues = function (ev, data) {
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
 
@@ -131,6 +150,8 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:add:issue', this.addIssue);
+        this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
