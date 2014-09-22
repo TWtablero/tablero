@@ -27,7 +27,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
 
         $.getJSON('https://api.github.com/user', {access_token: token}, function (userData) {
           var newData = _.clone(previousData);
-          newData.user = userData
+          if (newData != undefined) {
+            newData.user = userData
+          }
 
           this.trigger('data:githubUser:here', newData);
         }.bind(this));

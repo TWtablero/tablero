@@ -77,8 +77,10 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
       this.assignMyselfToIssue = function (ev, assignData) {
         var user, issue, url;
-        user = assignData.user;
-        issue = assignData.issue;
+        if (assignData != undefined) {
+          user = assignData.user;
+          issue = assignData.issue;
+        }
 
         if (!issue) {
           return;
