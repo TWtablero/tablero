@@ -48,21 +48,6 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         });
       };
 
-      this.createIssue = function (ev, data) {
-        var url = 'https://api.github.com/repos/guipdutra/test_issues_kanboard/issues' + "?access_token=" + this.getCurrentAuthToken();
-
-        $.ajax({
-          type: 'POST',
-          url: url,
-          data: JSON.stringify({'title': data.issueTitle,
-                                'body': data.issueBody,
-                                'labels': ["0 - Backlog"] }),
-          success: function (response, status, xhr) {
-            this.trigger("ui:add:issue", {"issue": response})
-          }.bind(this)
-        });
-      };
-
       this.addIssue = function (ev, data) {
         this.trigger('data:issues:refreshed', {issues: data});
       }
