@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
-  function (defineComponent, withAuthTokeFromHash) {
-    return defineComponent(githubIssues, withAuthTokeFromHash);
+define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'component/mixins/repositories_urls'],
+  function (defineComponent, withAuthTokeFromHash, repositoriesURLs) {
+    return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs);
 
     function githubIssues() {
       this.fetchUserAgentIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues?per_page=100&state=all');
+        return $.getJSON(this.repoIssuesURL(this.userAgentRepoURL) + this.defaultOptions());
       };
-      
+
 
       this.fetchDispatcherIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues?per_page=100&state=all');
+        return $.getJSON(this.repoIssuesURL(this.dispatcherRepoURL) + this.defaultOptions());
       };
 
       this.fetchPlatformIssues = function () {
-        return $.getJSON('https://api.github.com/repos/pixelated-project/pixelated-platform/issues?per_page=100&state=all');
+        return $.getJSON(this.repoIssuesURL(this.platformRepoURL) + this.defaultOptions());
       };
 
       this.createIssue = function (ev, data) {
-        var url = 'https://api.github.com/repos/guipdutra/test_issues_kanboard/issues' + "?access_token=" + this.getCurrentAuthToken();
+        var url, repositoryURL;
+        repositoryURL = this.getURLFromProject(data.projectName);
+        url = this.repoIssuesURL(repositoryURL) + this.accessToken.apply(this);
 
         $.ajax({
           type: 'POST',
