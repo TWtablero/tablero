@@ -33,3 +33,8 @@
 .container {
   width: 1670px;
 }
+
+#open_modal_issue {
+  float: right;
+  margin-top: 10px;
+}
