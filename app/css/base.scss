@@ -14,24 +14,12 @@
   border-color: #aaa;
 }
 
-.issue-number {
-  float: right;
-}
-
-.issue {
-  z-index: 1;
-}
-
 .assigns-myself {
-  z-index: 2;
-}
-
-.col-md-3 {
-  width: 20%;
-}
-
-.container {
-  width: 1670px;
+  float: right;
+  background: #ffcc66;
+  border-radius: 1px;
+  color: #535353;
+  padding: 2px 5px;
 }
 
 #open_modal_issue {
@@ -40,5 +28,5 @@
 }
 
 #projects {
- width: 30%;
+  width: 30%;
 }

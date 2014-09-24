@@ -1,0 +1,7 @@
+.container {
+	padding: 2em;
+}
+
+.column {
+	@include span-columns(2.3);
+}

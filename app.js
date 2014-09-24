@@ -2,8 +2,14 @@ var express = require('express');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var config = require('./config');
+var sass = require('node-sass');
 
 var app = express();
+
+app.use(sass.middleware({
+  src: __dirname + '/app',
+  debug: true
+}));
 
 app.use(express.static('app'));
 
