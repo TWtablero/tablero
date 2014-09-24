@@ -14,19 +14,25 @@
   border-color: #aaa;
 }
 
+#open_modal_issue {
+  float: right;
+}
+
+#projects {
+  width: 30%;
+}
+
+#open_modal_issue {
+  background: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 1px;
+}
+
 .assigns-myself {
   float: right;
   background: #ffcc66;
   border-radius: 1px;
   color: #535353;
   padding: 2px 5px;
-}
-
-#open_modal_issue {
-  float: right;
-  margin-top: 10px;
-}
-
-#projects {
-  width: 30%;
 }
