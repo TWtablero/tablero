@@ -1,3 +1,8 @@
+body {
+  font-family: "OpenSans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-size: 15px !important;
+}
+
 .pixelated-user-agent {
   background-color: #f0e0d0;
 }
@@ -20,6 +25,7 @@
   color: white;
   border: none;
   border-radius: 1px;
+  padding: 2px 5px;
   font-size: 0.9em;
 }
 
