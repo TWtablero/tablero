@@ -19,21 +19,13 @@ body {
   width: 30%;
 }
 
-#open_modal_issue {
+.btn-success {
   float: right;
-  background: #1abc9c;
-  color: white;
   border: none;
-  border-radius: 1px;
-  padding: 2px 5px;
-  font-size: 0.9em;
-}
-
-.assigns-myself {
-  float: right;
   background: #ffcc66;
   border-radius: 1px;
   color: #535353;
   padding: 2px 5px;
   font-size: 0.9em;
+  margin-top: 7px;
 }

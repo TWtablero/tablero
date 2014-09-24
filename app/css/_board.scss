@@ -8,10 +8,16 @@
 	background: #eee;
 	padding: 10px;
 	border: 1px solid #DFDFDF;
+	@include clearfix;
 }
 
 .assignee {
 	font-size: 0.85em;
+}
+
+.assignee-avatar {
+	width: 30px;
+	border-radius: 3px;
 }
 
 .title {

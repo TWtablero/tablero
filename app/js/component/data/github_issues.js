@@ -99,7 +99,8 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
           data: JSON.stringify({assignee: user.login}),
           success: function (response, status, xhr) {
             console.log('User ' + user.id + ' assigned to issue ' + issue.title);
-			      $('#' + issue.id + ' > .assignee').text(user.login);
+            $('#' + issue.id + ' > .assignee-avatar').attr('src', user.avatar_url);
+            $('#' + issue.id + ' > .assignee-avatar').attr('title', user.login);
           }
         });
       };

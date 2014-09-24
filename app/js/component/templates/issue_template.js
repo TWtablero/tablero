@@ -45,7 +45,7 @@ define([],
             '<a href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}">' +
               '<div class="title list-group-item-heading">#{{number}} {{title}}</div>' +
             '</a>' +
-            '<span class="assignee">{{assignee.login}}&nbsp;</span>' +
+            '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
             '<a class="assigns-myself btn btn-success btn-xs">Assign me</a>' +
           '</div>'
         );
