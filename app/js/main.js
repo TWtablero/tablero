@@ -8,6 +8,7 @@ requirejs.config({
   }
 });
 
+
 require(
   [
     'flight/lib/compose',
