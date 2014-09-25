@@ -28,4 +28,20 @@ body {
   padding: 2px 5px;
   font-size: 0.9em;
   margin-top: 7px;
+
+  &:hover {
+    color: #535353;
+    text-decoration: underline;
+  }
+}
+
+.right {
+  float: right;
+}
+
+select {
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  margin-left: 2em;
 }

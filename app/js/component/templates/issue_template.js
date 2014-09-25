@@ -43,10 +43,13 @@ define([],
         this.template = Hogan.compile(
           '<div class="issue list-group-item {{repoName}}" id="{{id}}">' +
             '<a href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}">' +
-              '<div class="title list-group-item-heading">#{{number}} {{title}}</div>' +
+              '<div class="title list-group-item-heading">{{title}}</div>' +
             '</a>' +
-            '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
-            '<a class="assigns-myself btn btn-success btn-xs">Assign me</a>' +
+            '<a class="assigns-myself">' +
+              '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
+              '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' + 
+            '</a>' +
+            '<span class="right">#{{number}}</span>' +
           '</div>'
         );
       });

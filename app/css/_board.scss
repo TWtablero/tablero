@@ -5,9 +5,8 @@
 .issue {
 	cursor: pointer;
 	margin-bottom: 1em;
-	background: #eee;
+	background: #eaeaea;
 	padding: 10px;
-	border: 1px solid #DFDFDF;
 	@include clearfix;
 }
 
@@ -15,17 +14,18 @@
 	font-size: 0.85em;
 }
 
-.assignee-avatar {
+.assignee-avatar, .empty-avatar {
 	width: 30px;
 	border-radius: 3px;
 }
 
 .title {
 	margin-bottom: 0.5em;
+	color: #5E5E5E;
 }
 
 h3 {
-	font-family: "OpenSansLight";
+	font-family: "OpenSansSemibold";
 	font-weight: normal;
 	font-size: 1.35em;
 	margin: 0;

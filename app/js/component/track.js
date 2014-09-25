@@ -47,6 +47,9 @@ define(
 
       this.renderIssue = function (issue) {
         var renderedIssue = $(this.render(issue));
+        if (renderedIssue.find('.assignee-avatar').attr('src') != "" ) {
+          renderedIssue.find('.empty-avatar').hide();
+        }
         renderedIssue.find('a.assigns-myself').click(function () {
           this.trigger('ui:assigns:user', {issue: issue});
         }.bind(this));
