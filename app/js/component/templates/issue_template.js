@@ -49,7 +49,7 @@ define([],
               '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
               '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' + 
             '</a>' +
-            '<span class="right">#{{number}}</span>' +
+            '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
           '</div>'
         );
       });

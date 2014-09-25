@@ -45,6 +45,16 @@ define(
       $("#myModal input, textarea").val('')
     });
 
+    $("#filter-repo").change(function() {
+      $('.issue').remove();
+      
+      if ($(this).val() == 'All repositories') {
+        $(document).trigger('ui:needs:issues');
+      } else {
+        $(document).trigger('ui:filter:repo', $(this).val());
+      }
+    });
+
     $(document).trigger('ui:draggable');
     $(document).trigger('ui:needs:githubUser');
   }

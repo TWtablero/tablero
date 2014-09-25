@@ -3,18 +3,6 @@ body {
   font-size: 15px !important;
 }
 
-.pixelated-user-agent {
-  background-color: #f0e0d0;
-}
-
-.pixelated-dispatcher {
-  background-color: #d0f0e0;
-}
-
-.pixelated-platform {
-  background-color: #d0e0f0;
-}
-
 #projects {
   width: 30%;
 }
@@ -25,13 +13,13 @@ body {
   background: #ffcc66;
   border-radius: 1px;
   color: #535353;
-  padding: 2px 5px;
-  font-size: 0.9em;
-  margin-top: 7px;
+  padding: 0px 6px;
+  font-size: 1.2em;
+  margin-top: 4px;
 
   &:hover {
     color: #535353;
-    text-decoration: underline;
+    text-decoration: none;
   }
 }
 
@@ -39,9 +27,22 @@ body {
   float: right;
 }
 
-select {
+#filter-repo {
   -webkit-appearance: none;
   border: none;
   background: transparent;
   margin-left: 2em;
+  top: -5px;
+  position: relative;
+  outline: none;
+}
+
+#filter-repo + label:after {
+  content: '▼';
+  color: black;
+  font-size: 0.6em;
+  font-family: Helvetica;
+  top: -6px;
+  left: 5px;
+  position: relative;
 }

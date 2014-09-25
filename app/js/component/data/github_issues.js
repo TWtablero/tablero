@@ -75,6 +75,36 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         );
       };
 
+      this.fetchRepo = function (ev, data) {
+        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
+
+        userAgentIssuesDeferred = $.Deferred();
+        dispatcherIssuesDeferred = $.Deferred();
+        platformIssuesDeferred = $.Deferred();
+
+        this.fetchUserAgentIssues().complete(userAgentIssuesDeferred.resolve);
+        this.fetchDispatcherIssues().complete(dispatcherIssuesDeferred.resolve);
+        this.fetchPlatformIssues().complete(platformIssuesDeferred.resolve);
+
+        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
+          function (userAgentIssues, dispatcherIssues, platformIssues) {
+            var allIssues = [];
+
+            if (data == 'pixelated-user-agent') {
+              allIssues = allIssues.concat(userAgentIssues[0].responseJSON);
+            }
+            if (data == 'pixelated-dispatcher') {
+              allIssues = allIssues.concat(dispatcherIssues[0].responseJSON);
+            }
+            if (data == 'pixelated-platform') {
+              allIssues = allIssues.concat(platformIssues[0].responseJSON);
+            }
+
+            this.trigger('data:issues:refreshed', {issues: allIssues});
+          }.bind(this)
+        );
+      };
+
       this.assignMyselfToIssue = function (ev, assignData) {
         var user, issue, url;
         if (assignData != undefined) {
@@ -156,6 +186,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:filter:repo', this.fetchRepo);
         this.on('ui:add:issue', this.addIssue);
         this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);

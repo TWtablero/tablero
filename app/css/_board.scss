@@ -8,6 +8,18 @@
 	background: #eaeaea;
 	padding: 10px;
 	@include clearfix;
+
+	&.pixelated-user-agent {
+	  background-color: #d0f0e0;
+	}
+
+	&.pixelated-dispatcher {
+	  background-color: #E7C0CC;
+	}
+
+	&.pixelated-platform {
+	  background-color: #d0e0f0;
+	}
 }
 
 .assignee {
@@ -31,4 +43,16 @@ h3 {
 	margin: 0;
 	margin-bottom: 0.5em;
 	margin-top: 0.5em;
+}
+
+.issue-number {
+	font-family: "OpenSansSemibold";
+	top: 4px;
+	position: relative;
+	color: #5E5E5E;
+
+	&:hover {
+		color: #535353;
+		text-decoration: underline;
+	}
 }
