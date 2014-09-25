@@ -13,6 +13,6 @@
     "neat": "1.4.0"
   },
   "devDependencies": {
-    "jasmine-flight": "3.x.x"
+    "jasmine-flight": "~3.0.0"
   }
 }

@@ -10,7 +10,8 @@ requirejs.config({
 
   paths: {
     'component': '../js/component',
-    'page': '../js/page'
+    'page': '../js/page',
+    'flight': '../bower_components/flight'
   },
 
   // ask Require.js to load these files (all our tests)
