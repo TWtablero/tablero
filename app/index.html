@@ -19,21 +19,18 @@
         <option>pixelated-platform</option>
         <option>pixelated-dispatcher</option>
       </select>
-      <label for="filter-repo"></label>
     </header>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">Add Issue</h4>
+            <h4 class="modal-title" id="myModalLabel">Create Issue</h4>
           </div>
           <div class="modal-body">
-           <label for="issueTitle">Title</label>
-           <input type="text" id="issueTitle" class="form-control field">
+           <input placeholder="Enter title here..." type="text" id="issueTitle" class="form-control field">
            <br/>
-           <label for="issueTitle">Body</label>
-           <textarea id="issueBody" class="form-control field" rows="3"></textarea>
+           <textarea placeholder="Enter text here..." id="issueBody" class="form-control field" rows="3"></textarea>
            <br/>
            <label for="projects">Project</label>
            <select id="projects" class="form-control">
@@ -43,8 +40,8 @@
            </select>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button id="create_issue" type="button" class="btn btn-primary">Create</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

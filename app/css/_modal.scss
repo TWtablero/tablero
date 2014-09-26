@@ -343,8 +343,7 @@ hr {
   filter: alpha(opacity=50);
 }
 .modal-header {
-  padding: 15px;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 20px 5px 10px 30px;
   min-height: 16.42857143px;
 }
 .modal-header .close {
@@ -356,12 +355,12 @@ hr {
 }
 .modal-body {
   position: relative;
-  padding: 15px;
+  padding: 30px;
+  padding-top: 0;
 }
 .modal-footer {
-  padding: 15px;
+  padding: 0px 0px 25px 26px;
   text-align: right;
-  border-top: 1px solid #e5e5e5;
 }
 .modal-footer .btn + .btn {
   margin-left: 5px;
@@ -382,12 +381,12 @@ hr {
 }
 @media (min-width: 768px) {
   .modal-dialog {
-    width: 600px;
+    width: 520px;
     margin: 30px auto;
   }
   .modal-content {
-    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   }
   .modal-sm {
     width: 300px;

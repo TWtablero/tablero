@@ -5,6 +5,8 @@ body {
 
 #projects {
   width: 30%;
+  height: 30px;
+  border-color: #bdbdbd;
 }
 
 .btn-success {
@@ -23,26 +25,80 @@ body {
   }
 }
 
+.btn-default {
+  color: white;
+  background: #999;
+}
+
 .right {
   float: right;
 }
 
 #filter-repo {
-  -webkit-appearance: none;
-  border: none;
-  background: transparent;
+  background: white;
   margin-left: 2em;
   top: -5px;
   position: relative;
   outline: none;
 }
 
-#filter-repo + label:after {
-  content: '▼';
-  color: black;
-  font-size: 0.6em;
-  font-family: Helvetica;
-  top: -6px;
-  left: 5px;
-  position: relative;
+.modal-dialog select {
+  background: white;
+}
+
+.modal-dialog h4 {
+  font-size: 1.3em;
+  color: #535353;
+}
+
+.modal-dialog label {
+  display: block;
+  margin-top: 0.7em;
+  margin-bottom: 0.2em;
+}
+
+.modal-body {
+  input[type=text] {
+    height: 35px;
+    background: white;
+    padding-left: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  textarea {
+    height: 150px;
+    padding-left: 0.5em;
+    margin-top: 1.5em;
+    padding-top: 0.3em;
+  }
+}
+
+.modal-body input[type=text], .modal-body textarea {
+  border-radius: 3px;
+  border: 1px solid #bdbdbd;
+  width: 455px;
+}
+
+.modal-header .close {
+  float: right;
+  background: none;
+  border: none;
+  font-family: "OpenSansBold";
+  font-size: 1.3em;
+  margin-right: 23px;
+}
+
+.modal-footer button {
+  float: left;
+  border: none;
+  width: 80px;
+  height: 30px;
+  margin-right: 0.5em;
+  border-radius: 2px;
+  margin-left: 0.3em;
+}
+
+.btn-primary {
+  background: #46B17F;
+  color: white;
 }
