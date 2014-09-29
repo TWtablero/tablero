@@ -3,6 +3,10 @@ body {
   font-size: 15px !important;
 }
 
+a {
+  cursor: pointer;
+}
+
 #projects {
   width: 30%;
   height: 30px;
@@ -76,7 +80,7 @@ body {
 .modal-body input[type=text], .modal-body textarea {
   border-radius: 3px;
   border: 1px solid #bdbdbd;
-  width: 455px;
+  width: 100%;
 }
 
 .modal-header .close {
