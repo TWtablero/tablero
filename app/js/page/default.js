@@ -27,13 +27,14 @@ define(
   function initialize() {
     githubIssues.attachTo(document);
     githubUser.attachTo(document);
+
     track.attachTo('.issue-track.backlog', {trackType: '0 - Backlog'});
     track.attachTo('.issue-track.ready', {trackType: '1 - Ready'});
     track.attachTo('.issue-track.development', {trackType: '2 - Development'});
     track.attachTo('.issue-track.quality-assurance', {trackType: '3 - Quality Assurance'});
     track.attachTo('.issue-track.done', {trackType: '4 - Done'});
 
-    $(document).trigger('ui:needs:issues');
+    $(document).trigger('ui:needs:issues', {projectName: 'all' });
 
     $("#create_issue").click(function() {
       $(document).trigger('ui:create:issue',
@@ -47,11 +48,11 @@ define(
 
     $("#filter-repo").change(function() {
       $('.issue').remove();
-      
+
       if ($(this).val() == 'All repositories') {
-        $(document).trigger('ui:needs:issues');
+        $(document).trigger('ui:needs:issues', {projectName: 'all' });
       } else {
-        $(document).trigger('ui:filter:repo', $(this).val());
+        $(document).trigger('ui:needs:issues', {projectName: $(this).val()});
       }
     });
 
