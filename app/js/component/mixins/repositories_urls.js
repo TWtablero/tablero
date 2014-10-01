@@ -14,7 +14,7 @@ define([],
       };
 
       this.defaultOptions = function () {
-        return "per_page=100&state=all"
+        return "&per_page=100&state=all&"
       };
 
       this.repoIssuesURL = function (repo) {
