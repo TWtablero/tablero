@@ -16,12 +16,11 @@ a {
 .btn-success {
   float: right;
   border: none;
-  background: #ffcc66;
-  border-radius: 1px;
+  background: white;
   color: #535353;
-  padding: 0px 6px;
-  font-size: 1.2em;
-  margin-top: 4px;
+  font-size: 0.9em;
+  padding: 2px 5px;
+  border-radius: 3px;
 
   &:hover {
     color: #535353;
@@ -44,6 +43,7 @@ a {
   top: -5px;
   position: relative;
   outline: none;
+  border: none;
 }
 
 .modal-dialog select {

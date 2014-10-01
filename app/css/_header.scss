@@ -1,12 +1,17 @@
 header {
-	background: #eee;
+	background: url('/img/back.png');
 
 	.logo {
-		background: #ffcc66;
 		padding: 0.5em;
 		color: #535353;
 		margin: 0;
 		display: inline-block;
+		font-family: "OpenSansBold";
 		font-size: 1.7em;
+	}
+
+	button.btn-success {
+		margin-right: 5em;
+		margin-top: 1.25em;
 	}
 }

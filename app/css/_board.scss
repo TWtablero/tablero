@@ -7,27 +7,38 @@
 	background: #eaeaea;
 	@include clearfix;
 
-	&.pixelated-user-agent {
-	  background-color: #d0f0e0;
+	.issue-header {
+		padding: 7px;
+		background: #d6d6d6;
 	}
 
-	&.pixelated-dispatcher {
-	  background-color: #E7C0CC;
+	.issue-body {
+		background: #eaeaea;
+		padding: 10px;
 	}
 
-	&.pixelated-platform {
-	  background-color: #d0e0f0;
+	&.pixelated-user-agent .issue-number {
+	  background-color: #3cb878;
+	}
+
+	&.pixelated-dispatcher .issue-number {
+	  background-color: #ef689e;
+	}
+
+	&.pixelated-platform .issue-number {
+	  background-color: #69b4df;
 	}
 }
 
-.issue-header {
+.labels {
 	padding: 10px;
-	background: #d6d6d6;
+	padding-top: 0;
 }
 
-.issue-body {
-	background: #eaeaea;
-	padding: 10px;
+.label {
+	padding: 3px 7px;
+	border-radius: 5px;
+	color: white;
 }
 
 .assignee {
@@ -55,9 +66,13 @@ h3 {
 
 .issue-number {
 	font-family: "OpenSansSemibold";
-	top: 4px;
+	top: 2px;
 	position: relative;
-	color: #5E5E5E;
+	color: white;
+	font-size: 1.15em;
+	top: -7px;
+	right: -7px;
+	padding: 10px 10px 9px 10px;
 
 	&:hover {
 		color: #535353;
