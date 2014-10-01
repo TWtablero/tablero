@@ -13,6 +13,9 @@
   <body role="document">
     <header>
       <h1 class="logo">PixBoard</h1>
+      <button id="open_modal_issue" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">
+              + CREATE ISSUE
+      </button>
       <select id="filter-repo">
         <option>All repositories</option>
         <option>pixelated-user-agent</option>
@@ -50,9 +53,6 @@
       <div class="column">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <button id="open_modal_issue" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">
-              +
-            </button>
             <h3>Backlog</h3>
           </div>
           <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
