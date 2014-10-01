@@ -32,9 +32,16 @@ define([],
         return clearedIssue;
       }
 
+      this.removeColumnsLabels = function(labels) {
+        return _.filter(labels, function(label) {
+          return !(label.name.match(/\d+ - \w+/));
+        });
+      }
+
       this.render = function (issue) {
         var renderedIssue;
         issue.repoName = this.getRepoName(issue);
+        issue.labelsName = this.removeColumnsLabels(issue.labels);
         renderedIssue = this.template.render(this.clearHuboardInfo(issue));
         return renderedIssue;
       };
@@ -47,8 +54,12 @@ define([],
             '</a></div>' +
             '<a class="assigns-myself">' +
               '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
-              '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' + 
+              '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
             '</a>' +
+            '{{#labelsName}}' +
+              '<br/>' +
+              '<span>{{name}}</span>' +
+            '{{/labelsName}}' +
             '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
           '</div>'
         );
