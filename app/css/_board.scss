@@ -5,7 +5,6 @@
 .issue {
 	margin-bottom: 1em;
 	background: #eaeaea;
-	padding: 10px;
 	@include clearfix;
 
 	&.pixelated-user-agent {
@@ -19,6 +18,16 @@
 	&.pixelated-platform {
 	  background-color: #d0e0f0;
 	}
+}
+
+.issue-header {
+	padding: 10px;
+	background: #d6d6d6;
+}
+
+.issue-body {
+	background: #eaeaea;
+	padding: 10px;
 }
 
 .assignee {

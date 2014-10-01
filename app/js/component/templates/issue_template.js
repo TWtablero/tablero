@@ -49,18 +49,20 @@ define([],
       this.before('initialize', function () {
         this.template = Hogan.compile(
           '<div class="issue list-group-item {{repoName}}" id="{{id}}">' +
-            '<div><a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}">' +
+            '<div class="issue-header">'+
+              '<a class="assigns-myself">' +
+                '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
+                '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
+              '</a>' +
+              '{{#labelsName}}' +
+                '<br/>' +
+                '<span>{{name}}</span>' +
+              '{{/labelsName}}' +
+              '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
+            '</div>' +
+            '<div class="issue-body"><a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}">' +
               '{{title}}' +
             '</a></div>' +
-            '<a class="assigns-myself">' +
-              '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
-              '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
-            '</a>' +
-            '{{#labelsName}}' +
-              '<br/>' +
-              '<span>{{name}}</span>' +
-            '{{/labelsName}}' +
-            '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
           '</div>'
         );
       });
