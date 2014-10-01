@@ -19,15 +19,15 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
     function githubIssues() {
       this.fetchUserAgentIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.userAgentRepoURL) + this.accessToken.apply(this) + this.defaultOptions());
+        return $.getJSON(this.repoIssuesURL(this.userAgentRepoURL));
       };
 
       this.fetchDispatcherIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.dispatcherRepoURL) + this.accessToken.apply(this) + this.defaultOptions());
+        return $.getJSON(this.repoIssuesURL(this.dispatcherRepoURL));
       };
 
       this.fetchPlatformIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.platformRepoURL) + this.accessToken.apply(this) + this.defaultOptions());
+        return $.getJSON(this.repoIssuesURL(this.platformRepoURL));
       };
 
       this.createIssue = function (ev, data) {

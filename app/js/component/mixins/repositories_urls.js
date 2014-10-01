@@ -14,11 +14,15 @@ define([],
       };
 
       this.defaultOptions = function () {
-        return "&per_page=100&state=all&"
+        return "per_page=100&state=all&"
       };
 
+      this.authRequest = function (url) {
+        return url + this.accessToken();
+      }
+
       this.repoIssuesURL = function (repo) {
-        return repo() + '/issues?'
+        return this.authRequest(repo() + '/issues?' + this.defaultOptions());
       };
 
       this.accessToken = function () {
