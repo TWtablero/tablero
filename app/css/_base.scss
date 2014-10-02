@@ -3,6 +3,10 @@ body {
   font-size: 16px !important;
 }
 
+img[src=""] {
+   display: none;
+}
+
 a {
   cursor: pointer;
   text-decoration: none;
