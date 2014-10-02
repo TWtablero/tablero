@@ -51,7 +51,8 @@ define([],
           '<div class="issue list-group-item {{repoName}}" id="{{id}}">' +
             '<div class="issue-header">'+
               '<a class="assigns-myself">' +
-                '<img class="empty-avatar" src="/img/avatar-empty.png" />' +
+                '<span class="empty-avatar">+</span>' +
+                '<span class="empty-avatar-label">ASSIGN ME</span>' +
                 '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
               '</a>' +
               '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +

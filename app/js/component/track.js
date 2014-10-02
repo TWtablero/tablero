@@ -43,12 +43,19 @@ define(
         issues.forEach(function (issue) {
           this.$node.prepend(this.renderIssue(issue));
         }.bind(this));
+
+        $('.panel-heading.backlog .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+        $('.panel-heading.ready .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
+        $('.panel-heading.development .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
+        $('.panel-heading.quality-assurance .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
+        $('.panel-heading.done .issues-count').text(' (' + $('.issue-track.done .issue').length + ')');
       };
 
       this.renderIssue = function (issue) {
         var renderedIssue = $(this.render(issue));
         if (renderedIssue.find('.assignee-avatar').attr('src') != "" ) {
           renderedIssue.find('.empty-avatar').hide();
+          renderedIssue.find('.empty-avatar-label').hide();
         }
         renderedIssue.find('a.assigns-myself').click(function () {
           this.trigger('ui:assigns:user', {issue: issue});

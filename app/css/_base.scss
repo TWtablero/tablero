@@ -5,6 +5,12 @@ body {
 
 a {
   cursor: pointer;
+  text-decoration: none;
+
+  &:hover, &:visited {
+    color: #535353;
+    text-decoration: underline;
+  }
 }
 
 #projects {
@@ -24,6 +30,7 @@ a {
 
   &:hover {
     color: #535353;
+    background: #fddd5d;
     text-decoration: none;
   }
 }
