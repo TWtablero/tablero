@@ -119,6 +119,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
             $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
             $('#' + issue.id + ' .empty-avatar').hide();
+            $('#' + issue.id + ' .empty-avatar-label').hide();
             $('#' + issue.id + ' .empty-label').hide();
           }
         });

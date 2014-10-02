@@ -2,15 +2,15 @@ define([],
   function () {
     return function () {
       this.userAgentRepoURL = function () {
-        return "https://api.github.com/repos/pixelated-project/pixelated-user-agent";
+        return "https://api.github.com/repos/guipdutra/test_issues_kanboard";
       };
 
       this.dispatcherRepoURL = function () {
-        return "https://api.github.com/repos/pixelated-project/pixelated-dispatcher";
+        return "https://api.github.com/repos/guipdutra/test_issues_kanboard";
       };
 
       this.platformRepoURL = function () {
-        return "https://api.github.com/repos/pixelated-project/pixelated-platform";
+        return "https://api.github.com/repos/guipdutra/test_issues_kanboard";
       };
 
       this.defaultOptions = function () {
