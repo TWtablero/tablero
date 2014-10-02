@@ -19,7 +19,7 @@ define([],
 
     function issueTemplate() {
       this.getRepoName = function (issue) {
-        var repoNameRegExp = /guipdutra\/(test_issues_kanboard)/;
+        var repoNameRegExp = /pixelated-project\/(pixelated-[a-z-]+)/;
         return repoNameRegExp.exec(issue.url)[1];
       };
 

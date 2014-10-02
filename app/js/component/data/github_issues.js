@@ -33,7 +33,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       this.createIssue = function (ev, data) {
         var url, repositoryURL;
         repositoryURL = this.getURLFromProject(data.projectName);
-        url = this.repoIssuesURL(repositoryURL) + this.accessToken.apply(this);
+        url = this.repoIssuesURL(repositoryURL);
 
         $.ajax({
           type: 'POST',
@@ -146,6 +146,12 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
               data: JSON.stringify({labels: [label], state: state}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
+
+                $('.panel-heading.backlog .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+                $('.panel-heading.ready .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
+                $('.panel-heading.development .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
+                $('.panel-heading.quality-assurance .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
+                $('.panel-heading.done .issues-count').text(' (' + $('.issue-track.done .issue').length + ')');
               }
             });
           }.bind(this)
@@ -166,7 +172,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       };
 
       this.getIssueUrlFromDraggable = function(ui) {
-        return ui.item[0].childNodes[0].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
+        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/') + "?access_token=" + this.getCurrentAuthToken();
       };
 
       this.getState = function(className) {
