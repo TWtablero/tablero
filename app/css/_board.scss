@@ -93,6 +93,41 @@
 	font-size: 1.3em;
 }
 
+.panel.panel-default {
+	position: relative;
+}
+
+.panel-heading.done {
+	position: absolute;
+	top: 37%;
+	text-align: center;
+	font-size: 0.7em;
+	padding: 6px;
+
+	h3 {
+		color: #aaa;
+		display: block;
+		margin-top: 7px;
+	}
+
+	img {
+		width: 51px;
+		display: block;
+		margin: 0 auto;
+		position: relative;
+		top: 0;
+
+		&.colored {
+			display: none;
+		}
+	}
+
+	.issues-count {
+		color: #aaa;
+		display: block;
+	}
+}
+
 .title {
 	margin-bottom: 0.5em;
 	color: #5E5E5E;
@@ -104,6 +139,16 @@ h3 {
 	font-weight: normal;
 	font-size: 1.3em;
 	margin: 0;
+}
+
+.list-group.done {
+	border: 2px dashed #ccc;
+	height: 77vh;
+	margin-top: 2.8em;
+}
+
+.list-group.done .issue {
+	display: none;
 }
 
 .issue-number {

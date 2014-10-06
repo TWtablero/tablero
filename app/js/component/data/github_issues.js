@@ -140,23 +140,37 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             label = this.parseLabel(event.target.id);
             state = this.getState(event.target.className);
 
+            $('.panel-heading.backlog .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+            $('.panel-heading.ready .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
+            $('.panel-heading.development .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
+            $('.panel-heading.quality-assurance .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
+            $('.panel-heading.done .issues-count').text(' (' + $('.issue-track.done .issue').length + ')');
+
+            if (label == "4 - Done") {
+              this.triggerRocketAnimation();
+            }
+
             $.ajax({
               type: 'PATCH',
               url: url,
               data: JSON.stringify({labels: [label], state: state}),
               success: function (response, status, xhr) {
                 console.log('Issue label  updated to ' + label);
-
-                $('.panel-heading.backlog .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-                $('.panel-heading.ready .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
-                $('.panel-heading.development .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
-                $('.panel-heading.quality-assurance .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
-                $('.panel-heading.done .issues-count').text(' (' + $('.issue-track.done .issue').length + ')');
               }
             });
           }.bind(this)
         }).disableSelection();
       };
+
+      this.triggerRocketAnimation = function() {
+        $(".panel-heading.done img.plain").hide();
+        $(".panel-heading.done img.colored").show().animate({
+          top: '-1000px'
+        }, 2000, 'easeInQuart', function() { 
+          $(".panel-heading.done img.colored").hide().css('top', 0);
+          $(".panel-heading.done img.plain").fadeIn("slow");
+        });
+      }
 
       this.parseLabel = function(label){
         var fullLabel = '';

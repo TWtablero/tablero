@@ -36,6 +36,16 @@ define(
 
     $(document).trigger('ui:needs:issues', {projectName: 'all' });
 
+    function triggerRocketAnimation() {
+        $(".panel-heading.done img.plain").hide();
+        $(".panel-heading.done img.colored").show().animate({
+          top: '-1000px'
+        }, 2000, 'easeInQuart', function() { 
+          $(".panel-heading.done img.colored").hide().css('top', 0);
+          $(".panel-heading.done img.plain").fadeIn("slow");
+        });
+      }
+
     $("#create_issue").click(function() {
       $(document).trigger('ui:create:issue',
         { 'issueTitle': $("#issueTitle").val(),
@@ -44,6 +54,10 @@ define(
 
       $("#myModal").modal('hide')
       $("#myModal input, textarea").val('')
+    });
+
+    $(".panel-heading.done img.plain").click(function () {
+      triggerRocketAnimation();
     });
 
     $("#filter-repo").change(function() {

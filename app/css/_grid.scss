@@ -4,4 +4,8 @@
 
 .column {
 	@include span-columns(2.4);
+
+	&:last-child {
+		@include span-columns(1.5);
+	}
 }
