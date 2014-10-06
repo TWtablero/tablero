@@ -38,11 +38,22 @@ define(
 
     function triggerRocketAnimation() {
         $(".panel-heading.done img.plain").hide();
+        $(".panel-heading.done h3").css('opacity', 0);
+        $(".panel-heading.done .issues-count").css('opacity', 0);
         $(".panel-heading.done img.colored").show().animate({
-          top: '-1000px'
-        }, 2000, 'easeInQuart', function() { 
+          top: '-650px'
+        }, 2000, 'easeInBack', function() { 
           $(".panel-heading.done img.colored").hide().css('top', 0);
-          $(".panel-heading.done img.plain").fadeIn("slow");
+          $(".panel-heading.done .check-done").fadeIn(2000, function() {
+            $(".panel-heading.done .check-done").hide();
+            $(".panel-heading.done img.plain").fadeIn(600);
+            $(".panel-heading.done h3").animate({
+              opacity: 1
+            }, 600);
+            $(".panel-heading.done .issues-count").animate({
+              opacity: 1
+            }, 600);
+          });
         });
       }
 
