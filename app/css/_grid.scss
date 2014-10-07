@@ -3,7 +3,7 @@
 }
 
 .column {
-	@include span-columns(2.4);
+	@include span-columns(2.6);
 
 	&:last-child {
 		@include span-columns(1.5);

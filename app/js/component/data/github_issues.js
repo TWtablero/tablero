@@ -170,8 +170,20 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
           top: '-650px'
         }, 2000, 'easeInBack', function() { 
           $(".panel-heading.done img.colored").hide().css('top', 0);
+          
+          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
+          $(".panel-heading.done h3").css('color', '#5dc66c');
+          $(".panel-heading.done h3").animate({
+            opacity: 1
+          }, 2000);
+
           $(".panel-heading.done .check-done").fadeIn(2000, function() {
             $(".panel-heading.done .check-done").hide();
+
+            $(".panel-heading.done h3").css('opacity', 0);
+            $(".panel-heading.done h3").text('Drop here to launch');
+            $(".panel-heading.done h3").css('color', '#aaa');
+
             $(".panel-heading.done img.plain").fadeIn(600);
             $(".panel-heading.done h3").animate({
               opacity: 1
