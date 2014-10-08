@@ -88,6 +88,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
             this.trigger('data:issues:refreshed', {issues: issuesFromProjects });
+            this.trigger('data:issues:mountExportCsvLink', {issues: issuesFromProjects });
           }.bind(this)
         );
       };

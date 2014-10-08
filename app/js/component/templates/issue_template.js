@@ -32,9 +32,21 @@ define([],
         return clearedIssue;
       }
 
+      this.getLabels = function(labels, columnLabelFilter) {
+        return _.filter(labels, columnLabelFilter);
+      }
+
+      var columnLabelRegex = /\d+ - \w+/;
+
       this.removeColumnsLabels = function(labels) {
-        return _.filter(labels, function(label) {
-          return !(label.name.match(/\d+ - \w+/));
+        return this.getLabels(labels, function(label) {
+          return !(label.name.match(columnLabelRegex))
+        })
+      }
+
+      this.getColumnLabel = function(labels) {
+        return this.getLabels(labels, function(label) {
+          return (label.name.match(columnLabelRegex))
         });
       }
 
@@ -42,6 +54,7 @@ define([],
         var renderedIssue;
         issue.repoName = this.getRepoName(issue);
         issue.labelsName = this.removeColumnsLabels(issue.labels);
+        issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
         renderedIssue = this.template.render(this.clearHuboardInfo(issue));
         return renderedIssue;
       };
