@@ -29,7 +29,7 @@ define(['flight/lib/component'],
 
       this.issuesToCsv = function(issues) {
         var issuesCsv =  _.map(issues, function(issue){
-          return [ issue.repoName, issue.number, issue.title, issue.state, issue.kanbanState, issue.body ].join(',')
+          return [ issue.repoName, issue.number, issue.title, issue.state, issue.kanbanState, issue.body ].join(';')
         });
 
         issuesCsv.splice(0, 0, this.csvHeader());
@@ -38,7 +38,7 @@ define(['flight/lib/component'],
       };
 
       this.csvHeader = function() {
-        return "Source,Github ID,Title,Status,Kanban State,Description";
+        return ["Source","Github ID","Title","Status","Kanban State","Description"].join(';');
       };
 
       this.after('initialize', function () {
