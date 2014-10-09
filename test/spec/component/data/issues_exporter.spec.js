@@ -24,6 +24,6 @@ describeComponent('component/data/issues_exporter', function () {
     ]
 
     expect(this.component.linkToCsv({'issues': issues})).toEqual(
-      'data:text/csv;charset=utf8,Source%3BGithub%20ID%3BTitle%3BStatus%3BKanban%20State%3BDescription%0Apixelated-platform%3B90%3Bsending%20mails%3Bopen%3B1%20-%20Ready%3Bshould%20send%20email%0Apixelated-user-agent%3B92%3Bhandle%20errors%20on%20sending%20mails%3Bopen%3B0%20-%20Backlog%3BIf%20mails%20can\'t%20be%20sent%20by%20the%20twisted%20process');
+      'data:text/csv;charset=utf8,Source%3BGithub%20ID%3BTitle%3BStatus%3BKanban%20State%0Apixelated-platform%3B90%3Bsending%20mails%3Bopen%3B1%20-%20Ready%0Apixelated-user-agent%3B92%3Bhandle%20errors%20on%20sending%20mails%3Bopen%3B0%20-%20Backlog');
   });
 });

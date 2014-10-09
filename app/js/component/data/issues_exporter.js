@@ -27,9 +27,15 @@ define(['flight/lib/component'],
           encodeURIComponent(this.issuesToCsv(data.issues));
       };
 
+      this.validIssuesToExport = function(issues) {
+        return _.filter(issues, function(issue) {
+          return issue.repoName != undefined
+        });
+      }
+
       this.issuesToCsv = function(issues) {
-        var issuesCsv =  _.map(issues, function(issue){
-          return [issue.repoName, issue.number, issue.title, issue.state, issue.kanbanState, issue.body.replace(/(\r\n|\n|\r)/gm," ")].join(';')
+        var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
+          return [issue.repoName, issue.number, issue.title, issue.state, issue.kanbanState].join(';')
         });
 
         issuesCsv.splice(0, 0, this.csvHeader());
@@ -38,7 +44,7 @@ define(['flight/lib/component'],
       };
 
       this.csvHeader = function() {
-        return ["Source","Github ID","Title","Status","Kanban State","Description"].join(';');
+        return ["Source","Github ID","Title","Status","Kanban State"].join(';');
       };
 
       this.after('initialize', function () {
