@@ -67,6 +67,12 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         return allIssues;
       };
 
+      this.removeIssuesWithoutLabels = function (issues) {
+        return _.filter(issues, function(issue) {
+          return issue.labels.length > 0
+        });
+      };
+
       this.fetchIssues = function (ev, data) {
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
 
@@ -83,12 +89,12 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             var projects = [{'projectName': 'pixelated-user-agent', 'repo': userAgentIssues},
               {'projectName': 'pixelated-dispatcher', 'repo': dispatcherIssues},
               {'projectName': 'pixelated-platform', 'repo': platformIssues}],
+            filteredProjects = this.filterProjectsByName(projects, data.projectName),
+            issuesFromProjects = this.getIssuesFromProjects(filteredProjects),
+            issuesWithLabels   = this.removeIssuesWithoutLabels(issuesFromProjects);
 
-            filteredProjects = this.filterProjectsByName(projects, data.projectName);
-            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
-
-            this.trigger('data:issues:refreshed', {issues: issuesFromProjects });
-            this.trigger('data:issues:mountExportCsvLink', {issues: issuesFromProjects });
+            this.trigger('data:issues:refreshed', {issues: issuesWithLabels });
+            this.trigger('data:issues:mountExportCsvLink', {issues: issuesWithLabels });
           }.bind(this)
         );
       };
