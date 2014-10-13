@@ -216,6 +216,10 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         return className.search('done') != -1 ? 'closed' : 'open';
       };
 
+      this.changeNewIssueLink = function(event, projectName){
+        $(".link").attr("href", this.newIssueURL(projectName));
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:add:issue', this.addIssue);
@@ -223,6 +227,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
+        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
       });
     }
   }

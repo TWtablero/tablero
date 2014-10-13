@@ -29,6 +29,11 @@ define([],
         return "access_token=" + this.getCurrentAuthToken();
       };
 
+      this.newIssueURL = function(projectName){
+        var repositoryURL = this.getURLFromProject(projectName)();
+        return repositoryURL.replace("api.github.com/repos", "github.com") + "/issues/new";
+      };
+
       this.getURLFromProject = function (projectName) {
         switch (projectName) {
         case 'user-agent':
