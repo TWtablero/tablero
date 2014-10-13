@@ -35,7 +35,12 @@ define(['flight/lib/component'],
 
       this.issuesToCsv = function(issues) {
         var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
-          return [issue.repoName, issue.number, issue.title, issue.state, issue.kanbanState].join(';')
+          return [issue.repoName,
+                  issue.number,
+                  issue.title,
+                  issue.state,
+                  issue.kanbanState,
+                  issue.body.replace(/(\r\n|\n|\r)/g, " ")].join(';')
         });
 
         issuesCsv.splice(0, 0, this.csvHeader());
@@ -44,7 +49,7 @@ define(['flight/lib/component'],
       };
 
       this.csvHeader = function() {
-        return ["Source","Github ID","Title","Status","Kanban State"].join(';');
+        return ["Source","Github ID","Title","Status","Kanban State","Description"].join(';');
       };
 
       this.after('initialize', function () {

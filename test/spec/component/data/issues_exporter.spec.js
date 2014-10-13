@@ -23,7 +23,6 @@ describeComponent('component/data/issues_exporter', function () {
       }
     ]
 
-    expect(this.component.linkToCsv({'issues': issues})).toEqual(
-      'data:text/csv;charset=utf8,Source%3BGithub%20ID%3BTitle%3BStatus%3BKanban%20State%0Apixelated-platform%3B90%3Bsending%20mails%3Bopen%3B1%20-%20Ready%0Apixelated-user-agent%3B92%3Bhandle%20errors%20on%20sending%20mails%3Bopen%3B0%20-%20Backlog');
+    expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent("Source;Github ID;Title;Status;Kanban State;Description\npixelated-platform;90;sending mails;open;1 - Ready;should send email\npixelated-user-agent;92;handle errors on sending mails;open;0 - Backlog;If mails can't be sent by the twisted process"))
   });
 });
