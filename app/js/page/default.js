@@ -81,7 +81,7 @@ define(
       $("#myModal input, textarea").val('')
     });
 
-    $(".panel-heading.done img.plain").click(function () {
+    $(".done").on( "sortreceive", function(event, ui) {
       triggerRocketAnimation();
     });
 
