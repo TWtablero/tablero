@@ -18,18 +18,6 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs);
 
     function githubIssues() {
-      this.fetchUserAgentIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.userAgentRepoURL));
-      };
-
-      this.fetchDispatcherIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.dispatcherRepoURL));
-      };
-
-      this.fetchPlatformIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.platformRepoURL));
-      };
-
       this.createIssue = function (ev, data) {
         var url, repositoryURL;
         repositoryURL = this.getURLFromProject(data.projectName);
