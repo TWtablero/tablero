@@ -125,8 +125,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         });
       };
 
-      this.draggable = function (ev, data) {
+      this.draggable = function (ev, data) { 
         $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
+          items: '.issue',
           connectWith: '.list-group',
           receive: function(event, ui) {
             var label, url;
