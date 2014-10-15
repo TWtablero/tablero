@@ -6,6 +6,7 @@
 	margin-bottom: 0.7em;
 	border: 1px solid #d6d6d6;
 	background: #eaeaea;
+	margin-right: 0.35em;
 	@include clearfix;
 
 	.issue-header {
@@ -81,7 +82,9 @@
 }
 
 .panel-body {
-	min-height: 300px;
+	height: 80vh;
+	overflow: scroll;
+	min-height: 450px;
 }
 
 .panel-heading h3 {
