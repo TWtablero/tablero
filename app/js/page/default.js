@@ -85,7 +85,7 @@ define(
       triggerRocketAnimation();
     });
 
-    $("#filter-repo").change(function() {
+    $("#filter-repo").val('All repositories').change(function() {
       $('.issue').remove();
 
       if ($(this).val() == 'All repositories') {
