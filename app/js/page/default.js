@@ -38,39 +38,6 @@ define(
 
     $(document).trigger('ui:needs:issues', {projectName: 'all' });
 
-    function triggerRocketAnimation() {
-        $(".panel-heading.done img.plain").hide();
-        $(".panel-heading.done h3").css('opacity', 0);
-        $(".panel-heading.done .issues-count").css('opacity', 0);
-        $(".panel-heading.done img.colored").show().animate({
-          top: '-650px'
-        }, 2000, 'easeInBack', function() { 
-          $(".panel-heading.done img.colored").hide().css('top', 0);
-          
-          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
-          $(".panel-heading.done h3").css('color', '#5dc66c');
-          $(".panel-heading.done h3").animate({
-            opacity: 1
-          }, 2000);
-
-          $(".panel-heading.done .check-done").fadeIn(2000, function() {
-            $(".panel-heading.done .check-done").hide();
-
-            $(".panel-heading.done h3").css('opacity', 0);
-            $(".panel-heading.done h3").text('Drop here to launch');
-            $(".panel-heading.done h3").css('color', '#aaa');
-
-            $(".panel-heading.done img.plain").fadeIn(600);
-            $(".panel-heading.done h3").animate({
-              opacity: 1
-            }, 600);
-            $(".panel-heading.done .issues-count").animate({
-              opacity: 1
-            }, 600);
-          });
-        });
-      }
-
     $("#create_issue").click(function() {
       $(document).trigger('ui:create:issue',
         { 'issueTitle': $("#issueTitle").val(),
@@ -79,10 +46,6 @@ define(
 
       $("#myModal").modal('hide')
       $("#myModal input, textarea").val('')
-    });
-
-    $(".done").on( "sortreceive", function(event, ui) {
-      triggerRocketAnimation();
     });
 
     $("#filter-repo").change(function() {
