@@ -48,10 +48,6 @@ define(
       $("#myModal input, textarea").val('')
     });
 
-    $(".panel-heading.done img.plain").click(function () {
-      triggerRocketAnimation();
-    });
-
     $("#filter-repo").val('All repositories').change(function() {
       $('.issue').remove();
 
