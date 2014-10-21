@@ -1,4 +1,4 @@
-# flight-kanboard
+# ROCKETBOARD
 
 ## Installation
 
