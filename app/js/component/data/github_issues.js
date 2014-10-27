@@ -58,13 +58,15 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       this.fetchIssues = function (ev, data) {
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
 
+        data.page = ('page' in data) ? (data.page + 1) : 1;
+
         userAgentIssuesDeferred = $.Deferred();
         dispatcherIssuesDeferred = $.Deferred();
         platformIssuesDeferred = $.Deferred();
 
-        this.fetchUserAgentIssues().complete(userAgentIssuesDeferred.resolve);
-        this.fetchDispatcherIssues().complete(dispatcherIssuesDeferred.resolve);
-        this.fetchPlatformIssues().complete(platformIssuesDeferred.resolve);
+        this.fetchUserAgentIssues(data.page).complete(userAgentIssuesDeferred.resolve);
+        this.fetchDispatcherIssues(data.page).complete(dispatcherIssuesDeferred.resolve);
+        this.fetchPlatformIssues(data.page).complete(platformIssuesDeferred.resolve);
 
         $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
           function (userAgentIssues, dispatcherIssues, platformIssues) {
@@ -75,7 +77,15 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
             this.trigger('data:issues:refreshed', {issues: issuesFromProjects });
-            this.trigger('data:issues:mountExportCsvLink', {issues: issuesFromProjects });
+
+            if(data.page == 1){
+              this.trigger('data:issues:clearExportCsvLink');
+            }
+
+            if(issuesFromProjects.length > 0){
+              this.trigger('data:issues:mountExportCsvLink', {issues: issuesFromProjects });
+              this.trigger('ui:needs:issues', data);
+            }
           }.bind(this)
         );
       };
