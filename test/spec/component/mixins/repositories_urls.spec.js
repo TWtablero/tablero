@@ -37,4 +37,21 @@ describeMixin('component/mixins/repositories_urls', function () {
       );
     });
   });
+
+  describe('list issues', function(){
+    it('alters issue page param', function(){
+      var current = 0;
+      expect(this.component.getPageParam(current)).toEqual("page=1&");
+      expect(this.component.getPageParam(current + 1)).toEqual("page=1&");
+      expect(this.component.getPageParam(2)).toEqual("page=2&");
+    });
+
+    it('should use page to request issues in default config', function(){
+      this.component.accessToken = function() { return "access_token=token666A"; };
+      var project = "https://api.github.com/repos/guipdutra/test_issues_kanboard";
+      expect(this.component.repoIssuesURL(project, 1)).toEqual(
+        "https://api.github.com/repos/guipdutra/test_issues_kanboard/issues?per_page=100&state=all&page=1&access_token=token666A"
+      );
+    });
+  });
 });

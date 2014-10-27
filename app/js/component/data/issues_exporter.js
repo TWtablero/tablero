@@ -18,13 +18,24 @@ define(['flight/lib/component'],
     return defineComponent(issuesExporter);
 
     function issuesExporter() {
+      this.csvLink = '';
+
       this.mountExportCsvLink = function(ev, data) {
         $("#export_csv").attr('href', this.linkToCsv(data));
       };
 
+      this.clearLink = function(){
+        this.csvLink = '';
+      }
+
       this.linkToCsv = function(data) {
-        return 'data:text/csv;charset=utf8,' +
-          encodeURIComponent(this.issuesToCsv(data.issues));
+        var issuesCsv = this.issuesToCsv(data.issues);
+        if(this.csvLink == ''){
+          issuesCsv.splice(0, 0, this.csvHeader());
+        }
+
+        this.csvLink += encodeURIComponent(issuesCsv.join("\n"));
+        return 'data:text/csv;charset=utf8,' + this.csvLink;
       };
 
       this.validIssuesToExport = function(issues) {
@@ -43,9 +54,7 @@ define(['flight/lib/component'],
                   issue.body.replace(/(\r\n|\n|\r)/g, " ")].join(';')
         });
 
-        issuesCsv.splice(0, 0, this.csvHeader());
-
-        return issuesCsv.join("\n");
+        return issuesCsv;
       };
 
       this.csvHeader = function() {
@@ -54,6 +63,7 @@ define(['flight/lib/component'],
 
       this.after('initialize', function () {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
+        this.on('data:issues:clearExportCsvLink', this.clearLink)
       });
     }
   }

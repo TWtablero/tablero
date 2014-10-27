@@ -1,32 +1,36 @@
 define([],
   function () {
     return function () {
-      this.fetchUserAgentIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("user-agent")));
+      this.fetchUserAgentIssues = function (page) {
+        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("user-agent"), page));
       };
 
-      this.fetchDispatcherIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("dispatcher")));
+      this.fetchDispatcherIssues = function (page) {
+        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("dispatcher"), page));
       };
 
-      this.fetchPlatformIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("platform")));
+      this.fetchPlatformIssues = function (page) {
+        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("platform"), page));
       };
 
-      this.fetchProjectIssues = function () {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("project-issues")));
+      this.fetchProjectIssues = function (page) {
+        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("project-issues"), page));
       };
 
       this.defaultOptions = function () {
-        return "per_page=100&state=all&"
+        return "per_page=100&state=all&" 
+      };
+
+      this.getPageParam = function(page){
+        return (isFinite(page)) ? "page=" + (page <= 0 ? 1 : page) + "&" : '';
       };
 
       this.authRequest = function (url) {
         return url + this.accessToken();
       }
 
-      this.repoIssuesURL = function (repo) {
-        return this.authRequest(repo + '/issues?' + this.defaultOptions());
+      this.repoIssuesURL = function (repo, page) {      
+        return this.authRequest(repo + '/issues?' + this.defaultOptions() + this.getPageParam(page));
       };
 
       this.accessToken = function () {
