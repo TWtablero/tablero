@@ -135,7 +135,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
               return;
             }
 
-            url = this.getIssueLabelsUrlFromDraggable(ui);
+            url = this.getIssueUrlFromDraggable(ui);
             label = this.parseLabel(event.target.id);
             oldLabel = this.parseLabel(ui.sender[0].id);
             state = this.getState(event.target.className);
@@ -148,17 +148,22 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
             if (label == "4 - Done") {
               this.triggerRocketAnimation();
+                $.ajax({
+                type: 'PATCH',
+                url: url + this.getAccessTokenParam(),
+                data: JSON.stringify({state:"closed"})
+              });
             }
 
             $.ajax({
               type: 'POST',
-              url: url + this.getAccessTokenParam(),
+              url: url  + "/labels" + this.getAccessTokenParam(),
               data: JSON.stringify([label])
             });
 
             $.ajax({
               type: 'DELETE',
-              url: url + "/" + oldLabel + this.getAccessTokenParam()
+              url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
             });
           }.bind(this)
         }).disableSelection();
@@ -210,8 +215,8 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         return fullLabel.trim();
       };
 
-      this.getIssueLabelsUrlFromDraggable = function(ui) {
-        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/') + "/labels";
+      this.getIssueUrlFromDraggable = function(ui) {
+        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
       };
 
       this.getAccessTokenParam = function() {
