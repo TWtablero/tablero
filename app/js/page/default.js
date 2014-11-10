@@ -21,49 +21,66 @@ define(
     'component/data/issues_exporter'
   ],
   function (githubUser, githubIssues, track, issuesExporter) {
-  'use strict';
+    'use strict';
 
-  return initialize;
+    return initialize;
 
-  function initialize() {
-    githubIssues.attachTo(document);
-    githubUser.attachTo(document);
-    issuesExporter.attachTo(document);
+    function initialize() {
+      githubIssues.attachTo(document);
+      githubUser.attachTo(document);
+      issuesExporter.attachTo(document);
 
-    track.attachTo('.issue-track.backlog', {trackType: '0 - Backlog'});
-    track.attachTo('.issue-track.ready', {trackType: '1 - Ready'});
-    track.attachTo('.issue-track.development', {trackType: '2 - Development'});
-    track.attachTo('.issue-track.quality-assurance', {trackType: '3 - Quality Assurance'});
-    track.attachTo('.issue-track.done', {trackType: '4 - Done'});
+      track.attachTo('.issue-track.backlog', {
+        trackType: '0 - Backlog'
+      });
+      track.attachTo('.issue-track.ready', {
+        trackType: '1 - Ready'
+      });
+      track.attachTo('.issue-track.development', {
+        trackType: '2 - Development'
+      });
+      track.attachTo('.issue-track.quality-assurance', {
+        trackType: '3 - Quality Assurance'
+      });
+      track.attachTo('.issue-track.done', {
+        trackType: '4 - Done'
+      });
 
-    $(document).trigger('ui:needs:issues', {projectName: 'all' });
+      $(document).trigger('ui:needs:issues', {
+        projectName: 'all'
+      });
 
-    $("#create_issue").click(function() {
-      $(document).trigger('ui:create:issue',
-        { 'issueTitle': $("#issueTitle").val(),
-          'issueBody':  $("#issueBody").val(),
-          'projectName': $("#projects").val() });
+      $("#create_issue").click(function () {
+        $(document).trigger('ui:create:issue', {
+          'issueTitle': $("#issueTitle").val(),
+          'issueBody': $("#issueBody").val(),
+          'projectName': $("#projects").val()
+        });
 
-      $("#myModal").modal('hide')
-      $("#myModal input, textarea").val('')
-    });
+        $("#myModal").modal('hide')
+        $("#myModal input, textarea").val('')
+      });
 
-    $("#filter-repo").val('All repositories').change(function() {
-      $('.issue').remove();
+      $("#filter-repo").val('All repositories').change(function () {
+        $('.issue').remove();
 
-      if ($(this).val() == 'All repositories') {
-        $(document).trigger('ui:needs:issues', {projectName: 'all' });
-      } else {
-        $(document).trigger('ui:needs:issues', {projectName: $(this).val()});
-      }
-    });
+        if ($(this).val() == 'All repositories') {
+          $(document).trigger('ui:needs:issues', {
+            projectName: 'all'
+          });
+        } else {
+          $(document).trigger('ui:needs:issues', {
+            projectName: $(this).val()
+          });
+        }
+      });
 
-    $("#projects").change(function(){
-      $(document).trigger("ui:issue:createIssuesURL", $(this).val());
-    });
+      $("#projects").change(function () {
+        $(document).trigger("ui:issue:createIssuesURL", $(this).val());
+      });
 
-    $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-    $(document).trigger('ui:draggable');
-    $(document).trigger('ui:needs:githubUser');
-  }
-});
+      $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
+      $(document).trigger('ui:draggable');
+      $(document).trigger('ui:needs:githubUser');
+    }
+  });
