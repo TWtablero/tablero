@@ -47,7 +47,7 @@ define(
       });
 
       $(document).trigger('ui:needs:issues', {
-        projectName: 'all'
+        projectName: ['pixelated-user-agent', 'pixelated-platform', 'pixelated-dispatcher']
       });
 
       $("#create_issue").click(function () {
@@ -61,22 +61,24 @@ define(
         $("#myModal input, textarea").val('')
       });
 
-      $("#filter-repo").val('All repositories').change(function () {
-        $('.issue').remove();
-
-        if ($(this).val() == 'All repositories') {
-          $(document).trigger('ui:needs:issues', {
-            projectName: 'all'
-          });
-        } else {
-          $(document).trigger('ui:needs:issues', {
-            projectName: $(this).val()
-          });
-        }
-      });
-
       $("#projects").change(function () {
         $(document).trigger("ui:issue:createIssuesURL", $(this).val());
+      });
+
+      $('.filter-repo').change(function () {
+        $('.issue').remove();
+        var reposToFilter = [];
+
+        $('.filter-repo').each(function () {
+          if ($(this).find('input').is(":checked")) {
+            reposToFilter.push($(this).find('input').attr('repo'));
+          }
+        });
+
+        $(document).trigger('ui:needs:issues', {
+          projectName: reposToFilter
+        });
+
       });
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());

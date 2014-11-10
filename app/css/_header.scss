@@ -11,4 +11,45 @@ header {
 		margin-right: 5em;
 		margin-top: 1.5em;
 	}
+
+	.filter-repo {
+		margin-right: 20px;
+		color: white;
+		cursor: pointer;
+
+		label {
+			cursor: pointer;
+		}
+
+		i {
+			margin-right: 3px;
+			background: #6a6a6a;
+			padding: 5px;
+			border-radius: 5px;
+			font-size: 1.2em;
+			color: #777;
+		}
+
+		input[type="checkbox"] {
+			display: none;
+		}
+
+		input[type="checkbox"]:checked + label {
+			i {
+				color: white;
+
+				&.pixelated-user-agent {
+					background-color: #3cb878;
+				}
+
+				&.pixelated-dispatcher {
+					background-color: #ef689e;
+				}
+
+				&.pixelated-platform {
+					background-color: #69b4df;
+				}
+			}
+		}
+	}
 }

@@ -45,14 +45,22 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         });
       }
 
-      this.filterProjectsByName = function (projects, projectName) {
-        return _.filter(projects, function (project) {
-          return project.projectName == projectName || projectName == 'all'
+      this.filterProjectsByName = function (projects, projectNames) {
+        var filteredRepos = [];
+
+        _.each(projects, function (project) {
+          if ($.inArray(project.projectName, projectNames) > -1) {
+            filteredRepos.push(project);
+          }
         });
+
+        return filteredRepos;
       };
 
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
+
+        console.log(projects);
 
         _.each(projects, function (project) {
           allIssues = allIssues.concat(project.repo[0].responseJSON);
