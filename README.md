@@ -1,10 +1,84 @@
 # ROCKETBOARD
 
+* [Installation](https://github.com/RocketBoard/rocketboard#installation)
+* [Static file server](https://github.com/RocketBoard/rocketboard#static-file-server)
+* [Unit tests](https://github.com/RocketBoard/rocketboard#unit-tests)
+* [Contributing to this project](https://github.com/RocketBoard/rocketboard#contributing-to-this-project)
+
 ## Installation
 
+* Install [Node.js](http://nodejs.org/download/)
+
+* Install Bower 
+```
+sudo npm install -g bower
+```
+
+* Clone this repository in https
+```
+git clone https://github.com/RocketBoard/rocketboard.git
+```
+ 
+* Install the project dependences
 ```
 npm install & bower install
 ```
+ 
+* Configure development environment: 
+
+ * Update these files:
+
+**app/js/component/mixins/repositories_urls.js**
+ 
+```  
+this.getURLFromProject = function (projectName) {
+        var repos = {
+          'user-agent': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
+          'dispatcher': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
+          'project-issues': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
+          'platform': "https://api.github.com/repos/RocketBoard/test_issues_kanboard" };
+        return repos[projectName] || "not found";
+```
+**app/js/component/templates/issue_template.js**	
+
+    function issueTemplate() {
+              this.getRepoName = function (issue) {
+                var repoNameRegExp = /RocketBoard\/(test_issues_kanboard)/;
+                return repoNameRegExp.exec(issue.url)[1];
+              };
+
+ 
+
+**config.js**
+ 
+Register **Rocketboard** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
+
+>Application Name: rocketboard
+>Homepage URL: http://localhost
+>Authorization callback URL: http://localhost:3000/request_auth_token
+
+And update file **config.js** with CLIENT ID and SECRET KEY generated:
+
+    config.clientId = process.env.CLIENT_ID || "<YOUR_CLIENT_ID>";
+    config.clientSecret = process.env.CLIENT_SECRET || "<YOUR_SECRET_KEY>”;
+
+ 
+* Ignore config files (temporary solution)
+```
+git update-index --assume-unchanged app/js/component/mixins/repositories_urls.js
+git update-index --assume-unchanged app/js/component/templates/issue_template.js
+git update-index --assume-unchanged config.js
+```
+ 
+*  Run the project with:
+```
+node app.js
+```
+
+* Access the project through the browser
+https://localhost:3000
+ 
+***Before create issues, please check if it is actually pointing to the fake repository!*** 
 
 
 

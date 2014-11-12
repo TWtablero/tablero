@@ -3,31 +3,36 @@ package rocketboard;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
-
 import rocketboardPages.RocketboardPage;
 
 
-
 public class RocketboardTests {
+	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "/#fe8c84520417ee740180f7cdcf2379d9d9f5cfcd"; //Marquezini's Key
+	//public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; //Fabio's Key
+	//public static String serviceUrl = "/#fe8c84520417ee740180f7cdcf2379d9d9f5cfcd"; //Marquezini's Key
 	//public static String serviceUrl = "#53dfb99e23c5a4335db3240a380223e57d7567ba"; // Guilherme's Key
 	public String repoUsed = "pixelated-user-agent";
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
-	public static String issueContent = "PageObject_"+RandomStringUtils.randomAlphabetic(6);
+	public String issueContent = "PageObject_"+RandomStringUtils.randomAlphabetic(6);
+	public String title = "title_"+RandomStringUtils.randomAlphabetic(6);
+	public String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
+	public String project;
+	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
+
+
 	int[] checkValue = null;
 	String selectedOption = "";
 
@@ -41,16 +46,16 @@ public class RocketboardTests {
 
 	@After
 	public void tearDown() {
-		driver.close();
+		driver.quit();
 	}
-	
+
 	@Test
 	public void E2E() throws Exception {
 		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
 
 		RocketboardPage.selectRepo(repoUsed);
 
-		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
+		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, RocketboardPage.chooseProject());
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 
 		RocketboardPage.moveIssue(issueContent, "2");
@@ -61,14 +66,25 @@ public class RocketboardTests {
 		Boolean issueLaunched = RocketboardPage.checkIssueLaunched("Liftoff! We Have a Liftoff!");
 		assertThat(issueLaunched, equalTo(Boolean.TRUE));
 	}
-		
+
+	@Test
+	/*Create an issue and check if the column backlog is correctly incremented  */
+	public void checkColumCount() throws Exception {
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		Thread.sleep(4000);
+		Integer valueBefore = RocketboardPage.getCount("backlog");
+		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		Integer valueAfter = RocketboardPage.getCount("backlog");
+		assertThat(valueAfter, equalTo(valueBefore+1));
+	}
+
 	@Test
 	public void moveCheckingValues() throws Exception {
 		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
 
 		RocketboardPage.selectRepo(repoUsed);
-		
-		assertThat(RocketboardPage.createIssueCheckingValue(issueContent, issueContent, repoCreateIssue), equalTo(Boolean.TRUE));
+
+		assertThat(RocketboardPage.createIssueCheckingValue(issueContent, issueContent, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
 
 		checkValue = RocketboardPage.moveIssueGettingValue(issueContent, "2");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
@@ -118,7 +134,7 @@ public class RocketboardTests {
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.FALSE));
 	}
-	
+
 	@Test
 	public void selectingRepository() throws Exception {
 		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
@@ -126,34 +142,76 @@ public class RocketboardTests {
 		RocketboardPage.selectRepo("pixelated-user-agent");
 		selectedOption = RocketboardPage.checkSelectedOption();
 		assertEquals(selectedOption, "pixelated-user-agent");
-		
+
 		RocketboardPage.selectRepo("pixelated-platform");
 		selectedOption = RocketboardPage.checkSelectedOption();
 		assertEquals(selectedOption, "pixelated-platform");
-		
+
 		RocketboardPage.selectRepo("pixelated-dispatcher");
 		selectedOption = RocketboardPage.checkSelectedOption();
 		assertEquals(selectedOption, "pixelated-dispatcher");
+
+		RocketboardPage.selectRepo("All repositories");
+		selectedOption = RocketboardPage.checkSelectedOption();
+		assertEquals(selectedOption, "All repositories");
 	}
 
-//	@Test // NOT DONE!!!
-//	public void openOptions() throws Exception {
-//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-//
-//		RocketboardPage.openModel();
-//		RocketboardPage.clickOptionsLink();
-//		issueModalOpened = RocketboardPage.modelOpened();
-//		System.out.println(issueModalOpened);
-//		//assertThat(issueModalOpened, equalTo(Boolean.FALSE));
-//
-//	}
-	
-//	@Test // NOT DONE!!!
-//	public void assignMe() throws Exception {
-//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-//		RocketboardPage.selectRepo(repoUsed);
-//		//checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
-//		RocketboardPage.getId();
-//
-//	}
+	@Test
+	public void createSimpleIssue() throws Exception{
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
+	}
+
+	@Test
+	public void issueAdvancedOption() throws Exception{
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		RocketboardPage.OpenModal();
+		RocketboardPage.clickAdvanced();
+		assertThat(RocketboardPage.isGithub(), equalTo(urlGit));
+	}
+
+	@Test
+	public void CreateIssueNoDescription() throws Exception{
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		RocketboardPage.createIssue(title,"", RocketboardPage.chooseProject());
+		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
+	}
+
+	//@Test
+	public void CreateIssueNoTitle() throws Exception{
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		RocketboardPage.createIssue("",desc, RocketboardPage.chooseProject());
+		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
+	}
+
+	//@Test
+	public void CreateIssueEmpty() throws Exception{
+		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+		RocketboardPage.createIssue("","", RocketboardPage.chooseProject());
+		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
+
+	}
+
+
+	//	@Test // NOT DONE!!!
+	//	public void openOptions() throws Exception {
+	//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+	//
+	//		RocketboardPage.openModel();
+	//		RocketboardPage.clickOptionsLink();
+	//		issueModalOpened = RocketboardPage.modelOpened();
+	//		System.out.println(issueModalOpened);
+	//		//assertThat(issueModalOpened, equalTo(Boolean.FALSE));
+	//
+	//	}
+
+	//	@Test // NOT DONE!!!
+	//	public void assignMe() throws Exception {
+	//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+	//		RocketboardPage.selectRepo(repoUsed);
+	//		//checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
+	//		RocketboardPage.getId();
+	//
+	//	}
 }

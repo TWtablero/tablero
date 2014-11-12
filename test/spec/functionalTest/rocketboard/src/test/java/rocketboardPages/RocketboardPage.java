@@ -8,6 +8,11 @@ import java.util.List;
 //import javax.swing.text.html.parser.Element;
 
 
+
+
+
+
+import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 //import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -24,6 +29,7 @@ public class RocketboardPage {
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
+
 
 	@FindBy(id="issueTitle")
 	WebElement title;
@@ -46,11 +52,14 @@ public class RocketboardPage {
 	@FindBy(css="button.close")
 	WebElement xBtn;
 
-	@FindBy(id="myModal")
+	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
-	
+
 	@FindBy(id="filter-repo")
 	WebElement filterRepo;
+
+	@FindBy(linkText="Advanced options")
+	WebElement advancedOptions;
 
 	//@FindBy(linkText="https://github.com/guipdutra/test_issues_kanboard/issues/new")
 	@FindBy(className="link")
@@ -61,25 +70,17 @@ public class RocketboardPage {
 		driver.get(RocketboardTests.baseUrl + RocketboardTests.serviceUrl);
 	}
 
-	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
-		openModalIssueBtn.click();
-		title.sendKeys(titleTxt);
-		desc.sendKeys(descTxt);
-		selectProjects(repoName);
-		createBtn.click();	
-	}
-
 	public void selectProjects(String repoName) throws Exception {
 		Select selectProjects = new Select(project);
-		selectProjects.selectByVisibleText(repoName);
+		selectProjects.selectByValue(repoName);
 	}
 
 	public void selectRepo(String repoName) throws Exception {
 		Integer repoId = null;
-		
+
 		// WAIT LOAD OPTIONS
 		Thread.sleep(2000);
-		
+
 		// CREATE LIST BASED IN THE WEBELEMENTS
 		//Select se = new Select(driver.findElement(By.id("filter-repo")));
 		Select se = new Select(filterRepo);
@@ -97,7 +98,7 @@ public class RocketboardPage {
 			repoId = actual_role.indexOf(repoName); 
 			repoId++; // FIX THE DIFFERENCE OF INDEX
 		} 
-		
+
 		// SELECT THE OPTION
 		driver.findElement(By.xpath("//select[@id='filter-repo']/option["+repoId+"]")).click();
 		Thread.sleep(1000);
@@ -120,6 +121,19 @@ public class RocketboardPage {
 		createIssue(title, desc, repoName);
 		values[1] = getCount("backlog");
 		return values;
+	}
+
+
+	public void createIssue(String titleTxt, String descTxt, String project) throws Exception {
+		openModalIssueBtn.click();
+		title.sendKeys(titleTxt);
+		desc.sendKeys(descTxt);
+		selectProjects(project);
+		createBtn.click();
+	}
+
+	public void OpenModal() throws Exception {
+		openModalIssueBtn.click();
 	}
 
 	public Integer getCount(String column) throws Exception {
@@ -210,6 +224,7 @@ public class RocketboardPage {
 
 	public void clicOutsideForm() throws Exception {
 		outsideModal.click();
+		
 	}
 
 	public Boolean checkIssueLaunched(String message) throws Exception {
@@ -227,18 +242,56 @@ public class RocketboardPage {
 		Thread.sleep(1000);
 		options.click();
 	}
-	
+
 	public String checkSelectedOption() throws Exception {
 		Select comboBox = new Select(filterRepo);
 		String selectedComboValue = comboBox.getFirstSelectedOption().getText();
 		return selectedComboValue;
 	}
-	
+
+	public String isGithub() throws Exception{
+		String result = advancedOptions.getAttribute("href");
+		return result;
+	}
+
+	public void clickAdvanced() throws Exception{
+		advancedOptions.click();
+
+	}
+
+	public String chooseProject () throws Exception {
+		String [] listProjects = new String[3];
+		listProjects[0] = "user-agent";
+		listProjects[1] = "dispatcher";
+		listProjects[2] = "platform";
+		int index = RandomUtils.nextInt(0, 2);
+		return (listProjects[index]);
+
+	}
+
+	public boolean checkTitleFrame(String title) {
+		return	driver.findElement(By.linkText(title)).isDisplayed();
+
+	}
+
+	public boolean isGithub(String validateGit) {
+		return driver.findElement(By.name(validateGit)).isDisplayed();
+	}
+
+	public void createIssueTitle(String titleTxt) throws Exception {
+		openModalIssueBtn.click();
+		title.sendKeys(titleTxt);
+		createBtn.click();
+	}
+
+
 	// GET ID
-//	public void getId() throws Exception {
-//		System.out.println("HERE1!!!!");
-//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
-//		String id=driver.findElement(By.xpath().getAttribute("id");
-//		System.out.println("ID FOUND WAS: "+id);
-//	}
+	//	public void getId() throws Exception {
+	//		System.out.println("HERE1!!!!");
+	//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
+	//		String id=driver.findElement(By.xpath().getAttribute("id");
+	//		System.out.println("ID FOUND WAS: "+id);
+	//	}
+
+
 }
