@@ -19,14 +19,14 @@ public class RocketboardTests {
 	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	//public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; //Fabio's Key
+	public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; //Fabio's Key
 	//public static String serviceUrl = "/#fe8c84520417ee740180f7cdcf2379d9d9f5cfcd"; //Marquezini's Key
 	//public static String serviceUrl = "#53dfb99e23c5a4335db3240a380223e57d7567ba"; // Guilherme's Key
 	public String repoUsed = "pixelated-user-agent";
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
-	public String issueContent = "PageObject_"+RandomStringUtils.randomAlphabetic(6);
+	public static String issueContent = "PageObject_Automation"+RandomStringUtils.randomAlphabetic(6);
 	public String title = "title_"+RandomStringUtils.randomAlphabetic(6);
 	public String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
 	public String project;
@@ -35,24 +35,46 @@ public class RocketboardTests {
 
 	int[] checkValue = null;
 	String selectedOption = "";
+	private RocketboardPage RocketboardPage;
+	private final String messageSucessRocket="Liftoff! We Have a Liftoff!";
 
 	@Before
 	public void setUp() {
 		// FIREFOX WEBDRIVER
-		driver = new FirefoxDriver();
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().window().maximize();
+		this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);		
+	    RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);
 	}
 
 	@After
 	public void tearDown() {
+		driver.close();
 		driver.quit();
+	}
+	
+	
+	@Test
+	public void moveIssueInsideDone() throws Exception{
+		RocketboardPage.selectRepo(repoUsed);
+		RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
+		RocketboardPage.moveIssue(issueContent, "ready");
+		RocketboardPage.moveIssue(issueContent, "development");
+		RocketboardPage.moveIssue(issueContent, "quality-assurance");
+		RocketboardPage.moveIssue(issueContent, "done");
+		assertThat(RocketboardPage.checkIssueLaunched(messageSucessRocket), equalTo(Boolean.TRUE));
 	}
 
 	@Test
-	public void E2E() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
+	public void checkQuantityIssuesAfterCreateOne() throws Exception {
+		RocketboardPage.selectRepo(repoUsed);
+		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
+		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
+	}
+		
 
+	@Test
+	public void E2E() throws Exception {
 		RocketboardPage.selectRepo(repoUsed);
 
 		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, RocketboardPage.chooseProject());
@@ -70,7 +92,6 @@ public class RocketboardTests {
 	@Test
 	/*Create an issue and check if the column backlog is correctly incremented  */
 	public void checkColumCount() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
 		Thread.sleep(4000);
 		Integer valueBefore = RocketboardPage.getCount("backlog");
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
@@ -80,8 +101,6 @@ public class RocketboardTests {
 
 	@Test
 	public void moveCheckingValues() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-
 		RocketboardPage.selectRepo(repoUsed);
 
 		assertThat(RocketboardPage.createIssueCheckingValue(issueContent, issueContent, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
@@ -98,8 +117,6 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaCloseButton() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-
 		RocketboardPage.openModel();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
@@ -111,8 +128,6 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaXButton() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-
 		RocketboardPage.openModel();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
@@ -124,8 +139,6 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_typingOutside() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-
 		RocketboardPage.openModel();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
@@ -137,8 +150,6 @@ public class RocketboardTests {
 
 	@Test
 	public void selectingRepository() throws Exception {
-		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-
 		RocketboardPage.selectRepo("pixelated-user-agent");
 		selectedOption = RocketboardPage.checkSelectedOption();
 		assertEquals(selectedOption, "pixelated-user-agent");
