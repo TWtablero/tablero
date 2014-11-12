@@ -56,6 +56,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       };
 
       this.fetchIssues = function (ev, data) {
+        //inserido para solução problema na automação
+        $("#loading").addClass("loading");
+        //--
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
@@ -70,6 +73,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
         $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
           function (userAgentIssues, dispatcherIssues, platformIssues) {
+            //inserido para solução problema na automação
+            $("#loading").removeClass();
+            //--
             var projects = [{'projectName': 'pixelated-user-agent', 'repo': userAgentIssues},
               {'projectName': 'pixelated-dispatcher', 'repo': dispatcherIssues},
               {'projectName': 'pixelated-platform', 'repo': platformIssues}],
@@ -88,7 +94,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             }
           }.bind(this)
         );
-      };
+    };
 
       this.assignMyselfToIssue = function (ev, assignData) {
         var user, issue, url;
@@ -239,7 +245,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         this.on('data:githubUser:here', this.assignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-      });
+       });
     }
   }
 );

@@ -1,35 +1,40 @@
 package rocketboardPages;
 
 import static org.junit.Assert.fail;
-
+import java.awt.List;
 import java.util.ArrayList;
-import java.util.List;
 
-//import javax.swing.text.html.parser.Element;
-
-
+import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 //import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import rocketboard.RocketboardTests;
 
 public class RocketboardPage {
-	WebDriver driver;
+	private WebDriver driver;
 	Boolean issueCreated;
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
 
-	@FindBy(id="issueTitle")
-	WebElement title;
 
-	@FindBy(id="issueBody")
-	WebElement desc;
+	//Coluna de Issues
+	@FindBy(how = How.ID, using = "0-backlog")
+	WebElement columnBacklog;
+
+	@FindBy(how = How.ID, using = "issueTitle")
+	WebElement issueTitle;
+
+	@FindBy(how = How.ID, using = "issueBody")
+	WebElement issueDesc;
 
 	@FindBy(id="projects")
 	WebElement project;
@@ -46,11 +51,14 @@ public class RocketboardPage {
 	@FindBy(css="button.close")
 	WebElement xBtn;
 
-	@FindBy(id="myModal")
+	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
-	
+
 	@FindBy(id="filter-repo")
 	WebElement filterRepo;
+
+	@FindBy(linkText="Advanced options")
+	WebElement advancedOptions;
 
 	//@FindBy(linkText="https://github.com/guipdutra/test_issues_kanboard/issues/new")
 	@FindBy(className="link")
@@ -61,12 +69,35 @@ public class RocketboardPage {
 		driver.get(RocketboardTests.baseUrl + RocketboardTests.serviceUrl);
 	}
 
+	/**
+	 * input value at element IssueTitle
+	 */	
+	public void setIssueTitle(String value) {
+		waitingObject(issueTitle);
+		issueTitle.clear();
+		issueTitle.click();
+		issueTitle.sendKeys(value);
+	}
+
+	/**
+	 * input value at element DescIssue
+	 */	
+	public void setIssueDesc(String value) {
+		waitingObject(issueDesc);
+		issueDesc.clear();
+		issueDesc.click();
+		issueDesc.sendKeys(value);
+	}
+
+
 	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
+		waitingObject(openModalIssueBtn);
 		openModalIssueBtn.click();
-		title.sendKeys(titleTxt);
-		desc.sendKeys(descTxt);
+		setIssueTitle(titleTxt);
+		setIssueDesc(descTxt);
 		selectProjects(repoName);
 		createBtn.click();	
+		waitingLoading();
 	}
 
 	public void selectProjects(String repoName) throws Exception {
@@ -75,32 +106,11 @@ public class RocketboardPage {
 	}
 
 	public void selectRepo(String repoName) throws Exception {
-		Integer repoId = null;
-		
-		// WAIT LOAD OPTIONS
-		Thread.sleep(2000);
-		
-		// CREATE LIST BASED IN THE WEBELEMENTS
-		//Select se = new Select(driver.findElement(By.id("filter-repo")));
-		Select se = new Select(filterRepo);
-		List<WebElement> l = se.getOptions();
-
-		// CREATE ARRAY WITH WEBELEMENT OPTIONS
-		ArrayList<String> actual_role = new ArrayList<String>( );
-		for (int a = 0; a < l.size(); a++){
-			String varA = l.get(a).getAttribute("value");
-			actual_role.add(varA);
-		}
-
-		// FIND INDEX BASED THE VALUE
-		if(actual_role.contains(repoName)) {  
-			repoId = actual_role.indexOf(repoName); 
-			repoId++; // FIX THE DIFFERENCE OF INDEX
-		} 
-		
-		// SELECT THE OPTION
-		driver.findElement(By.xpath("//select[@id='filter-repo']/option["+repoId+"]")).click();
-		Thread.sleep(1000);
+		waitingLoading();
+		WebDriverWait wait = new WebDriverWait(this.driver, 10);
+		Select select=new Select(wait.until(ExpectedConditions.elementToBeClickable(filterRepo)));
+		select.selectByVisibleText(repoName);
+		waitingLoading();
 	}
 
 	public Boolean createIssueCheckingValue(String title, String desc, String repoName) throws Exception {
@@ -116,14 +126,19 @@ public class RocketboardPage {
 	}
 
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
+		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
 		values[1] = getCount("backlog");
 		return values;
 	}
 
-	public Integer getCount(String column) throws Exception {
-		Thread.sleep(2000);
+	public void OpenModal() throws Exception {
+		openModalIssueBtn.click();
+	}
+
+	public Integer getCount(String column) throws Exception {	
+		waitingLoading();
 		String countValueStr = "";
 		if (column == "done" ){
 			countValueStr = driver.findElement(By.xpath("//div[5]/div/div/span")).getText();
@@ -136,26 +151,13 @@ public class RocketboardPage {
 	}
 
 	public void moveIssue(String issueTitle, String column) throws Exception {
-		if ( column == "1" || column == "backlog"){
-			column = "0-backlog";
+		if(column.length()<=2){
+			column=columnName(column);
 		}
-		else if (column == "2" || column == "ready"){
-			column = "1-ready";
-		}
-		else if (column == "3" || column == "development"){
-			column = "2-development";
-		}
-		else if (column == "4" || column == "quality-assurance"){
-			column = "3-quality-assurance";
-		}
-		else if (column == "5" || column == "done"){
-			column = "4-done";
-		}
-
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
-		WebElement d2 = driver.findElement(By.id(column));
+		WebElement d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
 		new Actions(driver).dragAndDrop(d1, d2).build().perform();
-		Thread.sleep(1000);
+		waitingLoading();
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -163,18 +165,21 @@ public class RocketboardPage {
 		values[0] = getCount(getColumn);
 		moveIssue(issueTitle, column);
 		if (column =="5"){
-			Thread.sleep(4000); // wait for launch animation
+			waitingLoading(); // wait for launch animation
 		}
 		values[1] = getCount(getColumn);
 		return values;
 	}
 
 	public void waitMessage(String message) throws Exception {
-		for (int second = 0;; second++) {
-			if (second >= 60) fail("timeout");
-			try { if (message.equals(driver.findElement(By.xpath("//div[5]/div/div/h3")).getText())) break; } catch (Exception e) {}
-			Thread.sleep(1000);
+		waitingLoading();
+		System.out.println(message);
+		int timeout=0;
+		while(timeout<=10 || !message.equals(driver.findElement(By.cssSelector("div[class~='done']")).getText())){
+			System.out.println(driver.findElement(By.cssSelector("div[class~='done']")).getText());
+			timeout++;
 		}
+		System.out.println("ss");
 	}
 
 	public String columnName (String column) {
@@ -210,6 +215,7 @@ public class RocketboardPage {
 
 	public void clicOutsideForm() throws Exception {
 		outsideModal.click();
+		
 	}
 
 	public Boolean checkIssueLaunched(String message) throws Exception {
@@ -219,26 +225,88 @@ public class RocketboardPage {
 
 	public Boolean modelOpened() throws Exception {
 		//return driver.getPageSource().contains(create_issue);
-		Thread.sleep(1000);
+		waitingLoading();
 		return createBtn.isDisplayed();
 	}
 
 	public void clickOptionsLink() throws Exception {
-		Thread.sleep(1000);
+		waitingLoading();
 		options.click();
 	}
-	
+
 	public String checkSelectedOption() throws Exception {
 		Select comboBox = new Select(filterRepo);
 		String selectedComboValue = comboBox.getFirstSelectedOption().getText();
 		return selectedComboValue;
 	}
-	
+
+	public String isGithub() throws Exception{
+		String result = advancedOptions.getAttribute("href");
+		return result;
+	}
+
+	public void clickAdvanced() throws Exception{
+		advancedOptions.click();
+
+	}
+
+	public String chooseProject () throws Exception {
+		String [] listProjects = new String[3];
+		listProjects[0] = "user-agent";
+		listProjects[1] = "dispatcher";
+		listProjects[2] = "platform";
+		int index = RandomUtils.nextInt(0, 2);
+		return (listProjects[index]);
+
+	}
+
+	public boolean checkTitleFrame(String title) {
+		return	driver.findElement(By.linkText(title)).isDisplayed();
+
+	}
+
+	public boolean isGithub(String validateGit) {
+		return driver.findElement(By.name(validateGit)).isDisplayed();
+	}
+
+	public void createIssueTitle(String titleTxt) throws Exception {
+		openModalIssueBtn.click();
+		setIssueTitle(titleTxt);
+		createBtn.click();
+	}
+
+
+	/**
+	 * waiting load issues!
+	 * @throws InterruptedException 
+	 */
+	public void waitingLoading() throws InterruptedException{
+		int timeout=0;
+		while(driver.findElement(By.id("loading")).getAttribute("class").contains("loading")||timeout==10){
+			Thread.sleep(100);
+			timeout++;
+		}
+	}
+
+	/**
+	 * waiting status element 
+	 */
+	public void waitingObject(WebElement object) {
+		boolean regex = object.isEnabled();
+		while(!regex){
+			WebDriverWait wait = new WebDriverWait(this.driver, 30);
+			WebElement element = wait.until(ExpectedConditions.elementToBeClickable(object));
+			regex = element.isEnabled();
+		}
+	}
+
 	// GET ID
-//	public void getId() throws Exception {
-//		System.out.println("HERE1!!!!");
-//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
-//		String id=driver.findElement(By.xpath().getAttribute("id");
-//		System.out.println("ID FOUND WAS: "+id);
-//	}
+	//	public void getId() throws Exception {
+	//		System.out.println("HERE1!!!!");
+	//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
+	//		String id=driver.findElement(By.xpath().getAttribute("id");
+	//		System.out.println("ID FOUND WAS: "+id);
+	//	}
+
+
 }
