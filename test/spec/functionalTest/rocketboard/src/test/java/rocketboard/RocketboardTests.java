@@ -87,7 +87,7 @@ public class RocketboardTests {
 	}
 
 	@Test
-	/*Create an issue and check if the column backlog is correctly incremented  */
+	/*Create an issue and check if the column backlog is correctly incremented.  */
 	public void checkColumCount() throws Exception {
 		Thread.sleep(4000);
 		Integer valueBefore = RocketboardPage.getCount("backlog");

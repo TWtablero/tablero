@@ -60,7 +60,6 @@ public class RocketboardPage {
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
 
-	//@FindBy(linkText="https://github.com/guipdutra/test_issues_kanboard/issues/new")
 	@FindBy(className="link")
 	WebElement options;
 

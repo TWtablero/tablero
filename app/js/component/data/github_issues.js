@@ -26,29 +26,43 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         $.ajax({
           type: 'POST',
           url: url,
-          data: JSON.stringify({'title': data.issueTitle,
-                                'body': data.issueBody,
-                                'labels': ["0 - Backlog"] }),
+          data: JSON.stringify({
+            'title': data.issueTitle,
+            'body': data.issueBody,
+            'labels': ["0 - Backlog"]
+          }),
           success: function (response, status, xhr) {
-            this.trigger("ui:add:issue", {"issue": response})
+            this.trigger("ui:add:issue", {
+              "issue": response
+            })
           }.bind(this)
         });
       };
 
       this.addIssue = function (ev, data) {
-        this.trigger('data:issues:refreshed', {issues: data});
+        this.trigger('data:issues:refreshed', {
+          issues: data
+        });
       }
 
-      this.filterProjectsByName = function (projects, projectName){
-        return _.filter(projects, function(project) {
-          return project.projectName == projectName || projectName == 'all'
+      this.filterProjectsByName = function (projects, projectNames) {
+        var filteredRepos = [];
+
+        _.each(projects, function (project) {
+          if ($.inArray(project.projectName, projectNames) > -1) {
+            filteredRepos.push(project);
+          }
         });
+
+        return filteredRepos;
       };
 
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        _.each(projects, function(project) {
+        console.log(projects);
+
+        _.each(projects, function (project) {
           allIssues = allIssues.concat(project.repo[0].responseJSON);
         });
 
@@ -73,28 +87,39 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
         $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
           function (userAgentIssues, dispatcherIssues, platformIssues) {
-            //inserido para solução problema na automação
+
             $("#loading").removeClass();
-            //--
-            var projects = [{'projectName': 'pixelated-user-agent', 'repo': userAgentIssues},
-              {'projectName': 'pixelated-dispatcher', 'repo': dispatcherIssues},
-              {'projectName': 'pixelated-platform', 'repo': platformIssues}],
-            filteredProjects = this.filterProjectsByName(projects, data.projectName),
-            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
-            this.trigger('data:issues:refreshed', {issues: issuesFromProjects });
+            var projects = [{
+                'projectName': 'pixelated-user-agent',
+                'repo': userAgentIssues
+              }, {
+                'projectName': 'pixelated-dispatcher',
+                'repo': dispatcherIssues
+              }, {
+                'projectName': 'pixelated-platform',
+                'repo': platformIssues
+              }],
+              filteredProjects = this.filterProjectsByName(projects, data.projectName),
+              issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
-            if(data.page == 1){
+            this.trigger('data:issues:refreshed', {
+              issues: issuesFromProjects
+            });
+
+            if (data.page == 1) {
               this.trigger('data:issues:clearExportCsvLink');
             }
 
-            if(issuesFromProjects.length > 0){
-              this.trigger('data:issues:mountExportCsvLink', {issues: issuesFromProjects });
+            if (issuesFromProjects.length > 0) {
+              this.trigger('data:issues:mountExportCsvLink', {
+                issues: issuesFromProjects
+              });
               this.trigger('ui:needs:issues', data);
             }
           }.bind(this)
         );
-    };
+      };
 
       this.assignMyselfToIssue = function (ev, assignData) {
         var user, issue, url;
@@ -117,7 +142,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         $.ajax({
           type: 'PATCH',
           url: url,
-          data: JSON.stringify({assignee: user.login}),
+          data: JSON.stringify({
+            assignee: user.login
+          }),
           success: function (response, status, xhr) {
             console.log('User ' + user.id + ' assigned to issue ' + issue.title);
             $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
@@ -133,10 +160,10 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
           items: '.issue',
           connectWith: '.list-group',
-          receive: function(event, ui) {
+          receive: function (event, ui) {
             var label, url;
 
-            if(!this.getCurrentAuthToken()) {
+            if (!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
@@ -154,16 +181,18 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
 
             if (label == "4 - Done") {
               this.triggerRocketAnimation();
-                $.ajax({
+              $.ajax({
                 type: 'PATCH',
                 url: url + this.getAccessTokenParam(),
-                data: JSON.stringify({state:"closed"})
+                data: JSON.stringify({
+                  state: "closed"
+                })
               });
             }
 
             $.ajax({
               type: 'POST',
-              url: url  + "/labels" + this.getAccessTokenParam(),
+              url: url + "/labels" + this.getAccessTokenParam(),
               data: JSON.stringify([label])
             });
 
@@ -175,13 +204,13 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         }).disableSelection();
       };
 
-      this.triggerRocketAnimation = function() {
+      this.triggerRocketAnimation = function () {
         $(".panel-heading.done img.plain").hide();
         $(".panel-heading.done h3").css('opacity', 0);
         $(".panel-heading.done .issues-count").css('opacity', 0);
         $(".panel-heading.done img.colored").show().animate({
           top: '-650px'
-        }, 2000, 'easeInBack', function() {
+        }, 2000, 'easeInBack', function () {
           $(".panel-heading.done img.colored").hide().css('top', 0);
 
           $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
@@ -190,7 +219,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             opacity: 1
           }, 2000);
 
-          $(".panel-heading.done .check-done").fadeIn(2000, function() {
+          $(".panel-heading.done .check-done").fadeIn(2000, function () {
             $(".panel-heading.done .check-done").hide();
 
             $(".panel-heading.done h3").css('opacity', 0);
@@ -208,32 +237,32 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         });
       }
 
-      this.parseLabel = function(label){
+      this.parseLabel = function (label) {
         var fullLabel = '';
         label = label.split('-');
 
-        for(i = 1; i < label.length; i++) {
+        for (i = 1; i < label.length; i++) {
           var firstLetter = label[i][0];
-          fullLabel = fullLabel +  firstLetter.toUpperCase() + label[i].substring(1) + ' ';
+          fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
         }
 
         fullLabel = label[0] + ' - ' + fullLabel;
         return fullLabel.trim();
       };
 
-      this.getIssueUrlFromDraggable = function(ui) {
+      this.getIssueUrlFromDraggable = function (ui) {
         return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
       };
 
-      this.getAccessTokenParam = function() {
+      this.getAccessTokenParam = function () {
         return "?access_token=" + this.getCurrentAuthToken();
       };
 
-      this.getState = function(className) {
+      this.getState = function (className) {
         return className.search('done') != -1 ? 'closed' : 'open';
       };
 
-      this.changeNewIssueLink = function(event, projectName){
+      this.changeNewIssueLink = function (event, projectName) {
         $(".link").attr("href", this.newIssueURL(projectName));
       };
 
@@ -245,7 +274,7 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
         this.on('data:githubUser:here', this.assignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-       });
+      });
     }
   }
 );
