@@ -8,27 +8,24 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
 import rocketboardPages.RocketboardPage;
 
-
 public class RocketboardTests {
 	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; //Fabio's Key
-	//public static String serviceUrl = "/#fe8c84520417ee740180f7cdcf2379d9d9f5cfcd"; //Marquezini's Key
-	//public static String serviceUrl = "#53dfb99e23c5a4335db3240a380223e57d7567ba"; // Guilherme's Key
+	//Change this Github token informing yours.
+	//public static String serviceUrl = "#f18906ac338193e9bdec7e9e4cec063b20201da1"; //Nay's Key
 	public String repoUsed = "pixelated-user-agent";
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
-	public static String issueContent = "PageObject_Automation"+RandomStringUtils.randomAlphabetic(6);
-	public String title = "title_"+RandomStringUtils.randomAlphabetic(6);
-	public String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
+	//public static String issueContent = "Content"+RandomStringUtils.randomAlphabetic(6);
+	public static String title = "title_"+RandomStringUtils.randomAlphabetic(6);
+	public static String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
 	public String project;
 	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
 
@@ -57,18 +54,18 @@ public class RocketboardTests {
 	@Test
 	public void moveIssueInsideDone() throws Exception{
 		RocketboardPage.selectRepo(repoUsed);
-		RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
-		RocketboardPage.moveIssue(issueContent, "ready");
-		RocketboardPage.moveIssue(issueContent, "development");
-		RocketboardPage.moveIssue(issueContent, "quality-assurance");
-		RocketboardPage.moveIssue(issueContent, "done");
+		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		RocketboardPage.moveIssue(title, "ready");
+		RocketboardPage.moveIssue(title, "development");
+		RocketboardPage.moveIssue(title, "quality-assurance");
+		RocketboardPage.moveIssue(title, "done");
 		assertThat(RocketboardPage.checkIssueLaunched(messageSucessRocket), equalTo(Boolean.TRUE));
 	}
 
 	@Test
 	public void checkQuantityIssuesAfterCreateOne() throws Exception {
 		RocketboardPage.selectRepo(repoUsed);
-		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
+		checkValue = RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 	}
 		
@@ -77,13 +74,13 @@ public class RocketboardTests {
 	public void E2E() throws Exception {
 		RocketboardPage.selectRepo(repoUsed);
 
-		checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, RocketboardPage.chooseProject());
+		checkValue = RocketboardPage.createIssueGettingValue(title, desc, RocketboardPage.chooseProject());
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 
-		RocketboardPage.moveIssue(issueContent, "2");
-		RocketboardPage.moveIssue(issueContent, "3");
-		RocketboardPage.moveIssue(issueContent, "4");
-		RocketboardPage.moveIssue(issueContent, "5");
+		RocketboardPage.moveIssue(title, "2");
+		RocketboardPage.moveIssue(title, "3");
+		RocketboardPage.moveIssue(title, "4");
+		RocketboardPage.moveIssue(title, "5");
 
 		Boolean issueLaunched = RocketboardPage.checkIssueLaunched("Liftoff! We Have a Liftoff!");
 		assertThat(issueLaunched, equalTo(Boolean.TRUE));
@@ -103,15 +100,15 @@ public class RocketboardTests {
 	public void moveCheckingValues() throws Exception {
 		RocketboardPage.selectRepo(repoUsed);
 
-		assertThat(RocketboardPage.createIssueCheckingValue(issueContent, issueContent, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
+		assertThat(RocketboardPage.createIssueCheckingValue(title, desc, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
 
-		checkValue = RocketboardPage.moveIssueGettingValue(issueContent, "2");
+		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
-		checkValue = RocketboardPage.moveIssueGettingValue(issueContent, "3");
+		checkValue = RocketboardPage.moveIssueGettingValue(title, "3");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
-		checkValue = RocketboardPage.moveIssueGettingValue(issueContent, "4");
+		checkValue = RocketboardPage.moveIssueGettingValue(title, "4");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
-		checkValue = RocketboardPage.moveIssueGettingValue(issueContent, "5");
+		checkValue = RocketboardPage.moveIssueGettingValue(title, "5");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 	}
 

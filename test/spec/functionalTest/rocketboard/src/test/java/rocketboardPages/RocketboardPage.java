@@ -224,9 +224,9 @@ public class RocketboardPage {
 	}
 
 	public Boolean modelOpened() throws Exception {
-		//return driver.getPageSource().contains(create_issue);
-		waitingLoading();
+		Thread.sleep(1000);
 		return createBtn.isDisplayed();
+		
 	}
 
 	public void clickOptionsLink() throws Exception {
@@ -252,9 +252,9 @@ public class RocketboardPage {
 
 	public String chooseProject () throws Exception {
 		String [] listProjects = new String[3];
-		listProjects[0] = "user-agent";
-		listProjects[1] = "dispatcher";
-		listProjects[2] = "platform";
+		listProjects[0] = "User Agent";
+		listProjects[1] = "Dispatcher";
+		listProjects[2] = "Platform";
 		int index = RandomUtils.nextInt(0, 2);
 		return (listProjects[index]);
 
