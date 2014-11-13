@@ -17,10 +17,16 @@ define([],
   function (template, compiler) {
     return issueTemplate;
 
-    function issueTemplate() {
-      this.getRepoName = function (issue) {
-        var repoNameRegExp = /pixelated-project\/(pixelated-[a-z-]+)/;
-        return repoNameRegExp.exec(issue.url)[1];
+       function issueTemplate() {
+        var colorMap = {};
+
+     
+
+      this.getRepoColor = function (projectName) {
+          if (!(projectName in colorMap)) {
+              colorMap[projectName] = 'color' + _.size(colorMap);
+          }
+          return colorMap[projectName];
       };
 
       this.clearHuboardInfo = function (issue) {
@@ -52,7 +58,8 @@ define([],
 
       this.render = function (issue) {
         var renderedIssue;
-        issue.repoName = this.getRepoName(issue);
+        issue.repoName = issue.projectName;
+        issue.colorClass = this.getRepoColor(issue.projectName);
         issue.labelsName = this.removeColumnsLabels(issue.labels);
         issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
         renderedIssue = this.template.render(this.clearHuboardInfo(issue));
@@ -61,7 +68,7 @@ define([],
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
-          '<div class="issue list-group-item {{repoName}}" id="{{id}}">' +
+          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}">' +
             '<div class="issue-header">'+
               '<a class="assigns-myself">' +
                 '<span class="empty-avatar">+</span>' +

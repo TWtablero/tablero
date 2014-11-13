@@ -48,8 +48,14 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        _.each(projects, function(project) {
-          allIssues = allIssues.concat(project.repo[0].responseJSON);
+
+        _.each(projects, function(project,index) {
+
+          var issuesArrayJson = project.repo[0].responseJSON || [];
+          _.each(issuesArrayJson, function(issue,index) {
+              issue.projectName = project.projectName;
+               allIssues.push(issue);
+          });
         });
 
         return allIssues;

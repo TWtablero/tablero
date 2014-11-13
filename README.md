@@ -39,15 +39,7 @@ this.getURLFromProject = function (projectName) {
           'platform': "https://api.github.com/repos/RocketBoard/test_issues_kanboard" };
         return repos[projectName] || "not found";
 ```
-**app/js/component/templates/issue_template.js**	
 
-    function issueTemplate() {
-              this.getRepoName = function (issue) {
-                var repoNameRegExp = /RocketBoard\/(test_issues_kanboard)/;
-                return repoNameRegExp.exec(issue.url)[1];
-              };
-
- 
 
 **config.js**
  
