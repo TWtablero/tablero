@@ -7,23 +7,17 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import rocketboardPages.RocketboardPage;
 
-
-
 public class RocketboardTests {
 	private WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	//public static String serviceUrl = "/#fe8c84520417ee740180f7cdcf2379d9d9f5cfcd"; //Marquezini's Key
 	public static String serviceUrl = "#2e1c5ebdf4b4cd0e4ad4ad6e83c6212aa21a1d10";
-	//public static String serviceUrl = "#53dfb99e23c5a4335db3240a380223e57d7567ba"; // Guilherme's Key
 	public String repoUsed = "pixelated-user-agent";
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
@@ -48,7 +42,6 @@ public class RocketboardTests {
 		driver.close();
 		driver.quit();
 	}
-	
 	
 	@Test
 	public void moveIssueInsideDone() throws Exception{
@@ -86,7 +79,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaCloseButton() throws Exception {
-		RocketboardPage.openModel();
+		RocketboardPage.openModelCreateIssue();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
 
@@ -97,24 +90,20 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaXButton() throws Exception {
-		RocketboardPage.openModel();
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
-
+		RocketboardPage.openModelCreateIssue();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
 		RocketboardPage.xButton();	
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.FALSE));
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 
 	@Test
 	public void openCloseCreateForm_typingOutside() throws Exception {
-		RocketboardPage.openModel();
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
-
-		RocketboardPage.clicOutsideForm();	
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.FALSE));
+		RocketboardPage.openModelCreateIssue();
+		RocketboardPage.waitingFrameCreateIssueOpen();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
+		RocketboardPage.openModelCreateIssue();	
+		RocketboardPage.waitingFrameCreateIssueClose();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 	
 	@Test

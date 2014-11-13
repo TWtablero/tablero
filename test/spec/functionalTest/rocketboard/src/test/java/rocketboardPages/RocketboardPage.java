@@ -1,23 +1,15 @@
 package rocketboardPages;
 
-import static org.junit.Assert.fail;
-
-import org.openqa.selenium.By;
-//import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.*;
+import org.openqa.selenium.support.ui.*;
 
 import rocketboard.RocketboardTests;
 
 public class RocketboardPage {
 	private WebDriver driver;
-	Boolean issueCreated;
+	private Boolean issueCreated;
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
@@ -27,19 +19,19 @@ public class RocketboardPage {
 	WebElement columnBacklog;
 
 	@FindBy(how = How.ID, using = "issueTitle")
-	WebElement issueTitle;
+	WebElement editIssueTitle;
 
 	@FindBy(how = How.ID, using = "issueBody")
-	WebElement issueDesc;
+	WebElement editIssueDesc;
 
-	@FindBy(id="projects")
-	WebElement project;
+	@FindBy(how = How.ID, using = "open_modal_issue")
+	WebElement btnOpenModalCreateIssue;
 
-	@FindBy(id="create_issue")
-	WebElement createBtn;
+	@FindBy(how = How.ID, using = "create_issue")
+	WebElement btnCreateIssue;
 
-	@FindBy(id="open_modal_issue")
-	WebElement openModalIssueBtn;
+	@FindBy(how = How.ID, using = "projects")
+	WebElement comboBoxProject;
 
 	@FindBy(css="button.btn.btn-default")
 	WebElement closeBtn;
@@ -47,55 +39,74 @@ public class RocketboardPage {
 	@FindBy(css="button.close")
 	WebElement xBtn;
 
-	@FindBy(id="myModal")
-	WebElement outsideModal;
-
 	@FindBy(id="filter-repo")
 	WebElement filterRepo;
 
-	//@FindBy(linkText="https://github.com/guipdutra/test_issues_kanboard/issues/new")
 	@FindBy(className="link")
 	WebElement options;
 
 	public RocketboardPage(WebDriver driver) {
+		super();
 		this.driver = driver;
 		driver.get(RocketboardTests.baseUrl + RocketboardTests.serviceUrl);
 	}
 
 	/**
 	 * input value at element IssueTitle
+	 * @throws InterruptedException 
 	 */	
-	public void setIssueTitle(String value) {
-		waitingObject(issueTitle);
-		issueTitle.clear();
-		issueTitle.click();
-		issueTitle.sendKeys(value);
+	public void setIssueTitle(String value) throws InterruptedException {
+		frameCreateIssueDisplayed();
+		waitingObject(editIssueTitle);
+		editIssueTitle.clear();
+		editIssueTitle.click();
+		editIssueTitle.sendKeys(value);
 	}
 
 	/**
 	 * input value at element DescIssue
 	 */	
 	public void setIssueDesc(String value) {
-		waitingObject(issueDesc);
-		issueDesc.clear();
-		issueDesc.click();
-		issueDesc.sendKeys(value);
+		waitingObject(editIssueDesc);
+		editIssueDesc.clear();
+		editIssueDesc.click();
+		editIssueDesc.sendKeys(value);
+	}
+
+	/**
+	 * click at element CreateIssue
+	 */	
+	public void openModelCreateIssue() throws Exception {
+		waitingLoading();
+		waitingObject(btnOpenModalCreateIssue);
+		btnOpenModalCreateIssue.click();
+	}
+
+	/**
+	 * click at element CreateIssue
+	 */	
+	public void clickbtnCreateIssue() throws Exception {
+		waitingObject(btnCreateIssue);
+		btnCreateIssue.click();
+	}
+
+	/**
+	 * select project
+	 */	
+	public void selectProjects(String repoName) throws Exception {
+		Select selectProjects = new Select(comboBoxProject);
+		selectProjects.selectByVisibleText(repoName);
 	}
 
 	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
-		waitingObject(openModalIssueBtn);
-		openModalIssueBtn.click();
+		openModelCreateIssue();
 		setIssueTitle(titleTxt);
 		setIssueDesc(descTxt);
 		selectProjects(repoName);
-		createBtn.click();	
-		waitingLoading();
+		clickbtnCreateIssue();	
 	}
 
-	public void selectProjects(String repoName) throws Exception {
-		Select selectProjects = new Select(project);
-		selectProjects.selectByVisibleText(repoName);
-	}
+
 
 	public void selectRepo(String repoName) throws Exception {
 		waitingLoading();
@@ -167,7 +178,6 @@ public class RocketboardPage {
 			System.out.println(driver.findElement(By.cssSelector("div[class~='done']")).getText());
 			timeout++;
 		}
-		System.out.println("ss");
 	}
 
 	public String columnName (String column) {
@@ -189,9 +199,6 @@ public class RocketboardPage {
 		return column;
 	}
 
-	public void openModel() throws Exception {
-		openModalIssueBtn.click();
-	}
 
 	public void closeButton() throws Exception {
 		closeBtn.click();
@@ -201,19 +208,14 @@ public class RocketboardPage {
 		xBtn.click();
 	}
 
-	public void clicOutsideForm() throws Exception {
-		outsideModal.click();
-	}
-
 	public Boolean checkIssueLaunched(String message) throws Exception {
 		waitMessage(message);
 		return driver.getPageSource().contains(message);
 	}
 
 	public Boolean modelOpened() throws Exception {
-		//return driver.getPageSource().contains(create_issue);
 		waitingLoading();
-		return createBtn.isDisplayed();
+		return btnCreateIssue.isDisplayed();
 	}
 
 	public void clickOptionsLink() throws Exception {
@@ -250,4 +252,31 @@ public class RocketboardPage {
 			regex = element.isEnabled();
 		}
 	}
+	
+	public boolean frameCreateIssueDisplayed(){
+		return driver.findElement(By.cssSelector("div[class=modal-content]")).isDisplayed();
+	}
+	
+	public void waitingFrameCreateIssueOpen() throws InterruptedException{
+		boolean regex = frameCreateIssueDisplayed();
+		int timeout=0;
+		while(!regex||timeout>=30){
+			WebDriverWait wait = new WebDriverWait(this.driver, 30);
+			WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]")));;
+			regex = element.isDisplayed();
+			timeout++;
+		}
+	}
+	
+	public void waitingFrameCreateIssueClose() throws InterruptedException{
+//		boolean regex = frameCreateIssueDisplayed();
+//		int timeout=0;
+//		while(regex||timeout>=30){
+//			WebDriverWait wait = new WebDriverWait(this.driver, 30);
+//			regex = wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]"))));;
+//			timeout++;
+//		}
+	}
+	
+
 }
