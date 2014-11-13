@@ -24,17 +24,18 @@
 		transform: rotate(4deg);
 	}
 
-	&.pixelated-user-agent .issue-number {
-	  background-color: #3cb878;
+    &.color0 .issue-number {
+	  background-color: #69b4df ;
 	}
 
-	&.pixelated-dispatcher .issue-number {
+	&.color1 .issue-number {
 	  background-color: #ef689e;
 	}
 
-	&.pixelated-platform .issue-number {
-	  background-color: #69b4df;
+	&.color2 .issue-number {
+	  background-color: #3cb878;
 	}
+
 }
 
 .labels {
