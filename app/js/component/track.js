@@ -60,6 +60,10 @@ define(
         }
       };
 
+      this.cleanCount = function() {
+        this.attr.issuesCount = 0;
+      };
+
       this.moveIssue = function(movedToTrackName) {
         if(this.attr.trackType === "4 - Done") {
           this.attr.issuesCount++;
@@ -81,6 +85,7 @@ define(
 
       this.after('initialize', function () {
         this.on(document, 'data:issues:refreshed', this.displayIssues);
+        this.on(document, 'data:issues:cleanCount', this.cleanCount);
         this.on(document, 'data:issues:issueMoved', this.moveIssue);
       });
     }
