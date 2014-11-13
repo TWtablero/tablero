@@ -1,11 +1,12 @@
 'use strict';
 
 requirejs.config({
-  baseUrl: 'bower_components',
+  baseUrl: '',
   paths: {
-    'component': '../js/component',
-    'page': '../js/page',
-    'flight': '../bower_components/flight'
+    'component': 'js/component',
+    'page': 'js/page',
+    'flight': 'bower_components/flight',
+    'config': 'js/config'
   }
 });
 
@@ -24,7 +25,7 @@ require(
     DEBUG.events.logAll();
     compose.mixin(registry, [advice.withAdvice]);
 
-    require(['page/default'], function(initializeDefault) {
+    require(['page/default', 'config/config'], function(initializeDefault, config) {
       initializeDefault();
     });
   }

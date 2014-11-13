@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([],
-  function (template, compiler) {
+define(['config/config'],
+  function (config) {
     return issueTemplate;
 
     function issueTemplate() {
       this.getRepoName = function (issue) {
-        var repoNameRegExp = /pixelated-project\/(pixelated-[a-z-]+)/;
-        return repoNameRegExp.exec(issue.url)[1];
+        // EX: https://api.github.com/repos/RocketBoard/test_issues_kanboard/issues/398
+        return issue.url.split("/")[5];
       };
 
       this.clearHuboardInfo = function (issue) {
