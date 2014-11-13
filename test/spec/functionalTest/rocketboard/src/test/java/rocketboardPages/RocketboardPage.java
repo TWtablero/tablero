@@ -1,6 +1,9 @@
 package rocketboardPages;
 
 import org.openqa.selenium.*;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
@@ -13,6 +16,7 @@ public class RocketboardPage {
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
+
 
 	//Coluna de Issues
 	@FindBy(how = How.ID, using = "0-backlog")
@@ -39,8 +43,14 @@ public class RocketboardPage {
 	@FindBy(css="button.close")
 	WebElement xBtn;
 
+	@FindBy(css="div#myModal > div")
+	WebElement outsideModal;
+
 	@FindBy(id="filter-repo")
 	WebElement filterRepo;
+
+	@FindBy(linkText="Advanced options")
+	WebElement advancedOptions;
 
 	@FindBy(className="link")
 	WebElement options;
@@ -105,8 +115,6 @@ public class RocketboardPage {
 		selectProjects(repoName);
 		clickbtnCreateIssue();	
 	}
-
-
 
 	public void selectRepo(String repoName) throws Exception {
 		waitingLoading();
@@ -228,6 +236,36 @@ public class RocketboardPage {
 		String selectedComboValue = comboBox.getFirstSelectedOption().getText();
 		return selectedComboValue;
 	}
+
+	public String isGithub() throws Exception{
+		String result = advancedOptions.getAttribute("href");
+		return result;
+	}
+
+	public void clickAdvanced() throws Exception{
+		advancedOptions.click();
+
+	}
+
+	public String chooseProject () throws Exception {
+		String [] listProjects = new String[3];
+		listProjects[0] = "User Agent";
+		listProjects[1] = "Dispatcher";
+		listProjects[2] = "Platform";
+		int index = RandomUtils.nextInt(0, 2);
+		return (listProjects[index]);
+
+	}
+
+	public boolean checkTitleFrame(String title) {
+		return	driver.findElement(By.linkText(title)).isDisplayed();
+
+	}
+
+	public boolean isGithub(String validateGit) {
+		return driver.findElement(By.name(validateGit)).isDisplayed();
+	}
+
 
 	/**
 	 * waiting load issues!

@@ -17,12 +17,21 @@
               + CREATE ISSUE
       </button>
       <a id="export_csv" class="btn btn-success btn-xs" href="javascript:void(0)">EXPORT TO CSV </a>
-      <select id="filter-repo">
-        <option>All repositories</option>
-        <option>pixelated-user-agent</option>
-        <option>pixelated-platform</option>
-        <option>pixelated-dispatcher</option>
-      </select>
+      
+      <span class="filter-repo">
+        <input type="checkbox" id="repository-1" checked="true" repo="pixelated-user-agent">
+        <label for="repository-1"><i class="pixelated-user-agent icon-eye-open"></i> pixelated-user-agent</label>
+      </span>
+      
+      <span class="filter-repo">
+        <input type="checkbox" id="repository-2" checked="true" repo="pixelated-platform">
+        <label for="repository-2"><i class="pixelated-platform icon-eye-open"></i> pixelated-platform</label>
+      </span>
+      
+      <span class="filter-repo">
+        <input type="checkbox" id="repository-3" checked="true" repo="pixelated-dispatcher">
+        <label for="repository-3"><i class="pixelated-dispatcher icon-eye-open"></i> pixelated-dispatcher</label>
+      </span>
     </header>
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
