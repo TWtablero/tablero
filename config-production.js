@@ -1,7 +1,8 @@
 var config = {};
 
-config.clientId = "12345abcde";
-config.clientSecret = "12345abcde";
+// Set this variables on production server
+config.clientId = process.env.CLIENT_ID;
+config.clientSecret = process.env.CLIENT_SECRET;
 
 config.repos = {
   'user-agent': "https://api.github.com/repos/pixelated-project/pixelated-user-agent",
