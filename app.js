@@ -1,10 +1,11 @@
 var express = require('express');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
-var config = require('./config');
 var sass = require('node-sass');
-
 var app = express();
+
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+var config = require('./config-'+process.env.NODE_ENV+'.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
@@ -12,6 +13,10 @@ app.use(sass.middleware({
 }));
 
 app.use(express.static('app'));
+
+app.get('/config', function (req, res) {
+  res.send(config);
+});
 
 app.get('/request_code', function (req, res) {
   res.redirect('https://github.com/login/oauth/authorize?client_id=' + config.clientId + '&scope=public_repo');

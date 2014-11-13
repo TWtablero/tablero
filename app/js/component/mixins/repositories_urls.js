@@ -1,5 +1,6 @@
-define([],
-  function () {
+define(['config/config'],
+  function (config) {
+
     return function () {
       this.fetchUserAgentIssues = function (page) {
         return $.getJSON(this.repoIssuesURL(this.getURLFromProject("user-agent"), page));
@@ -43,12 +44,7 @@ define([],
       };
 
       this.getURLFromProject = function (projectName) {
-        var repos = {
-          'user-agent': "https://api.github.com/repos/pixelated-project/pixelated-user-agent",
-          'dispatcher': "https://api.github.com/repos/pixelated-project/pixelated-dispatcher",
-          'project-issues': "https://api.github.com/repos/pixelated-project/project-issues",
-          'platform': "https://api.github.com/repos/pixelated-project/pixelated-platform" };
-
+        var repos = config().repos;
         return repos[projectName] || "not found";
       };
     }
