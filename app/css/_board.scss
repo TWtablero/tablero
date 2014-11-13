@@ -107,10 +107,11 @@
 
 .panel-heading.done {
 	position: absolute;
-	top: 37%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	text-align: center;
 	font-size: 0.7em;
-	padding: 6px;
 
 	h3 {
 		color: #aaa;
