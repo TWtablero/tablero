@@ -60,12 +60,13 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        console.log(projects);
-
-        _.each(projects, function (project) {
-          allIssues = allIssues.concat(project.repo[0].responseJSON);
+        _.each(projects, function(project,index) {
+          var issuesArrayJson = project.repo[0].responseJSON || [];
+          _.each(issuesArrayJson, function(issue,index) {
+              issue.projectName = project.projectName;
+               allIssues.push(issue);
+          });
         });
-
         return allIssues;
       };
 
@@ -146,7 +147,6 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             assignee: user.login
           }),
           success: function (response, status, xhr) {
-            console.log('User ' + user.id + ' assigned to issue ' + issue.title);
             $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
             $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
             $('#' + issue.id + ' .empty-avatar').hide();
@@ -177,9 +177,9 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash', 'c
             $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
             $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
             $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
-            $('.panel-heading.done .issues-count').text(' (' + $('.issue-track.done .issue').length + ')');
 
             if (label == "4 - Done") {
+              this.trigger(document, 'data:issues:issueMoved');
               this.triggerRocketAnimation();
               $.ajax({
                 type: 'PATCH',

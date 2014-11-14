@@ -24,17 +24,18 @@
 		transform: rotate(4deg);
 	}
 
-	&.pixelated-user-agent .issue-number {
-	  background-color: #3cb878;
+    &.color0 .issue-number {
+	  background-color: #69b4df ;
 	}
 
-	&.pixelated-dispatcher .issue-number {
+	&.color1 .issue-number {
 	  background-color: #ef689e;
 	}
 
-	&.pixelated-platform .issue-number {
-	  background-color: #69b4df;
+	&.color2 .issue-number {
+	  background-color: #3cb878;
 	}
+
 }
 
 .labels {
@@ -88,7 +89,7 @@
 	min-height: 450px;
 }
 
-.panel-body#4-done {
+.panel-body.done {
 	overflow: hidden;
 }
 
@@ -107,10 +108,11 @@
 
 .panel-heading.done {
 	position: absolute;
-	top: 37%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	text-align: center;
 	font-size: 0.7em;
-	padding: 6px;
 
 	h3 {
 		color: #aaa;

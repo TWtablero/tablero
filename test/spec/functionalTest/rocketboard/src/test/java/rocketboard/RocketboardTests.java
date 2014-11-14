@@ -7,9 +7,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -54,7 +52,6 @@ public class RocketboardTests {
 		driver.close();
 		driver.quit();
 	}
-	
 	
 	@Test
 	public void moveIssueInsideDone() throws Exception{
@@ -117,7 +114,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaCloseButton() throws Exception {
-		RocketboardPage.openModel();
+		RocketboardPage.openModelCreateIssue();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
 
@@ -128,24 +125,20 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaXButton() throws Exception {
-		RocketboardPage.openModel();
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
-
+		RocketboardPage.openModelCreateIssue();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
 		RocketboardPage.xButton();	
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.FALSE));
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 
 	@Test
 	public void openCloseCreateForm_typingOutside() throws Exception {
-		RocketboardPage.openModel();
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
-
-		RocketboardPage.clicOutsideForm();	
-		issueModalOpened = RocketboardPage.modelOpened();
-		assertThat(issueModalOpened, equalTo(Boolean.FALSE));
+		RocketboardPage.openModelCreateIssue();
+		RocketboardPage.waitingFrameCreateIssueOpen();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
+		RocketboardPage.openModelCreateIssue();	
+		RocketboardPage.waitingFrameCreateIssueClose();
+		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 
 	@Test
@@ -184,7 +177,7 @@ public class RocketboardTests {
 
 	@Test
 	public void issueAdvancedOption() throws Exception{
-		RocketboardPage.OpenModal();
+		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.clickAdvanced();
 		assertThat(RocketboardPage.isGithub(), equalTo(urlGit));
 	}
@@ -207,26 +200,4 @@ public class RocketboardTests {
 		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
 
 	}
-
-
-	//	@Test // NOT DONE!!!
-	//	public void openOptions() throws Exception {
-	//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-	//
-	//		RocketboardPage.openModel();
-	//		RocketboardPage.clickOptionsLink();
-	//		issueModalOpened = RocketboardPage.modelOpened();
-	//		System.out.println(issueModalOpened);
-	//		//assertThat(issueModalOpened, equalTo(Boolean.FALSE));
-	//
-	//	}
-
-	//	@Test // NOT DONE!!!
-	//	public void assignMe() throws Exception {
-	//		RocketboardPage RocketboardPage = PageFactory.initElements(driver, RocketboardPage.class);
-	//		RocketboardPage.selectRepo(repoUsed);
-	//		//checkValue = RocketboardPage.createIssueGettingValue(issueContent, issueContent, repoCreateIssue);
-	//		RocketboardPage.getId();
-	//
-	//	}
 }

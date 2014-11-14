@@ -8,7 +8,7 @@ header {
 	}
 
 	button.btn-success, a.btn-success {
-		margin-right: 5em;
+		margin-right: 2em;
 		margin-top: 1.5em;
 	}
 
@@ -16,6 +16,9 @@ header {
 		margin-right: 20px;
 		color: white;
 		cursor: pointer;
+		font-size: 0.9em;
+		margin-right: 2em;
+		margin-top: 1.5em;
 
 		label {
 			cursor: pointer;
@@ -25,8 +28,8 @@ header {
 			margin-right: 3px;
 			background: #6a6a6a;
 			padding: 5px;
-			border-radius: 5px;
-			font-size: 1.2em;
+			border-radius: 3px;
+			font-size: 1em;
 			color: #777;
 		}
 
@@ -38,15 +41,15 @@ header {
 			i {
 				color: white;
 
-				&.pixelated-user-agent {
+				&.color0 {
 					background-color: #3cb878;
 				}
 
-				&.pixelated-dispatcher {
+				&.color2 {
 					background-color: #ef689e;
 				}
 
-				&.pixelated-platform {
+				&.color1 {
 					background-color: #69b4df;
 				}
 			}

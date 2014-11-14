@@ -68,6 +68,7 @@ define(
       $('.filter-repo').change(function () {
         $('.issue').remove();
         var reposToFilter = [];
+        $(document).trigger("data:issues:cleanCount");
 
         $('.filter-repo').each(function () {
           if ($(this).find('input').is(":checked")) {
