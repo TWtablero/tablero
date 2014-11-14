@@ -1,6 +1,6 @@
 var config = {};
 
-config.clientId = process.env.CLIENT_ID || "2a046800354c5d6c4f19";
-config.clientSecret = process.env.CLIENT_SECRET || "d679146387e8be036d2f471efe309eaeff260fde";
+config.clientId = process.env.CLIENT_ID || "1c798ee6e4fb306fd077";
+config.clientSecret = process.env.CLIENT_SECRET || "16d942571dcf5e59a81e53072b40d7260991d489";
 
 module.exports = config;
