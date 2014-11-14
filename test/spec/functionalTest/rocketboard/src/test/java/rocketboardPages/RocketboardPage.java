@@ -1,9 +1,14 @@
 package rocketboardPages;
 
+import static org.junit.Assert.fail;
+
+import java.awt.List;
+import java.util.ArrayList;
 import org.openqa.selenium.*;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ById;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
@@ -46,8 +51,14 @@ public class RocketboardPage {
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
 
-	@FindBy(id="filter-repo")
-	WebElement filterRepo;
+	@FindBy(css="header > span:nth-of-type(1) > label > i")
+	WebElement userAgent;
+
+	@FindBy(css="header > span:nth-of-type(2) > label > i")
+	WebElement platform;
+
+	@FindBy(css="header > span:nth-of-type(3) > label > i")
+	WebElement dispatcher;
 
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
@@ -116,17 +127,80 @@ public class RocketboardPage {
 		clickbtnCreateIssue();	
 	}
 
-	public void selectRepo(String repoName) throws Exception {
-		waitingLoading();
-		WebDriverWait wait = new WebDriverWait(this.driver, 10);
-		Select select=new Select(wait.until(ExpectedConditions.elementToBeClickable(filterRepo)));
-		select.selectByVisibleText(repoName);
-		waitingLoading();
+	public void selectRepo(String[] repoUsed) throws Exception {
+		if (repoUsed[0].contains("all")){
+			checkRepositoryPosition(dispatcher);
+			checkRepositoryPosition(userAgent);
+			checkRepositoryPosition(platform);
+
+		}else {
+			waitingLoading();
+			uncheckAllRepo();
+			for (int i=0;i<repoUsed.length;i++){
+				if (repoUsed[i].contains("dispatcher")){
+					checkRepositoryPosition(dispatcher);
+				}
+				if (repoUsed[i].contains("userAgent")){
+					checkRepositoryPosition(userAgent);
+				}
+				if (repoUsed[i].contains("platform")){
+					checkRepositoryPosition(platform);
+				}
+			}
+		}
 	}
 
+	public void checkRepositoryPosition(WebElement object) throws InterruptedException{
+		if (!object.isSelected()){
+			object.click();
+		} 
+	}
+
+	public void uncheckRepositoryPosition(WebElement object) throws InterruptedException{
+		if (object.isEnabled()){
+			object.click();
+		} 
+	}
+
+	public void uncheckAllRepo() throws InterruptedException{
+		uncheckRepositoryPosition(dispatcher);
+		uncheckRepositoryPosition(userAgent);	
+		uncheckRepositoryPosition(platform);	
+	} 
+
+
+	public boolean IsRepoSelected(String repo) throws InterruptedException{
+		boolean retorno = false;		
+		
+		if (repo == "dispatcher")
+		{
+			if (driver.findElement(By.id("repository-3")).isSelected())
+			retorno = true; 
+			else retorno = false;
+		}
+		
+		else if (repo == "platform")
+		{
+			if (driver.findElement(By.id("repository-2")).isSelected())
+			retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "userAgent")
+		{
+			if (driver.findElement(By.id("repository-1")).isSelected())
+			retorno = true;
+			else retorno = false;	
+		}
+		
+		return retorno;
+	}	
+
 	public Boolean createIssueCheckingValue(String title, String desc, String repoName) throws Exception {
+		Thread.sleep(5000);
 		Integer valueBefore = getCount("backlog");
 		createIssue(title, desc, repoName);
+		Thread.sleep(5000);
 		Integer valueAfter = getCount("backlog");
 		if ( valueAfter == valueBefore+1 ){
 			issueCreated = Boolean.TRUE;
@@ -216,25 +290,24 @@ public class RocketboardPage {
 		xBtn.click();
 	}
 
+	public void clicOutsideForm() throws Exception {
+		outsideModal.click();
+
+	}
+
 	public Boolean checkIssueLaunched(String message) throws Exception {
 		waitMessage(message);
 		return driver.getPageSource().contains(message);
 	}
 
 	public Boolean modelOpened() throws Exception {
-		waitingLoading();
-		return btnCreateIssue.isDisplayed();
+		Thread.sleep(1000);
+		return btnCreateIssue.isDisplayed();		
 	}
 
 	public void clickOptionsLink() throws Exception {
 		waitingLoading();
 		options.click();
-	}
-
-	public String checkSelectedOption() throws Exception {
-		Select comboBox = new Select(filterRepo);
-		String selectedComboValue = comboBox.getFirstSelectedOption().getText();
-		return selectedComboValue;
 	}
 
 	public String isGithub() throws Exception{
@@ -262,9 +335,6 @@ public class RocketboardPage {
 
 	}
 
-	public boolean isGithub(String validateGit) {
-		return driver.findElement(By.name(validateGit)).isDisplayed();
-	}
 
 
 	/**
@@ -317,4 +387,27 @@ public class RocketboardPage {
 	}
 	
 
-}
+	// GET ID
+	//	public void getId() throws Exception {
+	//		System.out.println("HERE1!!!!");
+	//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
+	//		String id=driver.findElement(By.xpath().getAttribute("id");
+	//		System.out.println("ID FOUND WAS: "+id);
+	//	}
+
+	public WebElement toWebElement(String str) throws InterruptedException{
+		WebElement weAux = null;
+
+		if (str == "dispatcher"){
+			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(3) > label > i"));
+		}
+		else if (str == "platform"){
+			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(2) > label > i"));
+		}
+		else if (str == "userAgent"){
+			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(1) > label > i"));
+		}
+		return weAux;
+
+	}
+}	
