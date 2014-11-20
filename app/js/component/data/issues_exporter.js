@@ -34,7 +34,7 @@ define(['flight/lib/component'],
           issuesCsv.splice(0, 0, this.csvHeader());
         }
 
-        this.csvLink += encodeURIComponent(issuesCsv.join("\n"));
+        this.csvLink += encodeURIComponent(issuesCsv.join("\n") + "\n");
         return 'data:text/csv;charset=utf8,' + this.csvLink;
       };
 
@@ -46,19 +46,39 @@ define(['flight/lib/component'],
 
       this.issuesToCsv = function(issues) {
         var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
-          return [issue.repoName,
+            return [issue.repoName,
                   issue.number,
-                  issue.title,
+                  "\"" + issue.title + "\"",
                   issue.state,
                   issue.kanbanState,
-                  issue.body.replace(/(\r\n|\n|\r)/g, " ")].join(';')
+                  "\"" + issue.body.replace(/(\r\n|\n|\r)/g, " ") + "\"",
+                  "\"" + issue.tags.toString() +  "\"",
+                  issue.created_at,
+                  issue.dev_at,
+                  issue.closed_at,
+                  daysBetween(issue.created_at, issue.closed_at),
+                  daysBetween(issue.dev_at, issue.closed_at)].join(';')
         });
 
         return issuesCsv;
       };
 
+      function daysBetween(earlierDate, lateDate) {
+        if (earlierDate && lateDate) {
+          var leadTime,
+              millisecondsInDay = 86400000;
+
+          leadTime = (new Date(lateDate) - new Date(earlierDate)) / millisecondsInDay;
+          leadTime = parseInt(leadTime);
+
+          return leadTime;
+        } else {
+          return "";
+        }
+      };
+
       this.csvHeader = function() {
-        return ["Source","Github ID","Title","Status","Kanban State","Description"].join(';');
+        return ["Source","Github ID","Title","Status","Kanban State","Description", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
       };
 
       this.after('initialize', function () {
