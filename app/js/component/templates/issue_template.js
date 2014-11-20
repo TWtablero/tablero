@@ -62,7 +62,6 @@ define([],
         issue.colorClass = this.getRepoColor(issue.projectName);
         issue.labelsName = this.removeColumnsLabels(issue.labels);
         issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
-        issue.tags = _.map(issue.labels, function(label) {return label.name;});
         renderedIssue = this.template.render(this.clearHuboardInfo(issue));
         return renderedIssue;
       };

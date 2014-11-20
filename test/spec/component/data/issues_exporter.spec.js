@@ -6,20 +6,20 @@ describeComponent('component/data/issues_exporter', function () {
   it('creates a link to download csv', function() {
     var issues = [
       {
-        "repoName": "pixelated-platform",
+        "projectName": "pixelated-platform",
         "number":   "90",
         "title":    "sending mails",
         "state":   "open",
-        "tags": ["1- Backlog", "2- Dev"],
+        "labels": [{name: "1- Backlog"}, {name: "2- Dev"}],
         "kanbanState":   "1 - Ready",
         "body":     "should send email"
       },
       {
-        "repoName": "pixelated-user-agent",
+        "projectName": "pixelated-user-agent",
         "number":   "92",
         "title":    "handle errors on sending mails",
         "state":   "open",
-        "tags": ["3- QA", "2- Dev"],
+        "labels": [{name: "3- QA"}, {name: "2- Dev"}],
         "kanbanState":   "0 - Backlog",
         "body":     "If mails can't be sent by the twisted process"
       }
@@ -34,20 +34,20 @@ describeComponent('component/data/issues_exporter', function () {
   it('creates a csv link and adds new issues to the end of it', function(){
     var issues = [
       {
-        "repoName": "pixelated-platform",
+        "projectName": "pixelated-platform",
         "number":   "90",
         "title":    "sending mails",
         "state":   "open",
-        "tags": [],
+        "labels": [],
         "kanbanState":   "1 - Ready",
         "body":     "should send email"
       },
       {
-        "repoName": "pixelated-user-agent",
+        "projectName": "pixelated-user-agent",
         "number":   "92",
         "title":    "handle errors on sending mails",
         "state":   "open",
-        "tags": [],
+        "labels": [],
         "kanbanState":   "0 - Backlog",
         "body":     "If mails can't be sent by the twisted process"
       }
@@ -60,9 +60,9 @@ describeComponent('component/data/issues_exporter', function () {
     expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
     var newIssues = [{
-        "repoName": "test-issues-ramon",
+        "projectName": "test-issues-ramon",
         "number":   "66",
-        "tags": [],
+        "labels": [],
         "title":    "handle errors on sending mails",
         "state":   "open",
         "kanbanState":   "1 - Backlog",
@@ -77,27 +77,27 @@ describeComponent('component/data/issues_exporter', function () {
   it('should create the csv with proper issue`s lead time according to its create and closed date', function() {
     var issues = [
       {
-        "repoName": "test-issues-leadTime-0",
+        "projectName": "test-issues-leadTime-0",
         "body": "lead time description-0",
-        "tags": [],
+        "labels": [],
         "title": "",
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:28:41Z",
         "dev_at": "2014-11-18T14:00:41Z"
       },
       {
-        "repoName": "test-issues-leadTime-1",
+        "projectName": "test-issues-leadTime-1",
         "body": "lead time description-1",
-        "tags": [],
+        "labels": [],
         "title": "",
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:29:41Z",
         "dev_at": "2014-11-18T14:00:41Z"
       },
       {
-        "repoName": "test-issues-leadTime-3",
+        "projectName": "test-issues-leadTime-3",
         "body": "lead time description-3",
-        "tags": [],
+        "labels": [],
         "title": "",
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-21T13:30:41Z",

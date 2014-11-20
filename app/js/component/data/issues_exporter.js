@@ -40,19 +40,19 @@ define(['flight/lib/component'],
 
       this.validIssuesToExport = function(issues) {
         return _.filter(issues, function(issue) {
-          return issue.repoName != undefined
+          return issue.projectName != undefined
         });
       }
 
       this.issuesToCsv = function(issues) {
         var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
-            return [issue.repoName,
+            return [issue.projectName,
                   issue.number,
                   "\"" + issue.title + "\"",
                   issue.state,
                   issue.kanbanState,
                   "\"" + issue.body.replace(/(\r\n|\n|\r)/g, " ") + "\"",
-                  "\"" + issue.tags.toString() +  "\"",
+                  "\"" + _.map(issue.labels, function(label) {return label.name;}) +  "\"",
                   issue.created_at,
                   issue.dev_at,
                   issue.closed_at,
