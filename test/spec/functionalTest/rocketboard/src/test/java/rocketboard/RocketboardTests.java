@@ -25,7 +25,7 @@ public class RocketboardTests {
 	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; 
+	public static String serviceUrl = "PUT HERE YOUR TOKEN TO GITHUB"; 
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
