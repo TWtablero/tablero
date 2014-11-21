@@ -4,14 +4,22 @@ import static org.junit.Assert.fail;
 
 import java.awt.List;
 import java.util.ArrayList;
-import org.openqa.selenium.*;
 
+import org.openqa.selenium.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ById;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.URL;
 
 import rocketboard.RocketboardTests;
 
@@ -21,7 +29,7 @@ public class RocketboardPage {
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
-
+	
 
 	//Coluna de Issues
 	@FindBy(how = How.ID, using = "0-backlog")
@@ -66,10 +74,12 @@ public class RocketboardPage {
 	@FindBy(className="link")
 	WebElement options;
 
+
 	public RocketboardPage(WebDriver driver) {
 		super();
 		this.driver = driver;
 		driver.get(RocketboardTests.baseUrl + RocketboardTests.serviceUrl);
+
 	}
 
 	/**
@@ -171,28 +181,28 @@ public class RocketboardPage {
 
 	public boolean IsRepoSelected(String repo) throws InterruptedException{
 		boolean retorno = false;		
-		
+
 		if (repo == "dispatcher")
 		{
 			if (driver.findElement(By.id("repository-3")).isSelected())
-			retorno = true; 
+				retorno = true; 
 			else retorno = false;
 		}
-		
+
 		else if (repo == "platform")
 		{
 			if (driver.findElement(By.id("repository-2")).isSelected())
-			retorno = true;
+				retorno = true;
 			else retorno = false;	
 		}
-		
+
 		else if (repo == "userAgent")
 		{
 			if (driver.findElement(By.id("repository-1")).isSelected())
-			retorno = true;
+				retorno = true;
 			else retorno = false;	
 		}
-		
+
 		return retorno;
 	}	
 
@@ -335,12 +345,11 @@ public class RocketboardPage {
 
 	}
 
-
-
 	/**
 	 * waiting load issues!
 	 * @throws InterruptedException 
 	 */
+	//FIX ME: Retirar o threadsleep
 	public void waitingLoading() throws InterruptedException{
 		int timeout=0;
 		while(driver.findElement(By.id("loading")).getAttribute("class").contains("loading")||timeout==10){
@@ -360,11 +369,11 @@ public class RocketboardPage {
 			regex = element.isEnabled();
 		}
 	}
-	
+
 	public boolean frameCreateIssueDisplayed(){
 		return driver.findElement(By.cssSelector("div[class=modal-content]")).isDisplayed();
 	}
-	
+
 	public void waitingFrameCreateIssueOpen() throws InterruptedException{
 		boolean regex = frameCreateIssueDisplayed();
 		int timeout=0;
@@ -375,17 +384,17 @@ public class RocketboardPage {
 			timeout++;
 		}
 	}
-	
+
 	public void waitingFrameCreateIssueClose() throws InterruptedException{
-//		boolean regex = frameCreateIssueDisplayed();
-//		int timeout=0;
-//		while(regex||timeout>=30){
-//			WebDriverWait wait = new WebDriverWait(this.driver, 30);
-//			regex = wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]"))));;
-//			timeout++;
-//		}
+		//		boolean regex = frameCreateIssueDisplayed();
+		//		int timeout=0;
+		//		while(regex||timeout>=30){
+		//			WebDriverWait wait = new WebDriverWait(this.driver, 30);
+		//			regex = wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]"))));;
+		//			timeout++;
+		//		}
 	}
-	
+
 
 	// GET ID
 	//	public void getId() throws Exception {

@@ -8,20 +8,24 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import com.gargoylesoftware.htmlunit.javascript.host.geo.Position;
-
 import rocketboardPages.RocketboardPage;
+import rocketboard.DriverManager;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class RocketboardTests {
 	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	//Change this Github token informing yours.
-	public static String serviceUrl = "PUT HERE YOUR GIT TOKEN"; 
+	public static String serviceUrl = "#4d310fd6a7ff10ee59f71790043d3f170ad3dc4b"; 
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -31,28 +35,46 @@ public class RocketboardTests {
 	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
 	String[] repoUsed = {"userAgent"};
 
-
 	int[] checkValue = null;
 	String selectedOption = "";
 	private RocketboardPage RocketboardPage;
 	private final String messageSucessRocket="Liftoff! We Have a Liftoff!";
 
+	/**
+	 * DriverManager instance
+	 */
+	DriverManager managerDriver = new DriverManager();
+
+
 	@Before
-	public void setUp() {
-		// FIREFOX WEBDRIVER
-		this.driver = new FirefoxDriver();
-		this.driver.manage().window().maximize();
-		this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);		
-	    RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);
-		//repoUsed[0]="userAgent";
+	public void setUp() throws Exception {
+
+		managerDriver.loadDriver();
+		this.driver = managerDriver.getDriver();
+		this.driver.get("http://localhost:3000"+ serviceUrl);
+
+		/* 
+		 * Choose the browser, version, and platform to test with SouceLabs 
+		 * 
+		DesiredCapabilities caps = DesiredCapabilities.firefox();
+		caps.setCapability("platform", Platform.LINUX);
+		caps.setCapability("version","28");		
+
+		driver = new RemoteWebDriver(new URL("http://[user]:[id]@ondemand.saucelabs.com:80/wd/hub"),caps);
+		this.driver.get("http://localhost:3000"+serviceUrl);
+		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);		 
+		 */
+
+		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);		 
+
 	}
 
 	@After
-	public void tearDown() {
-		driver.close();
+	public void tearDown() {  
 		driver.quit();
 	}
-	
+
+
 	@Test
 	public void moveIssueInsideDone() throws Exception{
 		RocketboardPage.selectRepo(repoUsed);
@@ -63,7 +85,6 @@ public class RocketboardTests {
 		RocketboardPage.moveIssue(title, "done");
 		assertThat(RocketboardPage.checkIssueLaunched(messageSucessRocket), equalTo(Boolean.TRUE));
 	}
-	
 
 	@Test
 	public void checkQuantityIssuesAfterCreateOne() throws Exception {
@@ -89,7 +110,7 @@ public class RocketboardTests {
 	@Test
 	//Create an issue and check if the column backlog is correctly incremented
 	public void checkColumCount() throws Exception {
-		Thread.sleep(4000);
+
 		Integer valueBefore = RocketboardPage.getCount("backlog");
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
 		Integer valueAfter = RocketboardPage.getCount("backlog");
@@ -143,7 +164,6 @@ public class RocketboardTests {
 
 	@Test
 	public void selectingRepository() throws Exception {
-		
 		String [] dispatcher = {"dispatcher"};
 		String [] platform = {"platform"};
 		String [] userAgent = {"userAgent"};
@@ -188,16 +208,4 @@ public class RocketboardTests {
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
 
-	//@Test
-	public void CreateIssueNoTitle() throws Exception{
-		RocketboardPage.createIssue("",desc, RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-	}
-
-	//@Test
-	public void CreateIssueEmpty() throws Exception{
-		RocketboardPage.createIssue("","", RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-
-	}
 }
