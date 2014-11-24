@@ -21,7 +21,9 @@ define(['flight/lib/component'],
       this.csvLink = '';
 
       this.mountExportCsvLink = function(ev, data) {
-        $("#export_csv").attr('href', this.linkToCsv(data));
+        var uri = this.linkToCsv(data);
+        $("#export_csv").attr('href', uri);
+        //window.open(uri);
       };
 
       this.clearLink = function(){
