@@ -3,7 +3,10 @@ package rocketboard;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
@@ -14,8 +17,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
+
 import rocketboardPages.RocketboardPage;
 import rocketboard.DriverManager;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,7 +28,7 @@ public class RocketboardTests {
 	private static final String String = null;
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "PUT HERE YOUR TOKEN TO GITHUB"; 
+	public static String serviceUrl = "PUT HERE YOUR GITHUB TOKEN"; 
 
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
@@ -219,13 +224,23 @@ public class RocketboardTests {
 
 	}
 
-
 	@Test
 	public void AssignMeCard() throws Exception{
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
 		String idCard = RocketboardPage.getInfo(title, "id");
 		RocketboardPage.assignMe(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
-	}	
+	}
+	
+	@Test
+	public void setLabel() throws Exception {
+		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		String href = RocketboardPage.getInfo(title, "href");
+		String id = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.restRequest(href, "[\"bug\"]");
+		RocketboardPage.visible(id);
+		String label = driver.findElement(By.xpath("//*[@id='"+id+"']/div[3]/span")).getText();
+		assertEquals(label.equals("bug"), Boolean.TRUE);
+	}
 
 }
