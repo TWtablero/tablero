@@ -26,9 +26,9 @@ describeComponent('component/data/issues_exporter', function () {
     ];
 
     expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
-        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-        "\npixelated-platform;90;\"sending mails\";open;1 - Ready;\"should send email\";\"1- Backlog,2- Dev\";;;;;" +
-        "\npixelated-user-agent;92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"3- QA,2- Dev\";;;;;\n"));
+        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Closed at;Lead Time" +
+        "\npixelated-platform;90;\"sending mails\";open;1 - Ready;\"should send email\";\"1- Backlog,2- Dev\";;;" +
+        "\npixelated-user-agent;92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"3- QA,2- Dev\";;;\n"));
   });
 
   it('creates a csv link and adds new issues to the end of it', function(){
@@ -53,9 +53,9 @@ describeComponent('component/data/issues_exporter', function () {
       }
     ];
 
-    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-                          "\npixelated-platform;90;\"sending mails\";open;1 - Ready;\"should send email\";\"\";;;;;" +
-                          "\npixelated-user-agent;92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"\";;;;;\n";
+    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Closed at;Lead Time" +
+                          "\npixelated-platform;90;\"sending mails\";open;1 - Ready;\"should send email\";\"\";;;" +
+                          "\npixelated-user-agent;92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"\";;;\n";
 
     expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
@@ -69,7 +69,7 @@ describeComponent('component/data/issues_exporter', function () {
         "body":     "just testing an issue"
     }];
 
-    var newIssuesToEncode = "test-issues-ramon;66;\"handle errors on sending mails\";open;1 - Backlog;\"just testing an issue\";\"\";;;;;\n";
+    var newIssuesToEncode = "test-issues-ramon;66;\"handle errors on sending mails\";open;1 - Backlog;\"just testing an issue\";\"\";;;\n";
 
     expect(this.component.linkToCsv({'issues': newIssues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
   });
@@ -106,9 +106,9 @@ describeComponent('component/data/issues_exporter', function () {
     ];
 
     expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
-        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-        "\ntest-issues-leadTime-0;;\"\";;;\"lead time description-0\";\"\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\ntest-issues-leadTime-1;;\"\";;;\"lead time description-1\";\"\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;1;0" +
-        "\ntest-issues-leadTime-3;;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-20T13:00:41Z;2014-11-21T13:30:41Z;3;1\n"));
+        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Closed at;Lead Time" +
+        "\ntest-issues-leadTime-0;;\"\";;;\"lead time description-0\";\"\";2014-11-18T13:29:41Z;2014-11-19T13:28:41Z;0" +
+        "\ntest-issues-leadTime-1;;\"\";;;\"lead time description-1\";\"\";2014-11-18T13:29:41Z;2014-11-19T13:29:41Z;1" +
+        "\ntest-issues-leadTime-3;;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-21T13:30:41Z;3\n"));
   });
 });
