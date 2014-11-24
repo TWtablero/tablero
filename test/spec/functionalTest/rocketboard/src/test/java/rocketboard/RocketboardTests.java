@@ -3,9 +3,7 @@ package rocketboard;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
@@ -13,11 +11,11 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
-
 import rocketboardPages.RocketboardPage;
 import rocketboard.DriverManager;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -26,6 +24,7 @@ public class RocketboardTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
 	public static String serviceUrl = "PUT HERE YOUR TOKEN TO GITHUB"; 
+
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -52,7 +51,8 @@ public class RocketboardTests {
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
 		this.driver.get("http://localhost:3000"+ serviceUrl);
-
+		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);	 
+		
 		/* 
 		 * Choose the browser, version, and platform to test with SouceLabs 
 		 * 
@@ -64,16 +64,14 @@ public class RocketboardTests {
 		this.driver.get("http://localhost:3000"+serviceUrl);
 		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);		 
 		 */
-
-		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);		 
-
 	}
+
+
 
 	@After
 	public void tearDown() {  
 		driver.quit();
 	}
-
 
 	@Test
 	public void moveIssueInsideDone() throws Exception{
@@ -108,7 +106,7 @@ public class RocketboardTests {
 	}
 
 	@Test
-	//Create an issue and check if the column backlog is correctly incremented
+	/** Create an issue and check if the column backlog is correctly incremented */
 	public void checkColumCount() throws Exception {
 
 		Integer valueBefore = RocketboardPage.getCount("backlog");
@@ -158,7 +156,6 @@ public class RocketboardTests {
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
 		RocketboardPage.openModelCreateIssue();	
-		RocketboardPage.waitingFrameCreateIssueClose();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 
@@ -207,5 +204,28 @@ public class RocketboardTests {
 		RocketboardPage.createIssue(title,"", RocketboardPage.chooseProject());
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
+
+
+	//@Test
+	public void CreateIssueNoTitle() throws Exception{
+		RocketboardPage.createIssue("",desc, RocketboardPage.chooseProject());
+		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
+	}
+
+	//@Test
+	public void CreateIssueEmpty() throws Exception{
+		RocketboardPage.createIssue("","", RocketboardPage.chooseProject());
+		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
+
+	}
+
+
+	@Test
+	public void AssignMeCard() throws Exception{
+		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		String idCard = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.assignMe(idCard);
+		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
+	}	
 
 }

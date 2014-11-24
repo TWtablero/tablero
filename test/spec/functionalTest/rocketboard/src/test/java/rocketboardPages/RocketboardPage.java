@@ -2,17 +2,20 @@ package rocketboardPages;
 
 import static org.junit.Assert.fail;
 
-import java.awt.List;
+
+//import java.awt.List;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ById;
+import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -23,13 +26,19 @@ import java.net.URL;
 
 import rocketboard.RocketboardTests;
 
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+
+
 public class RocketboardPage {
 	private WebDriver driver;
 	private Boolean issueCreated;
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
-	
+	Integer indexID = null;
+	Integer nameID = null;
+	String getInfo = "";
 
 	//Coluna de Issues
 	@FindBy(how = How.ID, using = "0-backlog")
@@ -73,7 +82,7 @@ public class RocketboardPage {
 
 	@FindBy(className="link")
 	WebElement options;
-
+	
 
 	public RocketboardPage(WebDriver driver) {
 		super();
@@ -385,38 +394,60 @@ public class RocketboardPage {
 		}
 	}
 
-	public void waitingFrameCreateIssueClose() throws InterruptedException{
-		//		boolean regex = frameCreateIssueDisplayed();
-		//		int timeout=0;
-		//		while(regex||timeout>=30){
-		//			WebDriverWait wait = new WebDriverWait(this.driver, 30);
-		//			regex = wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]"))));;
-		//			timeout++;
-		//		}
+	
+	public String getInfo(String nameIssue, String info) throws Exception {		
+		Thread.sleep(6000);
+		/** Create array with WebElement options*/
+		List<WebElement> l = driver.findElements(By.xpath("//div[contains(@class, 'issue list-group-item')]"));
+		List<WebElement> name = driver.findElements(By.xpath("//*[@class='title list-group-item-heading']"));
+		
+
+		/** Create array with WebElement options - ID */
+		ArrayList<String> actual_role = new ArrayList<String>( );
+		for (int a = 0; a < l.size(); a++){
+			String varA = l.get(a).getAttribute("id");
+			actual_role.add(varA);
+		}
+
+		/** Create array with WebElement options - Value */
+		ArrayList<String> actual_name = new ArrayList<String>( );
+		for (int a = 0; a < name.size(); a++){
+			String varB = name.get(a).getText();
+			actual_name.add(varB);
+		}
+
+		/** Create array with WebElement options - Href */
+		ArrayList<String> actual_href = new ArrayList<String>( );
+		for (int a = 0; a < name.size(); a++){
+			String varC = name.get(a).getAttribute("href");
+			actual_href.add(varC);
+		}
+
+		/** Find index based the value */
+		if(actual_name.contains(nameIssue)) {  
+			nameID = actual_name.indexOf(nameIssue); 
+		} 
+
+		/**Find value/href based in the index */
+		String value = actual_role.get(nameID);
+		String href = actual_href.get(nameID);
+
+		/** Check witch info should return */
+		if (info =="href"){
+			getInfo =  href.substring(19);
+		} else if (info =="id") {
+			getInfo =  value;
+		}
+
+		return getInfo.toString();
+	}
+	
+	public void assignMe(String id) throws Exception {
+		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
+		assign.click();	
+		Thread.sleep(6000);
+		
+		}
+
 	}
 
-
-	// GET ID
-	//	public void getId() throws Exception {
-	//		System.out.println("HERE1!!!!");
-	//WORKING FIRST POSITION		String id=driver.findElement(By.xpath("//*[@class='issue list-group-item test_issues_kanboard']")).getAttribute("id");
-	//		String id=driver.findElement(By.xpath().getAttribute("id");
-	//		System.out.println("ID FOUND WAS: "+id);
-	//	}
-
-	public WebElement toWebElement(String str) throws InterruptedException{
-		WebElement weAux = null;
-
-		if (str == "dispatcher"){
-			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(3) > label > i"));
-		}
-		else if (str == "platform"){
-			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(2) > label > i"));
-		}
-		else if (str == "userAgent"){
-			weAux = driver.findElement(By.cssSelector("header > span:nth-of-type(1) > label > i"));
-		}
-		return weAux;
-
-	}
-}	
