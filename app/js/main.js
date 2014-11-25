@@ -1,5 +1,10 @@
 'use strict';
 
+var CONFIG = {};
+$.getJSON('/config', function (data) {
+  CONFIG.repos = data.repos;
+});
+
 requirejs.config({
   baseUrl: 'bower_components',
   paths: {

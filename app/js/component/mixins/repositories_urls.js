@@ -17,6 +17,10 @@ define([],
         return $.getJSON(this.repoIssuesURL(this.getURLFromProject("project-issues"), page));
       };
 
+      this.fetchConfigInfo = function (data) {
+        return $.getJSON('/config', data);
+      };
+
       this.defaultOptions = function () {
         return "per_page=100&state=all&" 
       };
@@ -43,14 +47,7 @@ define([],
       };
 
       this.getURLFromProject = function (projectName) {
-        var repos = {
-          'user-agent': process.env.PX_USER_AGENT || "https://api.github.com/repos/pixelated-project/pixelated-user-agent",
-          'dispatcher': process.env.PX_DISPATCHER || "https://api.github.com/repos/pixelated-project/pixelated-dispatcher",
-          'project-issues': process.env.PX_PROJECT_ISSUES || "https://api.github.com/repos/pixelated-project/project-issues",
-          'platform': process.env.PX_PLATFORM || "https://api.github.com/repos/pixelated-project/pixelated-platform" 
-        };
-
-        return repos[projectName] || "not found";
+        return CONFIG.repos[projectName] || "not found";
       };
     }
   }
