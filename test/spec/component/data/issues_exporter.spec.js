@@ -242,10 +242,72 @@ describeComponent('component/data/issues_exporter', function () {
       2: {created_at: "2014-11-23T20:54:52Z"}
     };
 
-    expect(this.component.addDevDateForIssues(issues, events)).toEqual([
+    expect(this.component.mergeEventsWithIssues(issues, events)).toEqual([
       {id: 1, dev_at: "2014-11-24T20:54:52Z"},
       {id: 2, dev_at: "2014-11-23T20:54:52Z"},
       {id: 3}
+    ]);
+  });
+
+  it('should return the issues with the development date using its events', function() {
+    var issues = [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ];
+
+    var events = [
+      {
+        id: 197865882,
+        event: "labeled",
+        issue: {
+          id: 1
+        },
+        label: {name: "2 - Development"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865883,
+        event: "labeled",
+        issue: {
+          id: 1
+        },
+        label: {name: "2 - Development"},
+        created_at: "2014-11-20T20:54:52Z"
+      },
+      {
+        id: 197865887,
+        event: "labeled",
+        issue: {
+          id: 3
+        },
+        label: {name: "2 - Development"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865884,
+        event: "assigned",
+        issue: {
+          id: 2
+        },
+        label: {name: "2 - Development"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865885,
+        event: "labeled",
+        issue: {
+          id: 2
+        },
+        label: {name: "0 - Backlog"},
+        created_at: "2014-11-24T20:54:52Z"
+      }
+    ];
+
+    expect(this.component.addDevDateForIssues(issues, events)).toEqual([
+      {id: 1, dev_at: "2014-11-20T20:54:52Z"},
+      {id: 2},
+      {id: 3, dev_at: "2014-11-24T20:54:52Z"}
     ]);
   });
 

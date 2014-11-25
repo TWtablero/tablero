@@ -82,6 +82,22 @@ define(['flight/lib/component'],
         return ["Source","Github ID","Title","Status","Kanban State","Description", "Tags", "Create at", "Closed at", "Lead Time"].join(';');
       };
 
+      this.addDevDateForIssues = function(issues, events) {
+          var groupedEventsByIssueId = {},
+              labeledEvents = {},
+              developmentEvents = {},
+              earlierstDevelopemntIssuesEvent = {},
+              issuesWithDevDate = {};
+
+          groupedEventsByIssueId = this.groupEventsByIssuesId(events);
+          labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
+          developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
+          earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
+          issuesWithDevDate = this.mergeEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
+
+          return issuesWithDevDate;
+      };
+
       this.groupEventsByIssuesId = function(events) {
           return _.groupBy(events, function(event){ return event.issue.id; });
       };
@@ -100,7 +116,7 @@ define(['flight/lib/component'],
           }));
       };
 
-      this.addDevDateForIssues = function(issues, events) {
+      this.mergeEventsWithIssues = function(issues, events) {
           return _.each(issues, function(issue) {
             if (events[issue.id]) {
                 issue.dev_at =  events[issue.id].created_at;
