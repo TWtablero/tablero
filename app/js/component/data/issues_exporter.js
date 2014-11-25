@@ -90,6 +90,24 @@ define(['flight/lib/component'],
           return _.object(_.map(mappedEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.event == 'labeled'; })]}));
       };
 
+      this.getOnlyDevelopmentIssueEvents = function(labeledEvents) {
+          return _.object(_.map(labeledEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.label.name == '2 - Development'; })]}));
+      };
+
+      this.getEarliestDevelopmentIssueEvents = function(developmentEvents) {
+          return _.object(_.map(developmentEvents, function(events,key) {
+             return [key, _.first(_.sortBy(events, function(e) { return e.created_at;}))]
+          }));
+      };
+
+      this.addDevDateForIssues = function(issues, events) {
+          return _.each(issues, function(issue) {
+            if (events[issue.id]) {
+                issue.dev_at =  events[issue.id].created_at;
+            }
+          });
+      };
+
       this.after('initialize', function () {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
         this.on('data:issues:clearExportCsvLink', this.clearLink)

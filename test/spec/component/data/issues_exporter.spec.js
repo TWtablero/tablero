@@ -181,4 +181,72 @@ describeComponent('component/data/issues_exporter', function () {
     });
 
   });
+
+  it('should get only the events that corresponds when the issue was moved to the Development column', function() {
+    var labeledEvents = {
+      49941278: [
+        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "0 - Backlog"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-25T20:54:52Z"}
+      ],
+      49941279: [
+        {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-23T20:54:52Z"}
+      ]
+    };
+
+    expect(this.component.getOnlyDevelopmentIssueEvents(labeledEvents)).toEqual({
+          49941278: [
+            {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+            {label: {name: "2 - Development"}, created_at: "2014-11-25T20:54:52Z"}
+          ],
+          49941279: [
+            {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
+            {label: {name: "2 - Development"}, created_at: "2014-11-23T20:54:52Z"}
+          ]
+        }
+    );
+  });
+
+  it('should get the earlier event for each issue that corresponds when the issue was moved to the Development column', function() {
+    var labeledEvents = {
+      49941278: [
+        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "0 - Backlog"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-25T20:54:52Z"}
+      ],
+      49941279: [
+        {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-23T20:54:52Z"}
+      ]
+    };
+
+    expect(this.component.getEarliestDevelopmentIssueEvents(labeledEvents)).toEqual({
+          49941278: {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+          49941279: {label: {name: "2 - Development"}, created_at: "2014-11-23T20:54:52Z"}
+        }
+    );
+  });
+
+  it('should create the dev_at date for each issue according to its event creation date', function() {
+    var issues = [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ];
+
+    var events = {
+      1: {created_at: "2014-11-24T20:54:52Z"},
+      2: {created_at: "2014-11-23T20:54:52Z"}
+    };
+
+    expect(this.component.addDevDateForIssues(issues, events)).toEqual([
+      {id: 1, dev_at: "2014-11-24T20:54:52Z"},
+      {id: 2, dev_at: "2014-11-23T20:54:52Z"},
+      {id: 3}
+    ]);
+  });
+
 });
