@@ -1,10 +1,10 @@
 var express = require('express');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
-var config = require('./config');
 var sass = require('node-sass');
-
 var app = express();
+var configServer = require('./config-server.js');
+var config = require('./config.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
@@ -13,15 +13,19 @@ app.use(sass.middleware({
 
 app.use(express.static('app'));
 
+app.get('/config', function (req, res) {
+  res.send(config);
+});
+
 app.get('/request_code', function (req, res) {
-  res.redirect('https://github.com/login/oauth/authorize?client_id=' + config.clientId + '&scope=public_repo');
+  res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=public_repo');
 });
 
 app.get('/request_auth_token', function (req, res) {
   console.log('==== /request_auth_token ====');
   var getAuthTokenUrl = 'https://github.com/login/oauth/access_token?' +
-    'client_id=' + config.clientId +
-    '&client_secret=' + config.clientSecret +
+    'client_id=' + configServer.clientId +
+    '&client_secret=' + configServer.clientSecret +
     '&code=' + req.query.code;
 
   xhr = new XMLHttpRequest();
