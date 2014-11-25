@@ -111,4 +111,74 @@ describeComponent('component/data/issues_exporter', function () {
         "\ntest-issues-leadTime-1;;\"\";;;\"lead time description-1\";\"\";2014-11-18T13:29:41Z;2014-11-19T13:29:41Z;1" +
         "\ntest-issues-leadTime-3;;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-21T13:30:41Z;3\n"));
   });
+
+  it('should map all the events to the given issues', function() {
+    var events = [
+      {
+        id: 197865882,
+        event: "labeled",
+        issue: {
+          id: 49941279
+        }
+      },
+      {
+        id: 197865883,
+        event: "labeled",
+        issue: {
+          id: 49941279
+        }
+      },
+      {
+        id: 197865884,
+        event: "labeled",
+        issue: {
+          id: 49941278
+        }
+      },
+      {
+        id: 197865885,
+        event: "labeled",
+        issue: {
+          id: 49941278
+        }
+      }
+    ];
+
+    expect(this.component.groupEventsByIssuesId(events)).toEqual({
+      49941278: [
+        {id: 197865884, event: 'labeled', issue: {id : 49941278}},
+        {id: 197865885, event: 'labeled', issue: {id : 49941278}}
+      ],
+      49941279: [
+        {id : 197865882, event: 'labeled', issue: {id : 49941279}},
+        {id : 197865883, event: 'labeled', issue: {id : 49941279}}
+      ]});
+  });
+
+  it('should exclude the events that are different than labeled', function() {
+    var mappedEvents = {
+      49941278: [
+        {id: 197865884, event: 'labeled', issue: {id : 49941278}},
+        {id: 197865888, event: 'assigned', issue: {id : 49941278}},
+        {id: 197865885, event: 'labeled', issue: {id : 49941278}}
+      ],
+      49941279: [
+        {id : 197865882, event: 'labeled', issue: {id : 49941279}},
+        {id : 197865889, event: 'othertype', issue: {id : 49941279}},
+        {id : 197865883, event: 'labeled', issue: {id : 49941279}}
+     ]
+    };
+
+    expect(this.component.excludeNonLabeledEvents(mappedEvents)).toEqual({
+      49941278: [
+        {id: 197865884, event: 'labeled', issue: {id : 49941278}},
+        {id: 197865885, event: 'labeled', issue: {id : 49941278}}
+      ],
+      49941279: [
+        {id : 197865882, event: 'labeled', issue: {id : 49941279}},
+        {id : 197865883, event: 'labeled', issue: {id : 49941279}}
+      ]
+    });
+
+  });
 });

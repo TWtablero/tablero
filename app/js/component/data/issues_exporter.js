@@ -82,6 +82,14 @@ define(['flight/lib/component'],
         return ["Source","Github ID","Title","Status","Kanban State","Description", "Tags", "Create at", "Closed at", "Lead Time"].join(';');
       };
 
+      this.groupEventsByIssuesId = function(events) {
+          return _.groupBy(events, function(event){ return event.issue.id; });
+      };
+
+      this.excludeNonLabeledEvents = function(mappedEvents) {
+          return _.object(_.map(mappedEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.event == 'labeled'; })]}));
+      };
+
       this.after('initialize', function () {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
         this.on('data:issues:clearExportCsvLink', this.clearLink)
