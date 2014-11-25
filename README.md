@@ -26,40 +26,20 @@ npm install & bower install
  
 * Configure development environment: 
 
- * Update these files:
-
-**app/js/component/mixins/repositories_urls.js**
- 
-```  
-this.getURLFromProject = function (projectName) {
-        var repos = {
-          'user-agent': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
-          'dispatcher': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
-          'project-issues': "https://api.github.com/repos/RocketBoard/test_issues_kanboard",
-          'platform': "https://api.github.com/repos/RocketBoard/test_issues_kanboard" };
-        return repos[projectName] || "not found";
+  - Register **Rocketboard** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
 ```
-
-
-**config.js**
- 
-Register **Rocketboard** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
-
->Application Name: rocketboard
->Homepage URL: http://localhost
->Authorization callback URL: http://localhost:3000/request_auth_token
-
-And update file **config.js** with CLIENT ID and SECRET KEY generated:
-
-    config.clientId = process.env.CLIENT_ID || "<YOUR_CLIENT_ID>";
-    config.clientSecret = process.env.CLIENT_SECRET || "<YOUR_SECRET_KEY>”;
-
- 
-* Ignore config files (temporary solution)
+Application Name: rocketboard
+Homepage URL: http://localhost
+Authorization callback URL: http://localhost:3000/request_auth_token
 ```
-git update-index --assume-unchanged app/js/component/mixins/repositories_urls.js
-git update-index --assume-unchanged app/js/component/templates/issue_template.js
-git update-index --assume-unchanged config.js
+  - Add this variables to your environment (`/.bash_profile` on OS X):
+```
+export PX_CLIENT_ID="your_client_id"
+export PX_CLIENT_SECRET="your_client_secret"
+export PX_USER_AGENT="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
+export PX_DISPATCHER="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
+export PX_PROJECT_ISSUES="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
+export PX_PLATFORM="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
 ```
  
 *  Run the project with:
