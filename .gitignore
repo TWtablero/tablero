@@ -2,7 +2,6 @@
 node_modules
 app/bower_components
 *.swp
-config.js
 .DS_Store
 app/.DS_Store
 app/css/main.css
