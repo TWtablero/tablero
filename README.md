@@ -32,7 +32,7 @@ Application Name: rocketboard
 Homepage URL: http://localhost
 Authorization callback URL: http://localhost:3000/request_auth_token
 ```
-  - Add this variables to your environment (`~/.bash_profile` on OS X):
+  - Add this variables to your environment (`~/.profile` on OS X):
 ```
 export PX_CLIENT_ID="your_client_id"
 export PX_CLIENT_SECRET="your_client_secret"
@@ -41,7 +41,11 @@ export PX_DISPATCHER="https://api.github.com/repos/RocketBoard/test_issues_kanbo
 export PX_PROJECT_ISSUES="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
 export PX_PLATFORM="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
 ```
- 
+  - Run this to refresh `Terminal` so we can recongnize those new variables:
+```
+source ~/.profile
+```  
+
 *  Run the project with:
 ```
 node app.js
