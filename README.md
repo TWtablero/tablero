@@ -32,7 +32,7 @@ Application Name: rocketboard
 Homepage URL: http://localhost
 Authorization callback URL: http://localhost:3000/request_auth_token
 ```
-  - Add this variables to your environment (`/.bash_profile` on OS X):
+  - Add this variables to your environment (`~/.bash_profile` on OS X):
 ```
 export PX_CLIENT_ID="your_client_id"
 export PX_CLIENT_SECRET="your_client_secret"
