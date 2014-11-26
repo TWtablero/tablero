@@ -1,0 +1,40 @@
+.column .panel-body .issue-header {
+	position: relative;
+}
+
+.popover {
+	position: absolute;
+	background: #FFF;
+	width: 200px;
+	min-height: 100px;
+	top: .3em;
+	left: 3em;
+	z-index: 1000;
+	border: solid 1px #EEE;
+	border-radius: 3px;
+	box-shadow: 0px 7px 17px rgba(0,0,0,.3);
+}
+
+.popover-header {
+	background: #EEE;
+	border-bottom: solid 1px #DDD;
+}
+
+.popover-header::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: .75em;
+	height: .75em;
+	transform: rotate(45deg);
+	left: -.45em;
+	top: .65em;
+	background: #EEE;
+	border-bottom: solid 1px #DDD;
+	border-left: solid 1px #DDD;
+}
+.popover-header h2 {
+	font-size: 10pt;
+	padding: .5em;
+	margin: 0;
+}
