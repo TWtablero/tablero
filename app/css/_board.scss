@@ -184,3 +184,9 @@ h3 {
 		text-decoration: underline;
 	}
 }
+
+.empty-avatar.loading {
+	background: url('../img/ajax-loader.gif') no-repeat;
+	background-position: center center;
+	color: rgba(0,0,0,0);
+}
