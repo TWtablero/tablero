@@ -43,6 +43,7 @@ public class RocketboardTests {
 	String selectedOption = "";
 	private RocketboardPage RocketboardPage;
 	private final String messageSucessRocket="Liftoff! We Have a Liftoff!";
+	public static String messageDone="Drop here to launch";
 
 	/**
 	 * DriverManager instance
@@ -120,11 +121,8 @@ public class RocketboardTests {
 		assertThat(valueAfter, equalTo(valueBefore+1));
 	}
 
-	//@Test // - Test with error: String index out of range -2
+	@Test // - Test with error: String index out of range -2
 	public void moveCheckingValues() throws Exception {
-//		String[] position = new String[2];
-//		position[0]="all";
-//		RocketboardPage.selectRepo(position);
 		assertThat(RocketboardPage.createIssueCheckingValue(title, desc, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
@@ -133,7 +131,6 @@ public class RocketboardTests {
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "4");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "5");
-		Thread.sleep(4000);
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 	}
 

@@ -281,7 +281,8 @@ public class RocketboardPage {
 		values[0] = getCount(getColumn);
 		moveIssue(issueTitle, column);
 		if (column =="5"){
-			waitingLoading(); // wait for launch animation
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			waitMessage(RocketboardTests.messageDone);
 		}
 		values[1] = getCount(getColumn);
 		return values;
