@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 
 
+
 //import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
@@ -243,8 +244,11 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-		String id = getInfo(title, "id");
-		visible(id);
+//		String id = getInfo(title, "id");
+//		visible(id);
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		Boolean element = wait.until(
+		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
 		values[1] = getCount("backlog");
 		return values;
 	}
@@ -284,13 +288,9 @@ public class RocketboardPage {
 	}
 
 	public void waitMessage(String message) throws Exception {
-		waitingLoading();
-		System.out.println(message);
-		int timeout=0;
-		while(timeout<=10 || !message.equals(driver.findElement(By.cssSelector("div[class~='done']")).getText())){
-			System.out.println(driver.findElement(By.cssSelector("div[class~='done']")).getText());
-			timeout++;
-		}
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		Boolean element = wait.until(
+		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
 	}
 
 	public String columnName (String column) {
@@ -408,7 +408,6 @@ public class RocketboardPage {
 
 
 	public String getInfo(String nameIssue, String info) throws Exception {		
-		Thread.sleep(6000);
 		/** Create array with WebElement options*/
 		List<WebElement> l = driver.findElements(By.xpath("//div[contains(@class, 'issue list-group-item')]"));
 		List<WebElement> name = driver.findElements(By.xpath("//*[@class='title list-group-item-heading']"));
@@ -456,12 +455,13 @@ public class RocketboardPage {
 
 	public void assignMe(String id) throws Exception {
 		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
-		assign.click();	
-		Thread.sleep(6000);
+		assign.click();
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebElement element = wait.until(
+		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
 
 	public void pageRefresh() throws Exception {
-		//		driver.manage().deleteAllCookies();
 		driver.navigate().refresh();
 	}
 
