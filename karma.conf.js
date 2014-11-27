@@ -20,6 +20,8 @@ module.exports = function (config) {
       'app/bower_components/underscore/underscore.js',
       'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'app/bower_components/jasmine-flight/lib/jasmine-flight.js',
+      'app/bower_components/hogan/lib/template.js',
+      'app/bower_components/hogan/lib/compiler.js',
       // loaded with require
       {pattern: 'app/bower_components/flight/**/*.js', included: false},
       {pattern: 'app/js/**/*.js', included: false},
