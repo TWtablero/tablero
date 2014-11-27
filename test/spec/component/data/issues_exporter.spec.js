@@ -54,10 +54,10 @@ describeComponent('component/data/issues_exporter', function () {
     ];
 
     var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-                          "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"should send email\";\"\";;;;" +
-                          "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"\";;;;\n";
+                          "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"should send email\";\"\";;;;;" +
+                          "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"\";;;;;\n";
 
-    expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
+    expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
     var newIssues = [{
         "projectName": "test-issues-ramon",
@@ -71,7 +71,7 @@ describeComponent('component/data/issues_exporter', function () {
 
     var newIssuesToEncode = "\"test-issues-ramon\";66;\"handle errors on sending mails\";open;1 - Backlog;\"just testing an issue\";\"\";;;;;\n";
 
-    expect(this.component.linkToCsv({'issues': newIssues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
+    expect(this.component.linkToCsv(newIssues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
   });
 
   it('should create the csv with proper issue`s lead time according to its create and closed date', function() {
@@ -105,11 +105,11 @@ describeComponent('component/data/issues_exporter', function () {
       }
     ];
 
-    expect(this.component.linkToCsv({'issues': issues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
-        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-        "\n\"test-issues-leadTime-0\";;\"\";;;\"lead time description-0\";\"\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\n\"test-issues-leadTime-1\";;\"\";;;\"lead time description-1\";\"\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;1;0" +
-        "\n\"test-issues-leadTime-3\";;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-20T13:00:41Z;2014-11-21T13:30:41Z;3;1\n"));
+    expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
+        "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Closed at;Lead Time" +
+        "\n\"test-issues-leadTime-0\";;\"\";;;\"lead time description-0\";\"\";2014-11-18T13:29:41Z;2014-11-19T13:28:41Z;0" +
+        "\n\"test-issues-leadTime-1\";;\"\";;;\"lead time description-1\";\"\";2014-11-18T13:29:41Z;2014-11-19T13:29:41Z;1" +
+        "\n\"test-issues-leadTime-3\";;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-21T13:30:41Z;3\n"));
   });
 
   it('should map all the events to the given issues', function() {

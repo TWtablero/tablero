@@ -34,7 +34,7 @@ define(['flight/lib/component'],
       }
 
       this.linkToCsv = function(data) {
-        var issuesCsv = issuesToCsv(data);
+        var issuesCsv = this.issuesToCsv(data);
         if(csvLink == ''){
           issuesCsv.splice(0, 0, csvHeader());
         }
@@ -43,14 +43,14 @@ define(['flight/lib/component'],
         return 'data:text/csv;charset=utf8,' + csvLink;
       };
 
-      function validIssuesToExport(issues) {
+      this.validIssuesToExport = function(issues) {
         return _.filter(issues, function(issue) {
           return issue.projectName != undefined
         });
       }
 
-      function issuesToCsv(issues) {
-        var issuesCsv =  _.map(validIssuesToExport(issues), function(issue){
+      this.issuesToCsv = function(issues) {
+        var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
             return ["\"" + issue.projectName + "\"",
                   issue.number,
                   "\"" + issue.title + "\"",
