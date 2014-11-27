@@ -74,6 +74,7 @@ define(
       this.renderIssue = function (issue) {
         var renderedIssue = $(this.render(issue));
         if (renderedIssue.find('.assignee-avatar').attr('src') != "" ) {
+          renderedIssue.find('.assigns-myself').addClass('assigned');
           renderedIssue.find('.empty-avatar').hide();
           renderedIssue.find('.empty-avatar-label').hide();
         }

@@ -157,10 +157,10 @@ define([
             else {
               var that = this,
                   popover_confirm = $('<div class="popover-confirm"></div>'),
-                  popover_confirm_yes = $('<button type="button" class="btn btn-danger">yes</button>'),
-                  popover_confirm_no = $('<button type="button" class="btn btn-default">no</button>'),
+                  popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
+                  popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
                   pop = $(this.popover({
-                    title: "Unassign "+ userLogin +"?", body: ''
+                    title: '', body: ''
                   })).appendTo(issue_header);
 
               popover_confirm_yes.bind('click', function(){
@@ -171,6 +171,7 @@ define([
                 pop.remove();
               }).appendTo(popover_confirm);
 
+              pop.children('.popover-header').children('h2').html("Assignee: <strong>" + userLogin + "</strong>");
               popover_confirm.appendTo(pop.children('.popover-body'));
             }
           }
@@ -189,6 +190,7 @@ define([
             assignee: user.login
           }),
           success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
             $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
             $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
             $('#' + issue.id + ' .assignee-avatar').show();
@@ -235,6 +237,7 @@ define([
             assignee: ''
           }),
           success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
             $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
             $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
             $('#' + issue.id + ' .empty-avatar').show();
