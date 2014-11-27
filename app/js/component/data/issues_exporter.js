@@ -157,7 +157,16 @@ define(['flight/lib/component'],
           issuesWithDevDate = mergeEventsWithIssues(issuesToExport, earlierstDevelopemntIssuesEvent);
 
           var uri = linkToCsv(issuesWithDevDate);
-          $("#export_csv").attr('href', uri);
+
+          var downloadLink = document.createElement("a");
+          downloadLink.href = uri;
+          downloadLink.download = "data.csv";
+
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+
+          //$("#export_csv").attr('href', uri);
       };
 
 
