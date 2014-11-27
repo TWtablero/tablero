@@ -71,10 +71,19 @@
 	display: inline-block;
 }
 
-.empty-avatar-label {
+.empty-avatar-label,
+.assignee-avatar-label {
 	font-size: 0.7em;
 	color: #535353;
 	margin-left: 7px;
+}
+
+.assignee-avatar-label {
+	display: none;
+}
+
+.assigned .assignee-avatar-label {
+	display: inline-block;
 }
 
 .panel-heading {
