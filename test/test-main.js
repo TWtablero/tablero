@@ -9,6 +9,7 @@ requirejs.config({
   baseUrl: '/base/app/bower_components',
 
   paths: {
+    'config': '../js/config',
     'component': '../js/component',
     'page': '../js/page',
     'flight': '../bower_components/flight'
