@@ -26,14 +26,14 @@ define(['flight/lib/component'],
         $("#export_csv").attr("disabled", true);
         var repositoriesUrls = this.getRepositoriesUrlsFromIssues(data.issues);
           issuesToExport = data.issues;
-        this.getEventsFromProjects(repositoriesUrls, this.addDevDateForIssues);
+        this.getEventsFromProjects(repositoriesUrls);
       };
 
       this.clearLink = function(){
         csvLink = '';
       }
 
-      function linkToCsv(data) {
+      this.linkToCsv = function(data) {
         var issuesCsv = issuesToCsv(data);
         if(csvLink == ''){
           issuesCsv.splice(0, 0, csvHeader());
@@ -43,7 +43,7 @@ define(['flight/lib/component'],
         return 'data:text/csv;charset=utf8,' + csvLink;
       };
 
-        function validIssuesToExport(issues) {
+      function validIssuesToExport(issues) {
         return _.filter(issues, function(issue) {
           return issue.projectName != undefined
         });
@@ -87,8 +87,9 @@ define(['flight/lib/component'],
         return ["Source","Github ID","Title","Status","Kanban State","Description", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
       };
 
-      this.getEventsFromProjects = function(projectsUrl, callback) {
+      this.getEventsFromProjects = function(projectsUrl) {
         var events = [];
+        var self = this;
 
         function getEvents(url) {
             $.get(url,function(data,textStatus,request){
@@ -110,39 +111,39 @@ define(['flight/lib/component'],
         });
 
         $(document).ajaxStop(function () {
-            callback(events);
+            self.createCsvUri(self.addDevDateForIssues(events));
         });
       };
 
-        function groupEventsByIssuesId(events) {
-            return _.groupBy(events, function(event){ return event.issue.id; });
-        };
+      this.groupEventsByIssuesId = function(events) {
+          return _.groupBy(events, function(event){ return event.issue.id; });
+      };
 
-        function excludeNonLabeledEvents(mappedEvents) {
-            return _.object(_.map(mappedEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.event == 'labeled'; })]}));
-        };
+      this.excludeNonLabeledEvents = function(mappedEvents) {
+          return _.object(_.map(mappedEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.event == 'labeled'; })]}));
+      };
 
-        function getOnlyDevelopmentIssueEvents(labeledEvents) {
-            return _.object(_.map(labeledEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.label.name == '2 - Development'; })]}));
-        };
+      this.getOnlyDevelopmentIssueEvents = function(labeledEvents) {
+          return _.object(_.map(labeledEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.label.name == '2 - Development'; })]}));
+      };
 
-        function getEarliestDevelopmentIssueEvents(developmentEvents) {
-            return _.object(_.map(developmentEvents, function(events,key) {
-                return [key, _.first(_.sortBy(events, function(e) { return e.created_at;}))]
-            }));
-        };
+      this.getEarliestDevelopmentIssueEvents = function(developmentEvents) {
+          return _.object(_.map(developmentEvents, function(events,key) {
+              return [key, _.first(_.sortBy(events, function(e) { return e.created_at;}))]
+          }));
+      };
 
-        function mergeEventsWithIssues(issues, events) {
-            return _.each(issues, function(issue) {
-                if (events[issue.id]) {
-                    issue.dev_at =  events[issue.id].created_at;
-                }
-            });
-        };
+      this.mergeEventsWithIssues = function(issues, events) {
+          return _.each(issues, function(issue) {
+              if (events[issue.id]) {
+                  issue.dev_at =  events[issue.id].created_at;
+              }
+          });
+      };
 
-        this.getRepositoriesUrlsFromIssues = function(issues) {
+      this.getRepositoriesUrlsFromIssues = function(issues) {
             return _.uniq(_.pluck(issues, 'repoUrl'));
-        };
+      };
 
       this.addDevDateForIssues = function(events) {
           var groupedEventsByIssueId = {},
@@ -151,13 +152,17 @@ define(['flight/lib/component'],
               earlierstDevelopemntIssuesEvent = {},
               issuesWithDevDate = {};
 
-          groupedEventsByIssueId = groupEventsByIssuesId(events);
-          labeledEvents = excludeNonLabeledEvents(groupedEventsByIssueId);
-          developmentEvents = getOnlyDevelopmentIssueEvents(labeledEvents);
-          earlierstDevelopemntIssuesEvent = getEarliestDevelopmentIssueEvents(developmentEvents);
-          issuesWithDevDate = mergeEventsWithIssues(issuesToExport, earlierstDevelopemntIssuesEvent);
+          groupedEventsByIssueId = this.groupEventsByIssuesId(events);
+          labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
+          developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
+          earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
+          issuesWithDevDate = this.mergeEventsWithIssues(issuesToExport, earlierstDevelopemntIssuesEvent);
 
-          var uri = linkToCsv(issuesWithDevDate);
+          return issuesWithDevDate;
+      };
+
+      this.createCsvUri = function(issuesWithDevDate) {
+          var uri = this.linkToCsv(issuesWithDevDate);
 
           var downloadLink = document.createElement("a");
           downloadLink.href = uri;
@@ -167,12 +172,8 @@ define(['flight/lib/component'],
           downloadLink.click();
           document.body.removeChild(downloadLink);
 
-         $("#export_csv").attr("disabled", false);
-
-          //$("#export_csv").attr('href', uri);
+          $("#export_csv").attr("disabled", false);
       };
-
-
 
       this.after('initialize', function () {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);

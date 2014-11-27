@@ -25,13 +25,13 @@ describeComponent('component/data/issues_exporter', function () {
       }
     ];
 
-    expect(linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
+    expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(
         "Source;Github ID;Title;Status;Kanban State;Description;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
         "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"should send email\";\"1- Backlog,2- Dev\";;;;;" +
         "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"If mails can't be sent by the twisted process\";\"3- QA,2- Dev\";;;;;\n"));
   });
 
-  xit('creates a csv link and adds new issues to the end of it', function(){
+  it('creates a csv link and adds new issues to the end of it', function(){
     var issues = [
       {
         "projectName": "pixelated-platform",
@@ -74,7 +74,7 @@ describeComponent('component/data/issues_exporter', function () {
     expect(this.component.linkToCsv({'issues': newIssues})).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
   });
 
-  xit('should create the csv with proper issue`s lead time according to its create and closed date', function() {
+  it('should create the csv with proper issue`s lead time according to its create and closed date', function() {
     var issues = [
       {
         "projectName": "test-issues-leadTime-0",
@@ -112,7 +112,7 @@ describeComponent('component/data/issues_exporter', function () {
         "\n\"test-issues-leadTime-3\";;\"\";;;\"lead time description-3\";\"\";2014-11-18T13:29:41Z;2014-11-20T13:00:41Z;2014-11-21T13:30:41Z;3;1\n"));
   });
 
-  xit('should map all the events to the given issues', function() {
+  it('should map all the events to the given issues', function() {
     var events = [
       {
         id: 197865882,
@@ -155,7 +155,7 @@ describeComponent('component/data/issues_exporter', function () {
       ]});
   });
 
-  xit('should exclude the events that are different than labeled', function() {
+  it('should exclude the events that are different than labeled', function() {
     var mappedEvents = {
       49941278: [
         {id: 197865884, event: 'labeled', issue: {id : 49941278}},
@@ -182,7 +182,7 @@ describeComponent('component/data/issues_exporter', function () {
 
   });
 
-  xit('should get only the events that corresponds when the issue was moved to the Development column', function() {
+  it('should get only the events that corresponds when the issue was moved to the Development column', function() {
     var labeledEvents = {
       49941278: [
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
@@ -209,7 +209,7 @@ describeComponent('component/data/issues_exporter', function () {
     );
   });
 
-  xit('should get the earlier event for each issue that corresponds when the issue was moved to the Development column', function() {
+  it('should get the earlier event for each issue that corresponds when the issue was moved to the Development column', function() {
     var labeledEvents = {
       49941278: [
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
@@ -230,7 +230,7 @@ describeComponent('component/data/issues_exporter', function () {
     );
   });
 
-  xit('should create the dev_at date for each issue according to its event creation date', function() {
+  it('should create the dev_at date for each issue according to its event creation date', function() {
     var issues = [
       {id: 1},
       {id: 2},
@@ -249,7 +249,7 @@ describeComponent('component/data/issues_exporter', function () {
     ]);
   });
 
-  xit('should return the issues with the development date using its events', function() {
+  it('should return the issues with the development date using its events', function() {
     var issues = [
       {id: 1},
       {id: 2},
@@ -311,7 +311,7 @@ describeComponent('component/data/issues_exporter', function () {
     ]);
   });
 
-  xit('should get all the different repositorie urls from the issues', function() {
+  it('should get all the different repositorie urls from the issues', function() {
     var issues = [
       {id: 1, repoUrl: "https://api.github.com/repos/RocketBoard/test_issues_kanboard/"},
       {id: 2, repoUrl: "https://api.github.com/repos/RocketBoard/test_issues_kanboard/"},
