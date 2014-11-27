@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 define([],
-  function (template, compiler) {
+  function () {
     return issueTemplate;
 
        function issueTemplate() {

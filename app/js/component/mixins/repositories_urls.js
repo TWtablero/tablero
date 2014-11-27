@@ -1,5 +1,5 @@
-define([],
-  function () {
+define(['config/config_bootstrap'],
+  function (config) {
     return function () {
       this.fetchUserAgentIssues = function (page) {
         return $.getJSON(this.repoIssuesURL(this.getURLFromProject("user-agent"), page));
@@ -47,7 +47,7 @@ define([],
       };
 
       this.getURLFromProject = function (projectName) {
-        return CONFIG.repos[projectName] || "not found";
+        return config.getConfig().repos[projectName] || "not found";
       };
     }
   }

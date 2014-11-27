@@ -4,7 +4,7 @@ var url = require('url');
 var sass = require('node-sass');
 var app = express();
 var configServer = require('./config_server.js');
-var config = require('./config.js');
+var configClient = require('./config_client.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
@@ -14,7 +14,7 @@ app.use(sass.middleware({
 app.use(express.static('app'));
 
 app.get('/config', function (req, res) {
-  res.send(config);
+  res.send(configClient);
 });
 
 app.get('/request_code', function (req, res) {
