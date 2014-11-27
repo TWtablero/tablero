@@ -23,6 +23,7 @@ define(['flight/lib/component'],
       var csvLink = '';
 
       this.mountExportCsvLink = function(ev, data) {
+        $("#export_csv").attr("disabled", true);
         var repositoriesUrls = this.getRepositoriesUrlsFromIssues(data.issues);
           issuesToExport = data.issues;
         this.getEventsFromProjects(repositoriesUrls, this.addDevDateForIssues);
@@ -165,6 +166,8 @@ define(['flight/lib/component'],
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
+
+         $("#export_csv").attr("disabled", false);
 
           //$("#export_csv").attr('href', uri);
       };
