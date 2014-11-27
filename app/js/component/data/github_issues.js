@@ -77,7 +77,8 @@ define([
           var issuesArrayJson = project.repo[0].responseJSON || [];
           _.each(issuesArrayJson, function(issue,index) {
               issue.projectName = project.projectName;
-               allIssues.push(issue);
+              issue.repoUrl = issue.url.match(/https:\/\/([a-zA-Z._]+\/){4}/)[0];
+              allIssues.push(issue);
           });
         });
         return allIssues;
