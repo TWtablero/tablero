@@ -111,7 +111,7 @@ define(['flight/lib/component'],
         });
 
         $(document).ajaxStop(function () {
-            self.createCsvUri(self.addDevDateForIssues(events));
+            self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
         });
       };
 
@@ -145,7 +145,7 @@ define(['flight/lib/component'],
             return _.uniq(_.pluck(issues, 'repoUrl'));
       };
 
-      this.addDevDateForIssues = function(events) {
+      this.addDevDateForIssues = function(issues,events) {
           var groupedEventsByIssueId = {},
               labeledEvents = {},
               developmentEvents = {},
@@ -156,7 +156,7 @@ define(['flight/lib/component'],
           labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
           developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
           earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
-          issuesWithDevDate = this.mergeEventsWithIssues(issuesToExport, earlierstDevelopemntIssuesEvent);
+          issuesWithDevDate = this.mergeEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
 
           return issuesWithDevDate;
       };

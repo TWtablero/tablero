@@ -303,7 +303,6 @@ describeComponent('component/data/issues_exporter', function () {
         created_at: "2014-11-24T20:54:52Z"
       }
     ];
-
     expect(this.component.addDevDateForIssues(issues, events)).toEqual([
       {id: 1, dev_at: "2014-11-20T20:54:52Z"},
       {id: 2},
