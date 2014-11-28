@@ -82,14 +82,14 @@ public class RocketboardTests {
 		driver.quit();
 	}
 
-	@Test
+	//@Test // DUPLICATED FROM E2E test
 	public void moveIssueInsideDone() throws Exception{
 		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
-		RocketboardPage.moveIssue(title, "ready");
-		RocketboardPage.moveIssue(title, "development");
-		RocketboardPage.moveIssue(title, "quality-assurance");
-		RocketboardPage.moveIssue(title, "done");
+		RocketboardPage.moveIssue(title, "2");
+		RocketboardPage.moveIssue(title, "3");
+		RocketboardPage.moveIssue(title, "4");
+		RocketboardPage.moveIssue(title, "5");
 		assertThat(RocketboardPage.checkIssueLaunched(messageSucessRocket), equalTo(Boolean.TRUE));
 	}
 
@@ -111,7 +111,7 @@ public class RocketboardTests {
 		RocketboardPage.moveIssue(title, "4");
 		RocketboardPage.moveIssue(title, "5");
 
-		Boolean issueLaunched = RocketboardPage.checkIssueLaunched("Liftoff! We Have a Liftoff!");
+		Boolean issueLaunched = RocketboardPage.checkIssueLaunched(messageSucessRocket);
 		assertThat(issueLaunched, equalTo(Boolean.TRUE));
 	}
 

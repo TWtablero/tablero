@@ -289,8 +289,9 @@ public class RocketboardPage {
 //		while (flag != 1 && column == "done"){
 //			boolean verify = verifyLabel(issueTitle);
 //			if (verify == true){
-//				new Actions(driver).dragAndDrop(d1, d2).build().perform();
+//				pageRefresh();
 //				waitingLoading();
+//				new Actions(driver).dragAndDrop(d1, d2).build().perform();
 //			}
 //			if (verify == false){
 //				flag = 1;
@@ -538,7 +539,8 @@ public class RocketboardPage {
 	}
 	
 	public boolean verifyLabel(String label) throws Exception{
-		boolean verify = driver.findElement(By.linkText(label)).isDisplayed();
+		boolean verify = driver.getPageSource().contains(label);
+		System.out.print("VERIFY VALUE: "+verify);
 		return verify;
 	}
 
