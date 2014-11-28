@@ -8,12 +8,16 @@ import static org.junit.Assert.fail;
 
 
 
+
+
+
 //import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ById;
@@ -244,9 +248,7 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-//		String id = getInfo(title, "id");
-//		visible(id);
-		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebDriverWait wait = new WebDriverWait(driver, 20);
 		Boolean element = wait.until(
 		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
 		values[1] = getCount("backlog");
@@ -271,9 +273,30 @@ public class RocketboardPage {
 			column=columnName(column);
 		}
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
-		WebElement d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
+		WebElement d2;
+		if (column == "done"){
+			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
+		}
+		else {
+			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
+		}
 		new Actions(driver).dragAndDrop(d1, d2).build().perform();
 		waitingLoading();
+		
+//		// TRY TO FIX THE PROBLEM TO DROP IN DONE COLUMN
+//		int flag = 0;
+//		
+//		while (flag != 1 && column == "done"){
+//			boolean verify = verifyLabel(issueTitle);
+//			if (verify == true){
+//				new Actions(driver).dragAndDrop(d1, d2).build().perform();
+//				waitingLoading();
+//			}
+//			if (verify == false){
+//				flag = 1;
+//			}
+//		}
+//		waitingLoading();
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -289,7 +312,7 @@ public class RocketboardPage {
 	}
 
 	public void waitMessage(String message) throws Exception {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebDriverWait wait = new WebDriverWait(driver, 20);
 		Boolean element = wait.until(
 		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
 	}
@@ -457,7 +480,7 @@ public class RocketboardPage {
 	public void assignMe(String id) throws Exception {
 		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
 		assign.click();
-		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebDriverWait wait = new WebDriverWait(driver, 20);
 		WebElement element = wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
@@ -512,6 +535,11 @@ public class RocketboardPage {
 			i++;
 		}
 		return present;
+	}
+	
+	public boolean verifyLabel(String label) throws Exception{
+		boolean verify = driver.findElement(By.linkText(label)).isDisplayed();
+		return verify;
 	}
 
 }

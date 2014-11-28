@@ -33,8 +33,8 @@ public class RocketboardTests {
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
-	public static String title = "title_"+RandomStringUtils.randomAlphabetic(6);
-	public static String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
+	public static String title;
+	public static String desc;
 	public String project;
 	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
 	String[] repoUsed = {"userAgent"};
@@ -70,6 +70,9 @@ public class RocketboardTests {
 		this.driver.get("http://localhost:3000"+serviceUrl);
 		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);		 
 		 */
+		
+		title = "title_"+RandomStringUtils.randomAlphabetic(6);
+		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
 	}
 
 
@@ -81,7 +84,7 @@ public class RocketboardTests {
 
 	@Test
 	public void moveIssueInsideDone() throws Exception{
-		RocketboardPage.selectRepo(repoUsed);
+		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
 		RocketboardPage.moveIssue(title, "ready");
 		RocketboardPage.moveIssue(title, "development");
@@ -92,6 +95,7 @@ public class RocketboardTests {
 
 	@Test
 	public void checkQuantityIssuesAfterCreateOne() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(repoUsed);
 		checkValue = RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
@@ -99,7 +103,7 @@ public class RocketboardTests {
 
 	@Test
 	public void E2E() throws Exception {
-//		RocketboardPage.selectRepo(repoUsed);
+		RocketboardPage.waitingLoading();
 		checkValue = RocketboardPage.createIssueGettingValue(title, desc, RocketboardPage.chooseProject());
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 		RocketboardPage.moveIssue(title, "2");
@@ -114,15 +118,17 @@ public class RocketboardTests {
 	@Test
 	/** Create an issue and check if the column backlog is correctly incremented */
 	public void checkColumCount() throws Exception {
-
+		RocketboardPage.waitingLoading();
 		Integer valueBefore = RocketboardPage.getCount("backlog");
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		RocketboardPage.waitingLoading();
 		Integer valueAfter = RocketboardPage.getCount("backlog");
 		assertThat(valueAfter, equalTo(valueBefore+1));
 	}
 
 	@Test // - Test with error: String index out of range -2
 	public void moveCheckingValues() throws Exception {
+		RocketboardPage.waitingLoading();
 		assertThat(RocketboardPage.createIssueCheckingValue(title, desc, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
@@ -189,6 +195,7 @@ public class RocketboardTests {
 
 	@Test
 	public void createSimpleIssue() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(repoUsed);
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
 		RocketboardPage.waitingLoading();
@@ -224,6 +231,7 @@ public class RocketboardTests {
 
 	@Test
 	public void AssignMeCard() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
 		String idCard = RocketboardPage.getInfo(title, "id");
 		RocketboardPage.assignMe(idCard);
@@ -232,6 +240,7 @@ public class RocketboardTests {
 	
 	@Test
 	public void setLabel() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String id = RocketboardPage.getInfo(title, "id");
