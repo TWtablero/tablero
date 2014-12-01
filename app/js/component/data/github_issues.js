@@ -100,17 +100,17 @@ define([
             $("#loading").removeClass();
 
             var projects = [{
-                'projectName': 'pixelated-user-agent',
-                'repo': userAgentIssues
+                'projectName': 'pixelated-project-issues',
+                'repo': projectIssuesIssues
+              },  {
+                'projectName': 'pixelated-platform',
+                'repo': platformIssues
               }, {
                 'projectName': 'pixelated-dispatcher',
                 'repo': dispatcherIssues
               }, {
-                'projectName': 'pixelated-platform',
-                'repo': platformIssues
-              }, {
-                'projectName': 'pixelated-project-issues',
-                'repo': projectIssuesIssues
+                'projectName': 'pixelated-user-agent',
+                'repo': userAgentIssues
               }],
               filteredProjects = this.filterProjectsByName(projects, data.projectName),
               issuesFromProjects = this.getIssuesFromProjects(filteredProjects);

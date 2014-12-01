@@ -19,12 +19,13 @@ define([],
 
        function issueTemplate() {
         var colorMap = {};
+        var numOfRepos = 4;
 
      
 
       this.getRepoColor = function (projectName) {
           if (!(projectName in colorMap)) {
-              colorMap[projectName] = 'color' + _.size(colorMap);
+              colorMap[projectName] = 'color' + (numOfRepos-1-_.size(colorMap));
           }
           return colorMap[projectName];
       };
