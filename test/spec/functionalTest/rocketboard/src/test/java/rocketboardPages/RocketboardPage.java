@@ -248,7 +248,7 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebDriverWait wait = new WebDriverWait(driver, 40);
 		Boolean element = wait.until(
 		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
 		values[1] = getCount("backlog");
