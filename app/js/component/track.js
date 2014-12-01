@@ -64,8 +64,9 @@ define(
         this.attr.issuesCount = 0;
       };
 
-      this.moveIssue = function(movedToTrackName) {
-        if(this.attr.trackType === "4 - Done") {
+      this.moveIssue = function(movedToTrackName , params) {
+        var labelDone = "4 - Done";
+        if(this.attr.trackType === labelDone && params.label === labelDone) {
           this.attr.issuesCount++;
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }

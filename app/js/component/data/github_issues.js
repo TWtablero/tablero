@@ -270,6 +270,8 @@ define([
               return;
             }
 
+
+
             url = this.getIssueUrlFromDraggable(ui);
             label = this.parseLabel(event.target.id);
             oldLabel = this.parseLabel(ui.sender[0].id);
@@ -280,8 +282,16 @@ define([
             $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
             $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
 
+            var issueMovedParam = { 
+              label : label ,
+              oldLabel : oldLabel,
+              previousElement : ui.item[0].previousElementSibling,
+              nextElement : ui.item[0].previousElementSibling
+            };
+
+            this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
+
             if (label == "4 - Done") {
-              this.trigger(document, 'data:issues:issueMoved');
               this.triggerRocketAnimation();
               $.ajax({
                 type: 'PATCH',
