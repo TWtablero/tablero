@@ -543,6 +543,23 @@ public class RocketboardPage {
 		System.out.print("VERIFY VALUE: "+verify);
 		return verify;
 	}
+	
+	public boolean waitCreatedIssue(String label) throws Exception{
+		int i = 0;
+		boolean present = false;
+		while(i<=60 && present == false){
+			try {
+				driver.getPageSource().contains(label);
+	            present = true;
+	        } catch (org.openqa.selenium.NoSuchElementException e) {
+	        	present = false;
+	        }
+			System.out.print(present);
+			i++;
+		}
+		return present;
+	}
+	
 
 }
 

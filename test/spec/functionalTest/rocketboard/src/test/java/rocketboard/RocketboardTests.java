@@ -86,6 +86,7 @@ public class RocketboardTests {
 	public void moveIssueInsideDone() throws Exception{
 		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		RocketboardPage.waitCreatedIssue(title);
 		RocketboardPage.moveIssue(title, "2");
 		RocketboardPage.moveIssue(title, "3");
 		RocketboardPage.moveIssue(title, "4");
@@ -98,6 +99,7 @@ public class RocketboardTests {
 		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(repoUsed);
 		checkValue = RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		RocketboardPage.waitCreatedIssue(title);
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 	}	
 
@@ -105,6 +107,7 @@ public class RocketboardTests {
 	public void E2E() throws Exception {
 		RocketboardPage.waitingLoading();
 		checkValue = RocketboardPage.createIssueGettingValue(title, desc, RocketboardPage.chooseProject());
+		RocketboardPage.waitCreatedIssue(title);
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 		RocketboardPage.moveIssue(title, "2");
 		RocketboardPage.moveIssue(title, "3");
@@ -121,7 +124,7 @@ public class RocketboardTests {
 		RocketboardPage.waitingLoading();
 		Integer valueBefore = RocketboardPage.getCount("backlog");
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitingLoading();
+		RocketboardPage.waitCreatedIssue(title);
 		Integer valueAfter = RocketboardPage.getCount("backlog");
 		assertThat(valueAfter, equalTo(valueBefore+1));
 	}
@@ -130,6 +133,7 @@ public class RocketboardTests {
 	public void moveCheckingValues() throws Exception {
 		RocketboardPage.waitingLoading();
 		assertThat(RocketboardPage.createIssueCheckingValue(title, desc, RocketboardPage.chooseProject()), equalTo(Boolean.TRUE));
+		RocketboardPage.waitCreatedIssue(title);
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
 		assertEquals(String.valueOf(checkValue[0]+1),String.valueOf(checkValue[1]));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "3");
@@ -198,7 +202,7 @@ public class RocketboardTests {
 		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(repoUsed);
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitingLoading();
+		RocketboardPage.waitCreatedIssue(title);
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
 
@@ -212,6 +216,7 @@ public class RocketboardTests {
 	@Test
 	public void CreateIssueNoDescription() throws Exception{
 		RocketboardPage.createIssue(title,"", RocketboardPage.chooseProject());
+		RocketboardPage.waitCreatedIssue(title);
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
 
@@ -233,6 +238,7 @@ public class RocketboardTests {
 	public void AssignMeCard() throws Exception{
 		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		RocketboardPage.waitCreatedIssue(title);
 		String idCard = RocketboardPage.getInfo(title, "id");
 		RocketboardPage.assignMe(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
