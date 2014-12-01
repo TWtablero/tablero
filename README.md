@@ -21,7 +21,7 @@ git clone https://github.com/RocketBoard/rocketboard.git
  
 * Install the project dependences
 ```
-npm install & bower install
+npm install && bower install
 ```
  
 * Configure development environment: 

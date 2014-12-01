@@ -42,15 +42,19 @@ header {
 				color: white;
 
 				&.color0 {
-					background-color: #3cb878;
+					background-color: #cba50b;
+				}
+
+				&.color1 {
+					background-color: #69b4df;
 				}
 
 				&.color2 {
 					background-color: #ef689e;
 				}
 
-				&.color1 {
-					background-color: #69b4df;
+				&.color3 {
+					background-color: #3cb878;
 				}
 			}
 		}

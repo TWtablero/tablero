@@ -47,7 +47,7 @@ define(
       });
 
       $(document).trigger('ui:needs:issues', {
-        projectName: ['pixelated-user-agent', 'pixelated-platform', 'pixelated-dispatcher']
+        projectName: ['pixelated-user-agent', 'pixelated-platform', 'pixelated-dispatcher', 'pixelated-project-issues']
       });
 
       $("#create_issue").click(function () {
