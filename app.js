@@ -18,7 +18,7 @@ app.get('/config', function (req, res) {
 });
 
 app.get('/request_code', function (req, res) {
-  res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=public_repo');
+  res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=repo');
 });
 
 app.get('/request_auth_token', function (req, res) {

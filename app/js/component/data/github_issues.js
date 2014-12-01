@@ -79,20 +79,23 @@ define([
         //inserido para solução problema na automação
         $("#loading").addClass("loading");
         //--
-        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred;
+        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
         userAgentIssuesDeferred = $.Deferred();
         dispatcherIssuesDeferred = $.Deferred();
         platformIssuesDeferred = $.Deferred();
+        projectIssuesIssuesDeferred = $.Deferred();
 
         this.fetchUserAgentIssues(data.page).complete(userAgentIssuesDeferred.resolve);
         this.fetchDispatcherIssues(data.page).complete(dispatcherIssuesDeferred.resolve);
         this.fetchPlatformIssues(data.page).complete(platformIssuesDeferred.resolve);
+        this.fetchProjectIssues(data.page).complete(projectIssuesIssuesDeferred.resolve);
 
-        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred).done(
-          function (userAgentIssues, dispatcherIssues, platformIssues) {
+
+        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred).done(
+          function (userAgentIssues, dispatcherIssues, platformIssues, projectIssuesIssues) {
 
             $("#loading").removeClass();
 
@@ -105,6 +108,9 @@ define([
               }, {
                 'projectName': 'pixelated-platform',
                 'repo': platformIssues
+              }, {
+                'projectName': 'pixelated-project-issues',
+                'repo': projectIssuesIssues
               }],
               filteredProjects = this.filterProjectsByName(projects, data.projectName),
               issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
