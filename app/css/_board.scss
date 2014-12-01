@@ -24,16 +24,20 @@
 		transform: rotate(4deg);
 	}
 
-    &.color0 .issue-number {
-	  background-color: #69b4df ;
+	&.color0 .issue-number {
+		background-color: #3cb878;
 	}
 
 	&.color1 .issue-number {
-	  background-color: #ef689e;
+		background-color: #ef689e;
 	}
 
 	&.color2 .issue-number {
-	  background-color: #3cb878;
+		background-color: #69b4df;
+	}
+
+	&.color3 .issue-number {
+		background-color: #cba50b;
 	}
 
 }
