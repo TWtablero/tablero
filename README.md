@@ -1,6 +1,4 @@
-[![Build Status](https://snap-ci.com/RocketBoard/rocketboard/branch/master/build_image)](https://snap-ci.com/RocketBoard/rocketboard/branch/master)
-
-# RocketBoard
+# RocketBoard [![Build Status](https://snap-ci.com/RocketBoard/rocketboard/branch/master/build_image)](https://snap-ci.com/RocketBoard/rocketboard/branch/master)
 
 * [Installation](https://github.com/RocketBoard/rocketboard#installation)
 * [Static file server](https://github.com/RocketBoard/rocketboard#static-file-server)
