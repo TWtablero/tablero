@@ -37,7 +37,17 @@ define(
         filteredIssues = _.filter(issues, this.isIssueOnThisTrack, this);
         this.attr.issues = filteredIssues;
 
-        return _.sortBy(filteredIssues.reverse(), function (issue) { issue.number });
+        return filteredIssues;
+      };
+
+
+      this.sortIssues = function(){
+        var divList = $(".issue", this.node);
+        divList.sort(function(a, b){ return $(a).attr('data-priority') -  $(b).attr('data-priority') });
+
+        //$(".issue-track", this.node).html(divList);
+         divList.appendTo(this.node);
+        
       };
 
       this.displayIssues = function (ev, data) {
@@ -96,6 +106,9 @@ define(
         this.on(document, 'data:issues:cleanCount', this.cleanCount);
         this.on(document, 'data:issues:issueMoved', this.moveIssue);
         this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
+        this.on(document, 'ui:issues:ended', this.sortIssues);
+
+
       });
     }
   }

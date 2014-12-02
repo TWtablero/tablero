@@ -130,6 +130,8 @@ define([
                 issues: issuesFromProjects
               });
               this.trigger('ui:needs:issues', data);
+            } else {
+              this.trigger('ui:issues:ended');
             }
           }.bind(this)
         );
