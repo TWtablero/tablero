@@ -21,27 +21,23 @@ public class DriverManager {
 		if  (location.equals("localDriver")){
 			this.driver = new FirefoxDriver();	
 		}
-
 		else if (location.equals("remoteDriver")){
 			if (browser.equals("IE")){
 				DesiredCapabilities caps = DesiredCapabilities.internetExplorer();
 				caps.setCapability("platform", Platform.WIN8);
 				caps.setCapability("version","11");	
-
 			}
 			else if (browser.equals("chrome")){
 				DesiredCapabilities caps = DesiredCapabilities.chrome();
 				caps.setCapability("platform", Platform.MAC);
 				caps.setCapability("version","38");	
 			}
-
 			else if (browser.equals("firefox")){
 				DesiredCapabilities caps = DesiredCapabilities.chrome();
 				caps.setCapability("platform", Platform.LINUX);
 				caps.setCapability("version","32");	
 			}
 		}
-
 	}
 
 	public void loadDriver(){

@@ -1,15 +1,36 @@
 package rocketboardPages;
 
+import static org.junit.Assert.fail;
+
+
+
+
+
+
+
+
+
+
+//import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ById;
+import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +38,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+
 import rocketboard.RocketboardTests;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -196,6 +222,13 @@ public class RocketboardPage {
 
 		else if (repo == "userAgent")
 		{
+			if (driver.findElement(By.id("repository-4")).isSelected())
+				retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "projetIssue")
+		{
 			if (driver.findElement(By.id("repository-1")).isSelected())
 				retorno = true;
 			else retorno = false;	
@@ -203,20 +236,6 @@ public class RocketboardPage {
 
 		return retorno;
 	}	
-
-	public Boolean createIssueCheckingValue(String title, String desc, String repoName) throws Exception {
-		Thread.sleep(5000);
-		Integer valueBefore = getCount("backlog");
-		createIssue(title, desc, repoName);
-		Thread.sleep(5000);
-		Integer valueAfter = getCount("backlog");
-		if ( valueAfter == valueBefore+1 ){
-			issueCreated = Boolean.TRUE;
-		} else {
-			issueCreated = Boolean.FALSE;
-		}
-		return issueCreated;
-	}
 
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
 		waitingLoading();
@@ -233,7 +252,7 @@ public class RocketboardPage {
 	public Integer getCount(String column) throws Exception {	
 		waitingLoading();
 		String countValueStr = "";
-		if (column == "done" ){
+		if (column == "5" || column == "done"){
 			countValueStr = driver.findElement(By.xpath("//div[5]/div/div/span")).getText();
 		} else {
 			countValueStr = driver.findElement(By.cssSelector("div.panel-heading."+column+"-header > span.issues-count")).getText();
@@ -279,8 +298,8 @@ public class RocketboardPage {
 		getColumn = columnName(column);
 		values[0] = getCount(getColumn);
 		moveIssue(issueTitle, column);
-		if (column =="5"){
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		if (column =="5" || column =="done"){
+			waitMessage(RocketboardTests.messageSucessRocket);
 			waitMessage(RocketboardTests.messageDone);
 		}
 		values[1] = getCount(getColumn);
@@ -288,9 +307,21 @@ public class RocketboardPage {
 	}
 
 	public void waitMessage(String message) throws Exception {
-		WebDriverWait wait = new WebDriverWait(driver, 40);
-		Boolean element = wait.until(
-		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
+//		WebDriverWait wait = new WebDriverWait(driver, 40);
+//		Boolean element = wait.until(
+//		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
+		int i = 0;
+		boolean present = false;
+		while(i<=60 && present == false){
+			try {
+				driver.getPageSource().contains(message);
+	            present = true;
+	        } catch (org.openqa.selenium.NoSuchElementException e) {
+	        	present = false;
+	        }
+			Thread.sleep(1000);
+			i++;
+		}
 	}
 
 	public String columnName (String column) {
@@ -348,7 +379,6 @@ public class RocketboardPage {
 
 	public void clickAdvanced() throws Exception{
 		advancedOptions.click();
-
 	}
 
 	public String chooseProject () throws Exception {
@@ -507,7 +537,6 @@ public class RocketboardPage {
 	        } catch (org.openqa.selenium.NoSuchElementException e) {
 	        	present = false;
 	        }
-			System.out.print(present);
 			i++;
 		}
 		return present;
@@ -532,7 +561,6 @@ public class RocketboardPage {
 			Thread.sleep(1000);
 			i++;
 		}
-		System.out.print("Wait Created Issue (seconds): "+i);
 		return present;
 	}
 	
