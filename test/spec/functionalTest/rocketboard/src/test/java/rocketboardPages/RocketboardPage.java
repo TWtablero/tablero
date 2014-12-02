@@ -248,9 +248,10 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-		WebDriverWait wait = new WebDriverWait(driver, 40);
-		Boolean element = wait.until(
-		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
+//		WebDriverWait wait = new WebDriverWait(driver, 40);
+//		Boolean element = wait.until(
+//		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
+		waitCreatedIssue(title);
 		values[1] = getCount("backlog");
 		return values;
 	}
@@ -313,7 +314,7 @@ public class RocketboardPage {
 	}
 
 	public void waitMessage(String message) throws Exception {
-		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebDriverWait wait = new WebDriverWait(driver, 40);
 		Boolean element = wait.until(
 		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
 	}
@@ -554,9 +555,10 @@ public class RocketboardPage {
 	        } catch (org.openqa.selenium.NoSuchElementException e) {
 	        	present = false;
 	        }
-			System.out.print(present);
+			Thread.sleep(1000);
 			i++;
 		}
+		System.out.print("Wait Created Issue (seconds): "+i);
 		return present;
 	}
 	
