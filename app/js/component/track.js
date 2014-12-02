@@ -65,11 +65,17 @@ define(
       };
 
       this.moveIssue = function(movedToTrackName , params) {
-        var labelDone = "4 - Done";
+        var labelDone = "4 - Done"; 
         if(this.attr.trackType === labelDone && params.label === labelDone) {
           this.attr.issuesCount++;
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }
+      };
+
+    
+
+      this.priorityChanged = function(event, elementChanged){
+        $("#"+elementChanged.id).attr('data-priority',elementChanged.priority);
       };
 
       this.renderIssue = function (issue) {
@@ -89,6 +95,7 @@ define(
         this.on(document, 'data:issues:refreshed', this.displayIssues);
         this.on(document, 'data:issues:cleanCount', this.cleanCount);
         this.on(document, 'data:issues:issueMoved', this.moveIssue);
+        this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
       });
     }
   }

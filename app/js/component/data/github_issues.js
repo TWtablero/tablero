@@ -115,6 +115,8 @@ define([
               filteredProjects = this.filterProjectsByName(projects, data.projectName),
               issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
+            this.fillPriority(issuesFromProjects);
+
             this.trigger('data:issues:refreshed', {
               issues: issuesFromProjects
             });
@@ -131,6 +133,12 @@ define([
             }
           }.bind(this)
         );
+      };
+
+      this.fillPriority = function(issues){
+        _.each(issues, function(issue, index) {
+          issue.priority = issue.id;
+        });
       };
 
       this.assignMyselfToIssue = function (ev, assignData) {
@@ -285,8 +293,9 @@ define([
             var issueMovedParam = { 
               label : label ,
               oldLabel : oldLabel,
-              previousElement : ui.item[0].previousElementSibling,
-              nextElement : ui.item[0].previousElementSibling
+              element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
+              previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
+              nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
             };
 
             this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
@@ -347,7 +356,11 @@ define([
             }, 600);
           });
         });
-      }
+      };
+
+      this.DOMObjectToIssueMovedParam = function(element) {
+        return { id : element.id, priority : element.dataset.priority  };
+      };
 
       this.parseLabel = function (label) {
         var fullLabel = '';
