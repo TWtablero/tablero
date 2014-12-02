@@ -1,15 +1,36 @@
 package rocketboardPages;
 
+import static org.junit.Assert.fail;
+
+
+
+
+
+
+
+
+
+
+//import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ById;
+import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +38,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+
 import rocketboard.RocketboardTests;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+
 
 public class RocketboardPage {
 	private WebDriver driver;
