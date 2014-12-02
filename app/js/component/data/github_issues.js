@@ -270,6 +270,20 @@ define([
           items: '.issue',
           connectWith: '.list-group',
           cancel: '.popover',
+          update : function(event, ui){
+            console.log(ui);
+
+            var label = this.parseLabel(event.target.id);
+
+             var issueMovedParam = { 
+              label : label ,
+              element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
+              previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
+              nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
+            };
+
+            this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
+          }.bind(this),
           receive: function (event, ui) {
             var label, url;
 
@@ -290,15 +304,7 @@ define([
             $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
             $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
 
-            var issueMovedParam = { 
-              label : label ,
-              oldLabel : oldLabel,
-              element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
-              previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
-              nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
-            };
-
-            this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
+           
 
             if (label == "4 - Done") {
               this.triggerRocketAnimation();
