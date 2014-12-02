@@ -42,7 +42,7 @@ public class RocketboardTests {
 	int[] checkValue = null;
 	String selectedOption = "";
 	private RocketboardPage RocketboardPage;
-	private final String messageSucessRocket="Liftoff! We Have a Liftoff!";
+	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
 	public static String messageDone="Drop here to launch";
 
 	/**
