@@ -113,8 +113,13 @@
     <![endif]-->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="/bower_components/blockui/jquery.blockUI.js"></script>
     <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
     <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
+
+    <script type="text/javascript">
+      $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    </script>
 
     <!-- Google Analytics -->
     <!--
