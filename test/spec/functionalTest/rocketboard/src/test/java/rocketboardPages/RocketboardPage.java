@@ -135,6 +135,7 @@ public class RocketboardPage {
 		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
+		waitingFrameCreateIssueOpen();
 	}
 
 	/**
@@ -307,21 +308,21 @@ public class RocketboardPage {
 	}
 
 	public void waitMessage(String message) throws Exception {
-//		WebDriverWait wait = new WebDriverWait(driver, 40);
-//		Boolean element = wait.until(
-//		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
-		int i = 0;
-		boolean present = false;
-		while(i<=60 && present == false){
-			try {
-				driver.getPageSource().contains(message);
-	            present = true;
-	        } catch (org.openqa.selenium.NoSuchElementException e) {
-	        	present = false;
-	        }
-			Thread.sleep(1000);
-			i++;
-		}
+		WebDriverWait wait = new WebDriverWait(driver, 40);
+		Boolean element = wait.until(
+		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
+//		int i = 0;
+//		boolean present = false;
+//		while(i<=60 && present == false){
+//			try {
+//				driver.getPageSource().contains(message);
+//	            present = true;
+//	        } catch (org.openqa.selenium.NoSuchElementException e) {
+//	        	present = false;
+//	        }
+//			Thread.sleep(1000);
+//			i++;
+//		}
 	}
 
 	public String columnName (String column) {
