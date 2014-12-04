@@ -70,7 +70,7 @@ define(['flight/lib/component'],
       };
 
       function daysBetween(earlierDate, lateDate) {
-        if (earlierDate && lateDate) {
+        if ((earlierDate && lateDate) && (lateDate > earlierDate)) {
           var leadTime,
               millisecondsInDay = 86400000;
 
