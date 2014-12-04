@@ -1,18 +1,6 @@
 package rocketboardPages;
 
 import static org.junit.Assert.fail;
-
-
-
-
-
-
-
-
-
-
-
-
 //import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
@@ -139,6 +127,7 @@ public class RocketboardPage {
 		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
+		waitingFrameCreateIssueOpen();
 	}
 
 	/**

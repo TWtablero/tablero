@@ -33,8 +33,12 @@ module.exports = function (config) {
       'jasmine',
       'requirejs'
     ],
-    reporters: [process.env.TRAVIS ? 'dots' : 'progress'],
+    reporters: [process.env.TRAVIS ? 'dots' : 'progress' ,  'coverage'],
     reportSlowerThan: 500,
-    singleRun: false
+    singleRun: false,
+
+    preprocessors : {
+      'app/js/**/*.js' : 'coverage'
+    },
   });
 };
