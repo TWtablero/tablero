@@ -30,6 +30,7 @@ public class RocketboardTests {
 	private RocketboardPage RocketboardPage;
 	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
 	public static String messageDone="Drop here to launch";
+	public static String messageLoading="Please wait...";
 
 	/**
 	 * DriverManager instance
