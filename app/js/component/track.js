@@ -101,12 +101,18 @@ define(
         return renderedIssue;
       };
 
+      this.getIssues = function(event,eventCallback){
+
+        this.trigger(eventCallback.eventCallback);
+      };
+
       this.after('initialize', function () {
         this.on(document, 'data:issues:refreshed', this.displayIssues);
         this.on(document, 'data:issues:cleanCount', this.cleanCount);
         this.on(document, 'data:issues:issueMoved', this.moveIssue);
         this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
         this.on(document, 'ui:issues:ended', this.sortIssues);
+        this.on(document, 'data:needs:issues', this.getIssues);
 
 
       });

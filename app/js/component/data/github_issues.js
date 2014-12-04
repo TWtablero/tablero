@@ -265,27 +265,29 @@ define([
             $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
           }
         });
-      }
+      };
+
+
+      this.updateDraggable = function(event, ui){
+
+        var label = this.parseLabel(event.target.id);
+
+        var issueMovedParam = { 
+          label : label ,
+          element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
+          previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
+          nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
+        };
+
+        this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
+      };
 
       this.draggable = function (ev, data) {
         $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
           items: '.issue',
           connectWith: '.list-group',
           cancel: '.popover',
-          update : function(event, ui){
-            console.log(ui);
-
-            var label = this.parseLabel(event.target.id);
-
-             var issueMovedParam = { 
-              label : label ,
-              element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
-              previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
-              nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
-            };
-
-            this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
-          }.bind(this),
+          update : this.updateDraggable.bind(this),
           receive: function (event, ui) {
             var label, url;
 
@@ -367,7 +369,9 @@ define([
       };
 
       this.DOMObjectToIssueMovedParam = function(element) {
-        return { id : element.id, priority : element.dataset.priority  };
+        if(element && element.id)
+          return { id : element.id, priority : element.dataset.priority  };
+        return { id : 0, priority : 0};
       };
 
       this.parseLabel = function (label) {
