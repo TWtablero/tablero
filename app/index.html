@@ -118,6 +118,7 @@
     <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
 
     <script type="text/javascript">
+      $.blockUI.defaults.message = '<h1 id="loading" class="loading">Please wait...</h1>';
       $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     </script>
 
