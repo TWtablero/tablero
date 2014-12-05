@@ -283,7 +283,7 @@ public class RocketboardPage {
 		Actions builder = new Actions(driver);
 		Actions dragAndDrop = builder.clickAndHold(d1).moveToElement(d2);
 		dragAndDrop.build().perform();
-		Thread.sleep(500);
+		Thread.sleep(800);
 		dragAndDrop.release(d2).build().perform();
 		waitingLoading();
 	}
@@ -319,10 +319,9 @@ public class RocketboardPage {
 
 	public void waitMessage(String message) throws Exception {
 		int timeout=0;
-		while(driver.getPageSource().contains(message) == false && timeout != 10 ){
+		while(driver.getPageSource().contains(message) == false && timeout != 20 ){
 			Thread.sleep(500);
 			timeout++;
-			System.out.print("Timeout value MESSAGE: "+timeout+" for MESSAGE: "+message);
 		}
 	}
 
@@ -398,14 +397,9 @@ public class RocketboardPage {
 	 * waiting load issues!
 	 * @throws InterruptedException 
 	 */
-	//FIX ME: Retirar o threadsleep
 	public void waitingLoading() throws InterruptedException{
-		int timeout=0;
-//		while(driver.findElement(By.id("loading")).getAttribute("class").contains("loading")||timeout==10){
-		while(driver.getPageSource().contains(RocketboardTests.messageLoading) || timeout ==10 ){
+		while(driver.getPageSource().contains(RocketboardTests.messageLoading)){
 			Thread.sleep(500);
-			timeout++;
-			System.out.print("Timeout value LOADING: "+timeout);
 		}
 	}
 
