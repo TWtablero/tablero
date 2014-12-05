@@ -105,7 +105,6 @@
         </div>
       </div>
     </div>
-   <div id="loading" class="loading"></div> 
 
     <!--[if lt IE 9]>
     <script src="/bower_components/es5-shim/es5-shim.js"></script>
@@ -118,7 +117,7 @@
     <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
 
     <script type="text/javascript">
-      $.blockUI.defaults.message = '<h1 id="loading" class="loading">Please wait...</h1>';
+      $.blockUI.defaults.message = '<h'+'1 id="loa'+'ding" class="loa'+'ding">Please'+' wait...</h'+'1>';
       $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     </script>
 
