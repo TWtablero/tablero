@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
+ define(
   [
-    'flight/lib/component',
-    'component/templates/issue_template'
+  'flight/lib/component',
+  'component/templates/issue_template'
   ],
   function (defineComponent, withIssueTemplate) {
     return defineComponent(track, withIssueTemplate);
@@ -46,7 +46,7 @@ define(
         divList.sort(function(a, b){ return $(a).attr('data-priority') -  $(b).attr('data-priority') });
 
         //$(".issue-track", this.node).html(divList);
-         divList.appendTo(this.node);
+        divList.appendTo(this.node);
         
       };
 
@@ -82,7 +82,7 @@ define(
         }
       };
 
-    
+
 
       this.priorityChanged = function(event, elementChanged){
         $("#"+elementChanged.id).attr('data-priority',elementChanged.priority);
@@ -102,20 +102,47 @@ define(
       };
 
       this.getIssues = function(event,eventCallback){
+        var issues = $(".issue", this.$node);
 
-        this.trigger(eventCallback.eventCallback);
+        var map = { 
+          track : this.attr.trackType, 
+          issues :  _.map(issues, function(val) {
+            return {id: val.id, priority: val.dataset.priority };
+          })};
+
+
+          this.trigger(eventCallback.eventCallback, map);
       };
 
-      this.after('initialize', function () {
-        this.on(document, 'data:issues:refreshed', this.displayIssues);
-        this.on(document, 'data:issues:cleanCount', this.cleanCount);
-        this.on(document, 'data:issues:issueMoved', this.moveIssue);
-        this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
-        this.on(document, 'ui:issues:ended', this.sortIssues);
-        this.on(document, 'data:needs:issues', this.getIssues);
+      this.fillPriority = function(event, issues){
+          var UIissues = $('.issue', this.$node);
+
+          _.each(UIissues, function(val) {
+             
+             var objIssue = _.findWhere(issues.issues , { id : val.id});
+             if(objIssue)
+                val.dataset.priority = objIssue.priority;
+             else
+                val.dataset.priority = val.id;
+
+          });
+
+          this.trigger(document, 'ui:issues:ended');
+      };
 
 
-      });
+
+        this.after('initialize', function () {
+          this.on(document, 'data:issues:refreshed', this.displayIssues);
+          this.on(document, 'data:issues:cleanCount', this.cleanCount);
+          this.on(document, 'data:issues:issueMoved', this.moveIssue);
+          this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
+          this.on(document, 'ui:issues:ended', this.sortIssues);
+          this.on(document, 'data:needs:issues', this.getIssues);
+          this.on(document, 'data:got:priority', this.fillPriority);
+
+
+        });
+      }
     }
-  }
-);
+    );

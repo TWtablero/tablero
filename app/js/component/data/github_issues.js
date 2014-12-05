@@ -131,7 +131,7 @@ define([
               });
               this.trigger('ui:needs:issues', data);
             } else {
-              this.trigger('ui:issues:ended');
+              this.trigger('ui:needs:priority');
             }
           }.bind(this)
         );

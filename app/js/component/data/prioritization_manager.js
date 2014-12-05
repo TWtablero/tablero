@@ -15,7 +15,7 @@ define([
 					newPriority = (Number(params.previousElement.priority)  + Number(params.nextElement.priority) ) / 2 ;
 				}
 
-				var eventCallback = { eventCallback : "ui:got:issues" } ;
+				var eventCallback = { eventCallback : 'ui:got:issues' };
 				params.element.priority = newPriority;
 				this.trigger(document,'data:issue:priorityChanged', params.element );
 				this.trigger(document, 'data:needs:issues', eventCallback);
@@ -23,8 +23,23 @@ define([
 
 
 			this.savePriority = function(event,issues){
+				var itemKey = 'issues-'+issues.track;
 
-				localStorage.setItem("issues", issues);
+				var issuesString = JSON.stringify(issues.issues);
+				console.log(issuesString);
+				localStorage.setItem(itemKey, issuesString);
+				
+			};
+
+			this.loadPriority = function(event){
+				var issue0 = JSON.parse(localStorage.getItem('issues-0 - Backlog'));
+				var issue1 = JSON.parse(localStorage.getItem('issues-1 - Ready'));
+				var issue2 = JSON.parse(localStorage.getItem('issues-2 - Development'));
+				var issue3 = JSON.parse(localStorage.getItem('issues-3 - Quality Assurance'));
+
+				var allIssues = { issues :  _.union(issue0,issue1,issue2,issue3) };
+
+				this.trigger(document,'data:got:priority', allIssues);
 			};
 
 
@@ -33,7 +48,11 @@ define([
 				this.on('data:issues:issueMoved', this.changePriority);
 				this.on('data:issues:priorityChanged', this.changePriority);
 				this.on('ui:got:issues', this.savePriority);
+				this.on('ui:needs:priority', this.loadPriority);
 			});
 		}
 	}
 	);
+
+
+    
