@@ -195,7 +195,7 @@ public class RocketboardTests {
 	@Test
 	public void setLabel() throws Exception {
 		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		RocketboardPage.createIssue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String id = RocketboardPage.getInfo(title, "id");
 		RocketboardPage.restRequest(href, "[\"bug\"]");

@@ -230,7 +230,8 @@ public class RocketboardPage {
 		} else {
 			countValueStr = driver.findElement(By.cssSelector("div.panel-heading."+column+"-header > span.issues-count")).getText();
 		}
-		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
+//		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
+		countValueStr = countValueStr.replace("(", "").replace(")", "");
 		Integer countValueInt = new Integer (countValueStr);
 		return countValueInt;
 	}
