@@ -1,27 +1,14 @@
 package rocketboardPages;
 
-import static org.junit.Assert.fail;
-//import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ById;
-import org.openqa.selenium.WebDriver.Options;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,12 +16,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
 import rocketboard.RocketboardTests;
-
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.WebDriver;
-
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -46,7 +28,6 @@ public class RocketboardPage {
 	Integer nameID = null;
 	String getInfo = "";
 
-	//Coluna de Issues
 	@FindBy(how = How.ID, using = "0-backlog")
 	WebElement columnBacklog;
 
@@ -236,9 +217,6 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-//		WebDriverWait wait = new WebDriverWait(driver, 40);
-//		Boolean element = wait.until(
-//		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
 		waitCreatedIssue(title);
 		values[1] = getCount("backlog");
 		return values;
@@ -269,16 +247,6 @@ public class RocketboardPage {
 		else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
 		}
-		// OPTION 1
-		//new Actions(driver).dragAndDrop(d1, d2).build().perform();
-		
-		// OPTION 2
-//		Actions builder = new Actions(driver);
-//		Action dragAndDrop = builder.clickAndHold(d1)
-//	    	.moveToElement(d2)
-//	    	.release(d2)
-//	    	.build();
-//		dragAndDrop.perform();
 		
 		Actions builder = new Actions(driver);
 		Actions dragAndDrop = builder.clickAndHold(d1).moveToElement(d2);
@@ -309,7 +277,6 @@ public class RocketboardPage {
 				System.out.print("Checking Title Present INSIDE WHILE: "+present);
 				timeout++;
 			}
-			//waitingLoading();
 			waitMessage(RocketboardTests.messageSucessRocket);
 			waitMessage(RocketboardTests.messageDone);
 		}

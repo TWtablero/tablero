@@ -22,7 +22,6 @@ public class RocketboardTests {
 	public static String title;
 	public static String desc;
 	public String project;
-	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
 	String[] repoUsed = {"userAgent"};
 
 	int[] checkValue = null;
@@ -172,7 +171,8 @@ public class RocketboardTests {
 		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		RocketboardPage.clickAdvanced();
-		assertThat(RocketboardPage.isGithub(), equalTo(urlGit));
+		assertThat(RocketboardPage.isGithub().contains("https://github.com/"), equalTo(Boolean.TRUE));
+		assertThat(RocketboardPage.isGithub().contains("issues/new"), equalTo(Boolean.TRUE));
 	}
 
 	@Test
@@ -182,18 +182,6 @@ public class RocketboardTests {
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
  
-	//@Test
-	public void CreateIssueNoTitle() throws Exception{
-		RocketboardPage.createIssue("",desc, RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-	}
-
-	//@Test
-	public void CreateIssueEmpty() throws Exception{
-		RocketboardPage.createIssue("","", RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-	}
-
 	@Test
 	public void AssignMeCard() throws Exception{
 		RocketboardPage.waitingLoading();
