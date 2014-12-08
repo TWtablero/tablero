@@ -11,8 +11,8 @@
     "jquery-ui": "1.11",
     "bourbon": "3.2.0",
     "neat": "1.4.0",
-    "blockui": "*",
-    "pace": "~1.0.2"
+    "pace": "~1.0.2",
+    "blockui": "*"
   },
   "devDependencies": {
     "jasmine-flight": "~3.0.0"
