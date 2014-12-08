@@ -37,6 +37,7 @@ define([
             'labels': ["0 - Backlog"]
           }),
           success: function (response, status, xhr) {
+            response.projectName = data.projectName;
             this.trigger("ui:add:issue", {
               "issue": response
             })
@@ -100,16 +101,16 @@ define([
             $("#loading").removeClass();
 
             var projects = [{
-                'projectName': 'pixelated-project-issues',
+                'projectName': 'project-issues',
                 'repo': projectIssuesIssues
               },  {
-                'projectName': 'pixelated-platform',
+                'projectName': 'platform',
                 'repo': platformIssues
               }, {
-                'projectName': 'pixelated-dispatcher',
+                'projectName': 'dispatcher',
                 'repo': dispatcherIssues
               }, {
-                'projectName': 'pixelated-user-agent',
+                'projectName': 'user-agent',
                 'repo': userAgentIssues
               }],
               filteredProjects = this.filterProjectsByName(projects, data.projectName),
