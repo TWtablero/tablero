@@ -108,7 +108,6 @@ public class RocketboardPage {
 		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
-		waitingFrameCreateIssueOpen();
 	}
 
 	/**
@@ -222,16 +221,12 @@ public class RocketboardPage {
 		return values;
 	}
 
-	public Integer getCount(String column) throws Exception {	
-		waitingLoading();
+	public Integer getCount(String column) throws Exception {
 		String countValueStr = "";
-		if (column == "5" || column == "done"){
-			countValueStr = driver.findElement(By.xpath("//div[5]/div/div/span")).getText();
-		} else {
-			countValueStr = driver.findElement(By.cssSelector("div.panel-heading."+column+"-header > span.issues-count")).getText();
+		while(countValueStr == ""){
+			countValueStr = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count")).getText();
 		}
-//		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
-		countValueStr = countValueStr.replace("(", "").replace(")", "");
+		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
 		Integer countValueInt = new Integer (countValueStr);
 		return countValueInt;
 	}
@@ -243,16 +238,18 @@ public class RocketboardPage {
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
 		if (column == "done" || column =="5"){
-			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
+//			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
+			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
 		}
 		else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
 		}
-		
 		Actions builder = new Actions(driver);
 		Actions dragAndDrop = builder.clickAndHold(d1).moveToElement(d2);
 		dragAndDrop.build().perform();
-		Thread.sleep(800);
+		Thread.sleep(400);
+		dragAndDrop.moveToElement(d2).build().perform();
+		Thread.sleep(400);
 		dragAndDrop.release(d2).build().perform();
 		waitingLoading();
 	}
@@ -281,6 +278,7 @@ public class RocketboardPage {
 			waitMessage(RocketboardTests.messageSucessRocket);
 			waitMessage(RocketboardTests.messageDone);
 		}
+		Thread.sleep(800);
 		values[1] = getCount(getColumn);
 		return values;
 	}
@@ -366,6 +364,7 @@ public class RocketboardPage {
 	 * @throws InterruptedException 
 	 */
 	public void waitingLoading() throws InterruptedException{
+		Thread.sleep(3000);
 		while(driver.getPageSource().contains(RocketboardTests.messageLoading)){
 			Thread.sleep(500);
 		}

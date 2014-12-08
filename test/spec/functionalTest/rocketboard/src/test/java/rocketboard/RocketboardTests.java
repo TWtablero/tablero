@@ -110,6 +110,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaCloseButton() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
@@ -120,6 +121,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaXButton() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
 		RocketboardPage.xButton();	
@@ -128,6 +130,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_typingOutside() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
@@ -143,6 +146,7 @@ public class RocketboardTests {
 		String [] projectIssue = {"projectIssue"};
 		String [] all = {"all"};
 
+		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(dispatcher);
 		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.uncheckAllRepo();
@@ -168,6 +172,7 @@ public class RocketboardTests {
 
 	@Test
 	public void issueAdvancedOption() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		RocketboardPage.clickAdvanced();
@@ -177,6 +182,7 @@ public class RocketboardTests {
 
 	@Test
 	public void CreateIssueNoDescription() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssue(title,"", RocketboardPage.chooseProject());
 		RocketboardPage.waitCreatedIssue(title);
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
