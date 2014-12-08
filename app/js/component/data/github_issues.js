@@ -18,7 +18,9 @@ define([
   'component/mixins/with_auth_token_from_hash',
   'component/mixins/repositories_urls',
   'component/templates/popover_template'
-  ], function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+  ], 
+  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+    'use strict';
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
@@ -168,12 +170,13 @@ define([
             }
             else {
               var that = this,
-                  popover_confirm = $('<div class="popover-confirm"></div>'),
-                  popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
-                  popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
-                  pop = $(this.popover({
-                    title: '', body: ''
-                  })).appendTo(issue_header);
+
+              popover_confirm = $('<div class="popover-confirm"></div>'),
+              popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
+              popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
+              pop = $(this.popover({
+                title: '', body: ''
+              })).appendTo(issue_header);
 
               popover_confirm_yes.bind('click', function(){
                 that.trigger(document, 'ui:unassign:user', assignData);
@@ -354,54 +357,53 @@ define([
           fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
         }
 
-  fullLabel = label[0] + ' - ' + fullLabel;
-  return fullLabel.trim();
-};
+        fullLabel = label[0] + ' - ' + fullLabel;
+        return fullLabel.trim();
+      };
 
-this.getIssueUrlFromDraggable = function (ui) {
-  return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
-};
+      this.getIssueUrlFromDraggable = function (ui) {
+        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
+      };
 
-this.getAccessTokenParam = function () {
-  return "?access_token=" + this.getCurrentAuthToken();
-};
+      this.getAccessTokenParam = function () {
+        return "?access_token=" + this.getCurrentAuthToken();
+      };
 
-this.getState = function (className) {
-  return className.search('done') != -1 ? 'closed' : 'open';
-};
+      this.getState = function (className) {
+        return className.search('done') != -1 ? 'closed' : 'open';
+      };
 
-this.changeNewIssueLink = function (event, projectName) {
-  $(".link").attr("href", this.newIssueURL(projectName));
-};
+      this.changeNewIssueLink = function (event, projectName) {
+        $(".link").attr("href", this.newIssueURL(projectName));
+      };
 
-this.blockUI = function () {
-  $.blockUI();
-};
+      this.blockUI = function () {
+        $.blockUI();
+      };
 
-this.unblockUI = function (e, timeout) {
-  setTimeout($.unblockUI, (timeout || 0));
-};
+      this.unblockUI = function (e, timeout) {
+        setTimeout($.unblockUI, (timeout || 0));
+      };
 
-this.mountExportClick =  function(ev,data){
-  this.trigger('data:issues:mountExportCsvLink', {
-    issues: this.attr.issues
-  });
-};
+      this.mountExportClick =  function(ev,data){
+        this.trigger('data:issues:mountExportCsvLink', {
+          issues: this.attr.issues
+        });
+      };
 
-this.after('initialize', function () {
-  this.on('ui:needs:issues', this.fetchIssues);
-  this.on('ui:add:issue', this.addIssue);
-  this.on('ui:create:issue', this.createIssue);
-  this.on('ui:assigns:user', this.assignMyselfToIssue);
-  this.on('data:githubUser:here', this.assignMyselfToIssue);
-  this.on('ui:draggable', this.draggable);
-  this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-  this.on('#export_csv', 'click' , this.mountExportClick);
-  this.on('ui:unassign:user', this.unassignMyselfToIssue);
-  this.on('ui:blockUI', this.blockUI);
-  this.on('ui:unblockUI', this.unblockUI);
-});
-}
-}
-
+      this.after('initialize', function () {
+        this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:add:issue', this.addIssue);
+        this.on('ui:create:issue', this.createIssue);
+        this.on('ui:assigns:user', this.assignMyselfToIssue);
+        this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:draggable', this.draggable);
+        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+        this.on('#export_csv', 'click' , this.mountExportClick);
+        this.on('ui:unassign:user', this.unassignMyselfToIssue);
+        this.on('ui:blockUI', this.blockUI);
+        this.on('ui:unblockUI', this.unblockUI);
+      });
+    }
+  }
 );
