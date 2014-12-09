@@ -88,7 +88,7 @@
       </div>
       <div class="column">
         <div class="panel panel-default">
-          <div class="panel-heading quality-assurance-header"><h3>Quality Assurance</h3><span class="issues-count"></div>
+          <div class="panel-heading quality-assurance-header"><h3>QA</h3><span class="issues-count"></div>
           <div class="panel-body issue-track quality-assurance list-group" id="3-quality-assurance"> </div>
         </div>
       </div>
@@ -105,7 +105,6 @@
         </div>
       </div>
     </div>
-   <div id="loading" class="loading"></div> 
 
     <!--[if lt IE 9]>
     <script src="/bower_components/es5-shim/es5-shim.js"></script>
@@ -113,8 +112,15 @@
     <![endif]-->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="/bower_components/blockui/jquery.blockUI.js"></script>
     <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
     <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
+
+    <script type="text/javascript">
+      $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+      $.blockUI.defaults.ignoreIfBlocked = true;
+      $(document).ajaxStop($.unblockUI);
+    </script>
 
     <!-- Google Analytics -->
     <!--

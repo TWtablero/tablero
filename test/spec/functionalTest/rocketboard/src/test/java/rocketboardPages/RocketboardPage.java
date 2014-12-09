@@ -1,36 +1,14 @@
 package rocketboardPages;
 
-import static org.junit.Assert.fail;
-
-
-
-
-
-
-
-
-
-
-//import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ById;
-import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,12 +16,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
 import rocketboard.RocketboardTests;
-
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.WebDriver;
-
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -55,7 +28,6 @@ public class RocketboardPage {
 	Integer nameID = null;
 	String getInfo = "";
 
-	//Coluna de Issues
 	@FindBy(how = How.ID, using = "0-backlog")
 	WebElement columnBacklog;
 
@@ -111,6 +83,7 @@ public class RocketboardPage {
 	 * @throws InterruptedException 
 	 */	
 	public void setIssueTitle(String value) throws InterruptedException {
+		waitingLoading();
 		frameCreateIssueDisplayed();
 		waitingObject(editIssueTitle);
 		editIssueTitle.clear();
@@ -135,7 +108,6 @@ public class RocketboardPage {
 		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
-		waitingFrameCreateIssueOpen();
 	}
 
 	/**
@@ -155,11 +127,13 @@ public class RocketboardPage {
 	}
 
 	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
+		waitingLoading();
 		openModelCreateIssue();
 		setIssueTitle(titleTxt);
 		setIssueDesc(descTxt);
 		selectProjects(repoName);
-		clickbtnCreateIssue();	
+		clickbtnCreateIssue();
+		waitingLoading();
 	}
 
 	public void selectRepo(String[] repoUsed) throws Exception {
@@ -242,21 +216,15 @@ public class RocketboardPage {
 		waitingLoading();
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
-//		WebDriverWait wait = new WebDriverWait(driver, 40);
-//		Boolean element = wait.until(
-//		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[id$='backlog']"), title));
 		waitCreatedIssue(title);
 		values[1] = getCount("backlog");
 		return values;
 	}
 
-	public Integer getCount(String column) throws Exception {	
-		waitingLoading();
+	public Integer getCount(String column) throws Exception {
 		String countValueStr = "";
-		if (column == "5" || column == "done"){
-			countValueStr = driver.findElement(By.xpath("//div[5]/div/div/span")).getText();
-		} else {
-			countValueStr = driver.findElement(By.cssSelector("div.panel-heading."+column+"-header > span.issues-count")).getText();
+		while(countValueStr == ""){
+			countValueStr = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count")).getText();
 		}
 		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
 		Integer countValueInt = new Integer (countValueStr);
@@ -269,60 +237,58 @@ public class RocketboardPage {
 		}
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
-		if (column == "done"){
-			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
+		if (column == "done" || column =="5"){
+//			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
+			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
 		}
 		else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
 		}
-		new Actions(driver).dragAndDrop(d1, d2).build().perform();
+		Actions builder = new Actions(driver);
+		Actions dragAndDrop = builder.clickAndHold(d1).moveToElement(d2);
+		dragAndDrop.build().perform();
+		Thread.sleep(400);
+		dragAndDrop.moveToElement(d2).build().perform();
+		Thread.sleep(400);
+		dragAndDrop.release(d2).build().perform();
 		waitingLoading();
-		
-//		// TRY TO FIX THE PROBLEM TO DROP IN DONE COLUMN
-//		int flag = 0;
-//		
-//		while (flag != 1 && column == "done"){
-//			boolean verify = verifyLabel(issueTitle);
-//			if (verify == true){
-//				pageRefresh();
-//				waitingLoading();
-//				new Actions(driver).dragAndDrop(d1, d2).build().perform();
-//			}
-//			if (verify == false){
-//				flag = 1;
-//			}
-//		}
-//		waitingLoading();
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
+		int timeout = 0;
+		String idCard = null;
 		getColumn = columnName(column);
 		values[0] = getCount(getColumn);
+		if (column =="5" || column =="done"){
+			idCard = getInfo(issueTitle, "id");
+		}
 		moveIssue(issueTitle, column);
 		if (column =="5" || column =="done"){
+			boolean present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
+			System.out.print("Checking Title Present before WHILE: "+present);
+			while(present == true && timeout <= 10){
+				System.out.print("Checking Title Present: "+driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed());
+				System.out.print("Timeout value: "+timeout);
+				moveIssue(issueTitle, column);
+				visible(idCard);
+				present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
+				System.out.print("Checking Title Present INSIDE WHILE: "+present);
+				timeout++;
+			}
 			waitMessage(RocketboardTests.messageSucessRocket);
 			waitMessage(RocketboardTests.messageDone);
 		}
+		Thread.sleep(800);
 		values[1] = getCount(getColumn);
 		return values;
 	}
 
 	public void waitMessage(String message) throws Exception {
-		WebDriverWait wait = new WebDriverWait(driver, 40);
-		Boolean element = wait.until(
-		        ExpectedConditions.textToBePresentInElement(By.cssSelector("div[class~='done']"), message));
-//		int i = 0;
-//		boolean present = false;
-//		while(i<=60 && present == false){
-//			try {
-//				driver.getPageSource().contains(message);
-//	            present = true;
-//	        } catch (org.openqa.selenium.NoSuchElementException e) {
-//	        	present = false;
-//	        }
-//			Thread.sleep(1000);
-//			i++;
-//		}
+		int timeout=0;
+		while(driver.getPageSource().contains(message) == false && timeout != 20 ){
+			Thread.sleep(500);
+			timeout++;
+		}
 	}
 
 	public String columnName (String column) {
@@ -344,7 +310,6 @@ public class RocketboardPage {
 		return column;
 	}
 
-
 	public void closeButton() throws Exception {
 		closeBtn.click();
 	}
@@ -355,7 +320,6 @@ public class RocketboardPage {
 
 	public void clicOutsideForm() throws Exception {
 		outsideModal.click();
-
 	}
 
 	public Boolean checkIssueLaunched(String message) throws Exception {
@@ -389,24 +353,20 @@ public class RocketboardPage {
 		listProjects[2] = "Platform";
 		int index = RandomUtils.nextInt(0, 2);
 		return (listProjects[index]);
-
 	}
 
 	public boolean checkTitleFrame(String title) {
 		return	driver.findElement(By.linkText(title)).isDisplayed();
-
 	}
 
 	/**
 	 * waiting load issues!
 	 * @throws InterruptedException 
 	 */
-	//FIX ME: Retirar o threadsleep
 	public void waitingLoading() throws InterruptedException{
-		int timeout=0;
-		while(driver.findElement(By.id("loading")).getAttribute("class").contains("loading")||timeout==10){
-			Thread.sleep(100);
-			timeout++;
+		Thread.sleep(3000);
+		while(driver.getPageSource().contains(RocketboardTests.messageLoading)){
+			Thread.sleep(500);
 		}
 	}
 
@@ -565,6 +525,5 @@ public class RocketboardPage {
 		return present;
 	}
 	
-
 }
 
