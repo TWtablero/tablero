@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 define([
-  'flight/lib/component',
-  'component/mixins/with_auth_token_from_hash',
+    'flight/lib/component',
+    'component/mixins/with_auth_token_from_hash',
   ],
-  function (defineComponent, withAuthTokemFromHash) {
-    return defineComponent(issuesExporter,withAuthTokemFromHash);
+  function(defineComponent, withAuthTokemFromHash) {
+    'use strict';
+    return defineComponent(issuesExporter, withAuthTokemFromHash);
 
     function issuesExporter() {
       var issuesToExport = [];
@@ -26,47 +27,49 @@ define([
       var csvLink = '';
 
       this.mountExportCsvLink = function(ev, data) {
-        $("#export_csv").attr("disabled", true);
+        $('#export_csv').attr('disabled', true);
         var repositoriesUrls = this.getRepositoriesUrlsFromIssues(data.issues);
-          issuesToExport = data.issues;
+        issuesToExport = data.issues;
         this.getEventsFromProjects(repositoriesUrls);
       };
 
-      this.clearLink = function(){
+      this.clearLink = function() {
         csvLink = '';
-      }
+      };
 
       this.linkToCsv = function(data) {
         var issuesCsv = this.issuesToCsv(data);
-        if(csvLink == ''){
+        if (csvLink === '') {
           issuesCsv.splice(0, 0, csvHeader());
         }
 
-        csvLink += encodeURIComponent(issuesCsv.join("\n") + "\n");
+        csvLink += encodeURIComponent(issuesCsv.join('\n') + '\n');
         return 'data:text/csv;charset=utf8,' + csvLink;
       };
 
       this.validIssuesToExport = function(issues) {
         return _.filter(issues, function(issue) {
-          return issue.projectName != undefined
+          return issue.projectName !== undefined;
         });
-      }
+      };
 
       this.issuesToCsv = function(issues) {
-        var issuesCsv =  _.map(this.validIssuesToExport(issues), function(issue){
-          return ["\"" + issue.projectName + "\"",
-                issue.number,
-                "\"" + issue.title + "\"",
-                issue.state,
-                issue.kanbanState,
-                "\"" + issue.body.replace(/(\r\n|\n|\r)/g, " ") + "\"",
-                "\"" + _.map(issue.labels, function(label) {return label.name;}) +  "\"",
-                issue.created_at,
-                issue.dev_at,
-                issue.closed_at,
-                daysBetween(issue.created_at, issue.closed_at),
-                daysBetween(issue.dev_at, issue.closed_at)
-                ].join(';');
+        var issuesCsv = _.map(this.validIssuesToExport(issues), function(issue) {
+          return ['\"' + issue.projectName + "\"",
+            issue.number,
+            "\"" + issue.title + "\"",
+            issue.state,
+            issue.kanbanState,
+            "\"" + issue.body.replace(/(\r\n|\n|\r)/g, " ") + "\"",
+            "\"" + _.map(issue.labels, function(label) {
+              return label.name;
+            }) + "\"",
+            issue.created_at,
+            issue.dev_at,
+            issue.closed_at,
+            daysBetween(issue.created_at, issue.closed_at),
+            daysBetween(issue.dev_at, issue.closed_at)
+          ].join(';');
         });
 
         return issuesCsv;
@@ -75,7 +78,7 @@ define([
       function daysBetween(earlierDate, lateDate) {
         if ((earlierDate && lateDate) && (lateDate > earlierDate)) {
           var leadTime,
-              millisecondsInDay = 86400000;
+            millisecondsInDay = 86400000;
 
           leadTime = (new Date(lateDate) - new Date(earlierDate)) / millisecondsInDay;
           leadTime = parseInt(leadTime);
@@ -87,7 +90,7 @@ define([
       };
 
       function csvHeader() {
-        return ["Source","Github ID","Title","Status","Kanban State","Description", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
+        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Description", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
       };
 
       this.getEventsFromProjects = function(projectsUrl) {
@@ -95,17 +98,16 @@ define([
         var self = this;
 
         function getEvents(url) {
-          $.get(url,function(data,textStatus,request){
+          $.get(url, function(data, textStatus, request) {
             events = events.concat(data);
 
             try {
               var header = request.getResponseHeader('Link');
               var next = header.match(/<.*?>; rel="next"/)[0].match(/https.*[0-9]+/)[0];
-              if(next){
+              if (next) {
                 getEvents(next);
               }
-            } catch (err) {
-            }
+            } catch (err) {}
           });
         }
 
@@ -113,33 +115,45 @@ define([
           getEvents(val + 'issues/events?per_page=100&access_token=' + this.getCurrentAuthToken());
         }.bind(self));
 
-        $(document).one('ajaxStop', function () {
-            self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
+        $(document).one('ajaxStop', function() {
+          self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
         });
       };
 
       this.groupEventsByIssuesId = function(events) {
-        return _.groupBy(events, function(event){ return event.issue.id; });
+        return _.groupBy(events, function(event) {
+          return event.issue.id;
+        });
       };
 
       this.excludeNonLabeledEvents = function(mappedEvents) {
-        return _.object(_.map(mappedEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.event == 'labeled'; })]}));
+        return _.object(_.map(mappedEvents, function(issueEvents, key) {
+          return [key, _.filter(issueEvents, function(event) {
+            return event.event == 'labeled';
+          })]
+        }));
       };
 
       this.getOnlyDevelopmentIssueEvents = function(labeledEvents) {
-        return _.object(_.map(labeledEvents, function(issueEvents, key) { return [key, _.filter(issueEvents, function(event) { return event.label.name == '2 - Development'; })]}));
+        return _.object(_.map(labeledEvents, function(issueEvents, key) {
+          return [key, _.filter(issueEvents, function(event) {
+            return event.label.name == '2 - Development';
+          })]
+        }));
       };
 
       this.getEarliestDevelopmentIssueEvents = function(developmentEvents) {
-        return _.object(_.map(developmentEvents, function(events,key) {
-          return [key, _.first(_.sortBy(events, function(e) { return e.created_at;}))]
+        return _.object(_.map(developmentEvents, function(events, key) {
+          return [key, _.first(_.sortBy(events, function(e) {
+            return e.created_at;
+          }))]
         }));
       };
 
       this.mergeEventsWithIssues = function(issues, events) {
         return _.each(issues, function(issue) {
           if (events[issue.id]) {
-            issue.dev_at =  events[issue.id].created_at;
+            issue.dev_at = events[issue.id].created_at;
           }
         });
       };
@@ -148,7 +162,7 @@ define([
         return _.uniq(_.pluck(issues, 'repoUrl'));
       };
 
-      this.addDevDateForIssues = function(issues,events) {
+      this.addDevDateForIssues = function(issues, events) {
         var groupedEventsByIssueId = {},
           labeledEvents = {},
           developmentEvents = {},
@@ -176,13 +190,13 @@ define([
         document.body.removeChild(downloadLink);
         $("#export_csv").attr("disabled", false);
         issuesToExport = [];
-		    this.trigger('data:issues:clearExportCsvLink');
+        this.trigger('data:issues:clearExportCsvLink');
 
       };
 
-      this.after('initialize', function () {
+      this.after('initialize', function() {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
-        this.on('data:issues:clearExportCsvLink', this.clearLink)
+        this.on('data:issues:clearExportCsvLink', this.clearLink);
       });
     }
   }

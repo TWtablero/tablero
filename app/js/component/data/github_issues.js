@@ -89,6 +89,7 @@ define([
       this.fetchIssues = function (ev, data) {
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
 
+
         $(document).trigger('ui:blockUI');
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
@@ -391,6 +392,10 @@ define([
         });
       };
 
+      this.clearIssues = function(){
+        this.attr.issues = [];
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:add:issue', this.addIssue);
@@ -403,6 +408,8 @@ define([
         this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:blockUI', this.blockUI);
         this.on('ui:unblockUI', this.unblockUI);
+        this.on('ui:clear:issue', this.clearIssues)
+
       });
     }
   }
