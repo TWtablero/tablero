@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component'],
-  function (defineComponent) {
-    return defineComponent(issuesExporter);
+define([
+  'flight/lib/component',
+  'component/mixins/with_auth_token_from_hash',
+  ],
+  function (defineComponent, withAuthTokemFromHash) {
+    return defineComponent(issuesExporter,withAuthTokemFromHash);
 
     function issuesExporter() {
       var issuesToExport = [];
@@ -107,8 +110,8 @@ define(['flight/lib/component'],
         }
 
         $.each(projectsUrl, function(index, val) {
-          getEvents(val + 'issues/events?per_page=100&access_token=370bf89f94978ff28b11831de0e5d350aa1ccaba');
-        });
+          getEvents(val + 'issues/events?per_page=100&access_token=' + this.getCurrentAuthToken());
+        }.bind(self));
 
         $(document).one('ajaxStop', function () {
             self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
