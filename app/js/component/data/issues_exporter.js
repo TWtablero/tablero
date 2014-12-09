@@ -63,7 +63,7 @@ define(['flight/lib/component'],
                 issue.closed_at,
                 daysBetween(issue.created_at, issue.closed_at),
                 daysBetween(issue.dev_at, issue.closed_at)
-                ].join(';')å
+                ].join(';');
         });
 
         return issuesCsv;
@@ -110,8 +110,8 @@ define(['flight/lib/component'],
           getEvents(val + 'issues/events?per_page=100&access_token=370bf89f94978ff28b11831de0e5d350aa1ccaba');
         });
 
-        $(document).ajaxStop(function () {
-          self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
+        $(document).one('ajaxStop', function () {
+            self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
         });
       };
 
@@ -171,8 +171,10 @@ define(['flight/lib/component'],
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-
         $("#export_csv").attr("disabled", false);
+        issuesToExport = [];
+		    this.trigger('data:issues:clearExportCsvLink');
+
       };
 
       this.after('initialize', function () {
