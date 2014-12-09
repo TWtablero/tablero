@@ -77,10 +77,9 @@ define([
       };
 
       this.fetchIssues = function (ev, data) {
-        //inserido para solução problema na automação
-        $("#loading").addClass("loading");
-        //--
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
+
+        $(document).trigger('ui:blockUI');
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
@@ -97,8 +96,6 @@ define([
 
         $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred).done(
           function (userAgentIssues, dispatcherIssues, platformIssues, projectIssuesIssues) {
-
-            $("#loading").removeClass();
 
             var projects = [{
                 'projectName': 'project-issues',
@@ -369,6 +366,14 @@ define([
         $(".link").attr("href", this.newIssueURL(projectName));
       };
 
+      this.blockUI = function () {
+        $.blockUI();
+      };
+
+      this.unblockUI = function (e, timeout) {
+        setTimeout($.unblockUI, (timeout || 0));
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:add:issue', this.addIssue);
@@ -378,6 +383,8 @@ define([
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
         this.on('ui:unassign:user', this.unassignMyselfToIssue);
+        this.on('ui:blockUI', this.blockUI);
+        this.on('ui:unblockUI', this.unblockUI);
       });
     }
   }

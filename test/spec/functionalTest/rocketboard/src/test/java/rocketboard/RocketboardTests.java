@@ -22,7 +22,6 @@ public class RocketboardTests {
 	public static String title;
 	public static String desc;
 	public String project;
-	public String urlGit = "https://github.com/RocketBoard/test_issues_kanboard/issues/new";
 	String[] repoUsed = {"userAgent"};
 
 	int[] checkValue = null;
@@ -30,6 +29,7 @@ public class RocketboardTests {
 	private RocketboardPage RocketboardPage;
 	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
 	public static String messageDone="Drop here to launch";
+	public static String messageLoading="Please wait...";
 
 	/**
 	 * DriverManager instance
@@ -110,6 +110,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaCloseButton() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		issueModalOpened = RocketboardPage.modelOpened();
 		assertThat(issueModalOpened, equalTo(Boolean.TRUE));
@@ -120,6 +121,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_viaXButton() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
 		RocketboardPage.xButton();	
@@ -128,6 +130,7 @@ public class RocketboardTests {
 
 	@Test
 	public void openCloseCreateForm_typingOutside() throws Exception {
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		assertThat(RocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
@@ -143,6 +146,7 @@ public class RocketboardTests {
 		String [] projectIssue = {"projectIssue"};
 		String [] all = {"all"};
 
+		RocketboardPage.waitingLoading();
 		RocketboardPage.selectRepo(dispatcher);
 		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.uncheckAllRepo();
@@ -168,31 +172,22 @@ public class RocketboardTests {
 
 	@Test
 	public void issueAdvancedOption() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.openModelCreateIssue();
 		RocketboardPage.waitingFrameCreateIssueOpen();
 		RocketboardPage.clickAdvanced();
-		assertThat(RocketboardPage.isGithub(), equalTo(urlGit));
+		assertThat(RocketboardPage.isGithub().contains("https://github.com/"), equalTo(Boolean.TRUE));
+		assertThat(RocketboardPage.isGithub().contains("issues/new"), equalTo(Boolean.TRUE));
 	}
 
 	@Test
 	public void CreateIssueNoDescription() throws Exception{
+		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssue(title,"", RocketboardPage.chooseProject());
 		RocketboardPage.waitCreatedIssue(title);
 		assertThat(RocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 	}
  
-	//@Test
-	public void CreateIssueNoTitle() throws Exception{
-		RocketboardPage.createIssue("",desc, RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-	}
-
-	//@Test
-	public void CreateIssueEmpty() throws Exception{
-		RocketboardPage.createIssue("","", RocketboardPage.chooseProject());
-		//assertThat(RocketboardPage... waiting for UX definition about exceptions/messages
-	}
-
 	@Test
 	public void AssignMeCard() throws Exception{
 		RocketboardPage.waitingLoading();
@@ -206,7 +201,7 @@ public class RocketboardTests {
 	@Test
 	public void setLabel() throws Exception {
 		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssueGettingValue(title, desc, repoCreateIssue);
+		RocketboardPage.createIssue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String id = RocketboardPage.getInfo(title, "id");
 		RocketboardPage.restRequest(href, "[\"bug\"]");
