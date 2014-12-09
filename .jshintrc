@@ -31,5 +31,8 @@
     "it",
     "requirejs",
     "setupComponent"
-  ]
+  ],
+  "globals": {
+    "_": false
+  }
 }
