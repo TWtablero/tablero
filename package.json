@@ -5,6 +5,7 @@
     "generator-flight": "~0.8.0",
     "gulp": "~3.4.0",
     "gulp-livereload": "~0.2.0",
+    "hiredis": "^0.1.17",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.0",
     "karma-cli": "~0.0.4",
@@ -13,6 +14,7 @@
     "karma-jasmine": "~0.2.0",
     "karma-requirejs": "~0.2.1",
     "node-static": "~0.7.3",
+    "redis": "^0.12.1",
     "requirejs": "~2.1.11",
     "tiny-lr": "~0.0.5"
   },
@@ -32,6 +34,7 @@
     "postinstall": "bower install"
   },
   "dependencies": {
+    "body-parser": "^1.10.0",
     "bower": "^1.3.9",
     "express": "^4.8.7",
     "istanbul": "^0.3.2",
