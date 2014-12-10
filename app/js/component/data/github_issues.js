@@ -115,7 +115,6 @@ define([
               filteredProjects = this.filterProjectsByName(projects, data.projectName),
               issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
-            this.fillPriority(issuesFromProjects);
 
             this.trigger('data:issues:refreshed', {
               issues: issuesFromProjects
@@ -135,12 +134,6 @@ define([
             }
           }.bind(this)
         );
-      };
-
-      this.fillPriority = function(issues){
-        _.each(issues, function(issue, index) {
-          issue.priority = issue.id;
-        });
       };
 
       this.assignMyselfToIssue = function (ev, assignData) {

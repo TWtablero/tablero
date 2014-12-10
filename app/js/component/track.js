@@ -122,7 +122,7 @@
              var objIssue = _.findWhere(issues.issues , { id : val.id});
              if(objIssue)
                 val.dataset.priority = objIssue.priority;
-             else
+             else if(!val.dataset.priority)
                 val.dataset.priority = val.id;
 
           });
