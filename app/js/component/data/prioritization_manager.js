@@ -1,16 +1,17 @@
 define([
 	'flight/lib/component',
 	'component/mixins/with_auth_token_from_hash',
-	'component/mixins/repositories_urls'
-	], function (defineComponent, withAuthTokeFromHash, repositoriesURLs) {
-		return defineComponent(prioritizationManager, withAuthTokeFromHash, repositoriesURLs);
+	'component/mixins/repositories_urls',
+	'with-request'
+	], function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withRequest) {
+		return defineComponent(prioritizationManager, withAuthTokeFromHash, repositoriesURLs, withRequest);
 
 		function prioritizationManager() {
 
 			this.changePriority = function(movedToTrackName , params){
 				var newPriority ;
 				if( Number(params.nextElement.priority) === 0) {
-					newPriority = Number(params.previousElement.priority) + 1; 
+					newPriority = Number(params.previousElement.priority) + 1;
 				}else{
 					newPriority = (Number(params.previousElement.priority)  + Number(params.nextElement.priority) ) / 2 ;
 				}
@@ -21,25 +22,32 @@ define([
 				this.trigger(document, 'data:needs:issues', eventCallback);
 			};
 
-
-			this.savePriority = function(event,issues){
-				var itemKey = 'issues-'+issues.track;
+			this.savePriority = function(event, issues){
+				var itemKey = 'issues-' + issues.track;
 
 				var issuesString = JSON.stringify(issues.issues);
-				console.log(issuesString);
-				localStorage.setItem(itemKey, issuesString);
-				
+				this.put({
+					url: 'priorities',
+					data: JSON.stringify(issues),
+					contentType: "application/json"
+				});
 			};
 
 			this.loadPriority = function(event){
-				var issue0 = JSON.parse(localStorage.getItem('issues-0 - Backlog'));
-				var issue1 = JSON.parse(localStorage.getItem('issues-1 - Ready'));
-				var issue2 = JSON.parse(localStorage.getItem('issues-2 - Development'));
-				var issue3 = JSON.parse(localStorage.getItem('issues-3 - Quality Assurance'));
 
-				var allIssues = { issues :  _.union(issue0,issue1,issue2,issue3) };
+				var getIssues = function(track) {
+					this.get({
+					    url: '/priorities?track=' + track,
+					    success: function (data) {
+					    	this.trigger(document,'data:got:priority', data);
+					    }
+					});
+				}.bind(this);
 
-				this.trigger(document,'data:got:priority', allIssues);
+				var issue0 = getIssues('0 - Backlog');
+				var issue1 = getIssues('1 - Ready');
+				var issue2 = getIssues('2 - Development');
+				var issue3 = getIssues('3 - Quality Assurance');
 			};
 
 
@@ -55,4 +63,3 @@ define([
 	);
 
 
-    

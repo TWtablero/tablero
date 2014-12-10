@@ -47,7 +47,7 @@
 
         //$(".issue-track", this.node).html(divList);
         divList.appendTo(this.node);
-        
+
       };
 
       this.displayIssues = function (ev, data) {
@@ -75,7 +75,7 @@
       };
 
       this.moveIssue = function(movedToTrackName , params) {
-        var labelDone = "4 - Done"; 
+        var labelDone = "4 - Done";
         if(this.attr.trackType === labelDone && params.label === labelDone) {
           this.attr.issuesCount++;
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
@@ -104,8 +104,8 @@
       this.getIssues = function(event,eventCallback){
         var issues = $(".issue", this.$node);
 
-        var map = { 
-          track : this.attr.trackType, 
+        var map = {
+          track : this.attr.trackType,
           issues :  _.map(issues, function(val) {
             return {id: val.id, priority: val.dataset.priority };
           })};
@@ -118,7 +118,7 @@
           var UIissues = $('.issue', this.$node);
 
           _.each(UIissues, function(val) {
-             
+
              var objIssue = _.findWhere(issues.issues , { id : val.id});
              if(objIssue)
                 val.dataset.priority = objIssue.priority;
