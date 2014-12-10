@@ -49,7 +49,7 @@ define(
       });
 
       $(document).trigger('ui:needs:issues', {
-        projectName: ['pixelated-user-agent', 'pixelated-platform', 'pixelated-dispatcher', 'pixelated-project-issues']
+        projectName: ['user-agent', 'platform', 'dispatcher', 'project-issues']
       });
 
       $("#create_issue").click(function () {
