@@ -20,7 +20,6 @@ define([
   'component/templates/popover_template'
   ], 
   function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
-    'use strict';
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
@@ -273,7 +272,7 @@ define([
           connectWith: '.list-group',
           cancel: '.popover',
           receive: function (event, ui) {
-            var label, url;
+            var label, url , oldLabel, state;
 
             if (!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
@@ -353,7 +352,7 @@ define([
         var fullLabel = '';
         label = label.split('-');
 
-        for (i = 1; i < label.length; i++) {
+        for (var i = 1; i < label.length; i++) {
           var firstLetter = label[i][0];
           fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
         }
