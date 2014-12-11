@@ -18,14 +18,21 @@ define(
     'component/data/github_user',
     'component/data/github_issues',
     'component/track',
-    'component/data/issues_exporter'
+    'component/data/issues_exporter',
+		'jquery',
+		'blockUI'
   ],
-  function (githubUser, githubIssues, track, issuesExporter) {
+  function (githubUser, githubIssues, track, issuesExporter, $, blockUI) {
     'use strict';
 
     return initialize;
 
     function initialize() {
+		
+	    $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	    $.blockUI.defaults.ignoreIfBlocked = true;
+	    $(document).ajaxStop($.unblockUI);
+			
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);

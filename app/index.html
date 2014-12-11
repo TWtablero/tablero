@@ -6,9 +6,6 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/css/main.css">
-    <script src="/bower_components/hogan/lib/template.js"></script>
-    <script src="/bower_components/hogan/lib/compiler.js"></script>
-    <script src="/bower_components/underscore/underscore.js"></script>
   </head>
   <body role="document">
     <header>
@@ -110,17 +107,8 @@
     <script src="/bower_components/es5-shim/es5-shim.js"></script>
     <script src="/bower_components/es5-shim/es5-sham.js"></script>
     <![endif]-->
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="/bower_components/blockui/jquery.blockUI.js"></script>
-    <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
-    <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
 
-    <script type="text/javascript">
-      $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
-      $.blockUI.defaults.ignoreIfBlocked = true;
-      $(document).ajaxStop($.unblockUI);
-    </script>
+    <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
 
     <!-- Google Analytics -->
     <!--
