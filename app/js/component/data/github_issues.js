@@ -18,10 +18,16 @@ define([
   'component/mixins/with_auth_token_from_hash',
   'component/mixins/repositories_urls',
   'component/templates/popover_template'
-  ], function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+  ], 
+  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
+
+      this.defaultAttrs({
+          issues : [] 
+      });
+
 
       this.createIssue = function (ev, data) {
         var url, repositoryURL;
@@ -43,6 +49,8 @@ define([
             })
           }.bind(this)
         });
+
+      
       };
 
       this.addIssue = function (ev, data) {
@@ -69,8 +77,9 @@ define([
         _.each(projects, function(project,index) {
           var issuesArrayJson = project.repo[0].responseJSON || [];
           _.each(issuesArrayJson, function(issue,index) {
-              issue.projectName = project.projectName;
-               allIssues.push(issue);
+            issue.projectName = project.projectName;
+            issue.repoUrl = issue.url.match(/https:\/\/([a-zA-Z._*\d]+\/){4}/)[0];
+            allIssues.push(issue);
           });
         });
         return allIssues;
@@ -78,6 +87,7 @@ define([
 
       this.fetchIssues = function (ev, data) {
         var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
+
 
         $(document).trigger('ui:blockUI');
 
@@ -117,14 +127,14 @@ define([
               issues: issuesFromProjects
             });
 
+            this.attr.issues = this.attr.issues.concat(issuesFromProjects);
+
             if (data.page == 1) {
               this.trigger('data:issues:clearExportCsvLink');
             }
 
             if (issuesFromProjects.length > 0) {
-              this.trigger('data:issues:mountExportCsvLink', {
-                issues: issuesFromProjects
-              });
+  
               this.trigger('ui:needs:issues', data);
             }
           }.bind(this)
@@ -160,12 +170,13 @@ define([
             }
             else {
               var that = this,
-                  popover_confirm = $('<div class="popover-confirm"></div>'),
-                  popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
-                  popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
-                  pop = $(this.popover({
-                    title: '', body: ''
-                  })).appendTo(issue_header);
+
+              popover_confirm = $('<div class="popover-confirm"></div>'),
+              popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
+              popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
+              pop = $(this.popover({
+                title: '', body: ''
+              })).appendTo(issue_header);
 
               popover_confirm_yes.bind('click', function(){
                 that.trigger(document, 'ui:unassign:user', assignData);
@@ -261,7 +272,7 @@ define([
           connectWith: '.list-group',
           cancel: '.popover',
           receive: function (event, ui) {
-            var label, url;
+            var label, url , oldLabel, state;
 
             if (!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
@@ -341,7 +352,7 @@ define([
         var fullLabel = '';
         label = label.split('-');
 
-        for (i = 1; i < label.length; i++) {
+        for (var i = 1; i < label.length; i++) {
           var firstLetter = label[i][0];
           fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
         }
@@ -374,6 +385,16 @@ define([
         setTimeout($.unblockUI, (timeout || 0));
       };
 
+      this.mountExportClick =  function(ev,data){
+        this.trigger('data:issues:mountExportCsvLink', {
+          issues: this.attr.issues
+        });
+      };
+
+      this.clearIssues = function(){
+        this.attr.issues = [];
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:add:issue', this.addIssue);
@@ -382,9 +403,12 @@ define([
         this.on('data:githubUser:here', this.assignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+        this.on('#export_csv', 'click' , this.mountExportClick);
         this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:blockUI', this.blockUI);
         this.on('ui:unblockUI', this.unblockUI);
+        this.on('ui:clear:issue', this.clearIssues)
+
       });
     }
   }
