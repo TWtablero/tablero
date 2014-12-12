@@ -83,6 +83,8 @@ define(
           }
         });
 
+        $(document).trigger('ui:clear:issue');
+
         $(document).trigger('ui:needs:issues', {
           projectName: reposToFilter
         });
