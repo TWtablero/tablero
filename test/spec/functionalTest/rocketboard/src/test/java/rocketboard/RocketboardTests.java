@@ -3,11 +3,13 @@ package rocketboard;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+
 import rocketboardPages.RocketboardPage;
 
 
@@ -208,6 +210,58 @@ public class RocketboardTests {
 		RocketboardPage.visible(id);
 		String label = driver.findElement(By.xpath("//*[@id='"+id+"']/div[3]/span")).getText();
 		assertEquals(label.equals("bug"), Boolean.TRUE);
+	}
+	
+	@Test
+	public void UnassignLabel() throws Exception {
+		RocketboardPage.waitingLoading();
+		RocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = RocketboardPage.getInfo(title, "href");
+		String idCard = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.visible(idCard);
+		RocketboardPage.alreadyAssignee(idCard);
+		String btn1 = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/div/div[2]/div/button[1]")).getText();
+		assertEquals(btn1.equals("Unassign"), Boolean.TRUE);
+		String btn2 = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/div/div[2]/div/button[2]")).getText();
+		assertEquals(btn2.equals("Cancel"), Boolean.TRUE);
+	}
+	
+	@Test
+	public void CancelUnassignAction() throws Exception {
+		RocketboardPage.waitingLoading();
+		RocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = RocketboardPage.getInfo(title, "href");
+		String idCard = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.visible(idCard);
+		RocketboardPage.alreadyAssignee(idCard);
+		RocketboardPage.unassignCancel(idCard);
+		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
+	}
+	
+	@Test
+	public void ConfirmUnassignAction() throws Exception {
+		RocketboardPage.waitingLoading();
+		RocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = RocketboardPage.getInfo(title, "href");
+		String idCard = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.visible(idCard);
+		RocketboardPage.alreadyAssignee(idCard);
+		RocketboardPage.unassignConfirm(idCard);
+		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
+	}
+	
+	@Test
+	public void UnassignOwnUser() throws Exception{
+		RocketboardPage.waitingLoading();
+		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
+		RocketboardPage.waitCreatedIssue(title);
+		String idCard = RocketboardPage.getInfo(title, "id");
+		RocketboardPage.assignMe(idCard);
+		RocketboardPage.unassignMe(idCard);
+		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
 	}
 
 }

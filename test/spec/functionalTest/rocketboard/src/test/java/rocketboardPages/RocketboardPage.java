@@ -451,6 +451,20 @@ public class RocketboardPage {
 		WebElement element = wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
+	
+	public void unassignMe(String id) throws Exception {
+		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
+		unassign.click();
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebElement element = wait.until(
+		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]")));
+	}
+	
+	public void alreadyAssignee(String id) throws Exception {
+		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
+		unassign.click();
+		Thread.sleep(2000);
+	}
 
 	public void pageRefresh() throws Exception {
 		driver.navigate().refresh();
@@ -459,6 +473,36 @@ public class RocketboardPage {
 	public void restRequest(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
 		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+RocketboardTests.serviceUrl.substring(1);
+		String infWebSvcRequestMessage = labelGit;
+
+		// CREATE HTTP REQUEST CONTENT
+		URL urlForInfWebSvc = new URL(urlString);
+		URLConnection UrlConnInfWebSvc = urlForInfWebSvc.openConnection();
+		HttpURLConnection httpUrlConnInfWebSvc = (HttpURLConnection) UrlConnInfWebSvc;
+		httpUrlConnInfWebSvc.setDoOutput(true);
+		httpUrlConnInfWebSvc.setDoInput(true);
+		httpUrlConnInfWebSvc.setAllowUserInteraction(true);
+		httpUrlConnInfWebSvc.setRequestMethod("POST");
+		OutputStreamWriter infWebSvcReqWriter = new OutputStreamWriter(httpUrlConnInfWebSvc.getOutputStream());
+		infWebSvcReqWriter.write(infWebSvcRequestMessage);
+		infWebSvcReqWriter.flush();
+		infWebSvcReqWriter.close();
+
+		// get a response - maybe "success" or "true", XML or JSON etc.
+		InputStream inputStream = httpUrlConnInfWebSvc.getInputStream();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		String line;
+		StringBuffer response = new StringBuffer();
+		while ((line = bufferedReader.readLine()) != null) {
+			response.append(line);
+			response.append('\r');
+		}
+		bufferedReader.close();
+	}
+	
+	public void restAssign(String urlGit, String labelGit) throws Exception {	
+		// SETUP STRINGS
+		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+RocketboardTests.serviceUrl.substring(1);
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
@@ -523,6 +567,22 @@ public class RocketboardPage {
 			i++;
 		}
 		return present;
+	}
+	
+	public void unassignCancel(String id) throws Exception {
+		WebElement unassignCancelBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[2]"));
+		unassignCancelBtn.click();
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebElement element = wait.until(
+		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
+	}
+	
+	public void unassignConfirm(String id) throws Exception {
+		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[1]"));
+		unassignConfirmBtn.click();
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebElement element = wait.until(
+		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
 	}
 	
 }

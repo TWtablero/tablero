@@ -12,6 +12,7 @@
     "bourbon": "3.2.0",
     "neat": "1.4.0",
     "flight-request": "*",
+    "pace": "~1.0.2",
     "blockui": "*"
   },
   "devDependencies": {
