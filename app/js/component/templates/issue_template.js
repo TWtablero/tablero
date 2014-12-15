@@ -18,7 +18,12 @@ define([],
     return issueTemplate;
 
        function issueTemplate() {
-        var colorMap = {};
+        var colorMap = {
+          'project-issues' : 'color0',
+          'user-agent' : 'color3',
+          'platform' : 'color1',
+          'dispatcher' : 'color2'
+        };
         var numOfRepos = 4;
 
      

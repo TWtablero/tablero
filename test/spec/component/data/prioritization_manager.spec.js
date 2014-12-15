@@ -9,10 +9,10 @@ describeComponent('component/data/prioritization_manager', function () {
     var spyEvent = spyOnEvent(document, 'data:issue:priorityChanged');
 
     var params = { 
-                    element : { priority : 5 } ,
-                    nextElement : { priority : 1},
-                    previousElement : { priority : 0}
-                };
+      element : { priority : 5 } ,
+      nextElement : { priority : 1},
+      previousElement : { priority : 0}
+    };
 
     this.component.changePriority(null,params);
 
@@ -22,14 +22,14 @@ describeComponent('component/data/prioritization_manager', function () {
 
   });
 
-    it('last element priority should be previous priority + 1 ', function () {
+  it('last element priority should be previous priority + 1 ', function () {
     var spyEvent = spyOnEvent(document, 'data:issue:priorityChanged');
 
     var params = { 
-                    element : { priority : 5 } ,
-                    previousElement : { priority : 1},
-                    nextElement : { priority : 0}
-                };
+      element : { priority : 5 } ,
+      previousElement : { priority : 1},
+      nextElement : { priority : 0}
+    };
 
     this.component.changePriority(null,params);
 
