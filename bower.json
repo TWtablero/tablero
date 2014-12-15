@@ -12,7 +12,9 @@
     "bourbon": "3.2.0",
     "neat": "1.4.0",
     "pace": "~1.0.2",
-    "blockui": "*"
+    "blockui": "*",
+    "zeroclipboard": "*",
+    "font-awesome": "*"
   },
   "devDependencies": {
     "jasmine-flight": "~3.0.0"

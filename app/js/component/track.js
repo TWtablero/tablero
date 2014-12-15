@@ -16,9 +16,10 @@
 define(
   [
     'flight/lib/component',
-    'component/templates/issue_template'
+    'component/templates/issue_template',
+    'zeroclipboard'
   ],
-  function (defineComponent, withIssueTemplate) {
+  function (defineComponent, withIssueTemplate, ZeroClipboard) {
     return defineComponent(track, withIssueTemplate);
 
     function track() {
@@ -58,6 +59,8 @@ define(
         if(this.attr.trackType === "4 - Done") {
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }
+
+        this.trigger('ui:issues:displayed');
       };
 
       this.cleanCount = function() {
@@ -84,10 +87,15 @@ define(
         return renderedIssue;
       };
 
+      this.makeCopyable = function(evt) {
+        new ZeroClipboard($('.copy-button', evt.target));
+      }
+
       this.after('initialize', function () {
         this.on(document, 'data:issues:refreshed', this.displayIssues);
         this.on(document, 'data:issues:cleanCount', this.cleanCount);
         this.on(document, 'data:issues:issueMoved', this.moveIssue);
+        this.on(this.$node, 'ui:issues:displayed', this.makeCopyable);
       });
     }
   }

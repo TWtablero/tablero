@@ -6,7 +6,8 @@ requirejs.config({
     'config': '../js/config',
     'component': '../js/component',
     'page': '../js/page',
-    'flight': '../bower_components/flight'
+    'flight': '../bower_components/flight',
+    'zeroclipboard': '../bower_components/zeroclipboard/dist/ZeroClipboard.min'
   }
 });
 

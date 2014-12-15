@@ -19,6 +19,13 @@
 		padding: 10px;
 	}
 
+	.copy-button {
+		background: inherit;
+		border-style: none;
+		color: grey;
+		opacity: 0.7;
+	}
+
 	&:active {
 		cursor: url("/img/closedhand.cur"), default !important;
 		transform: rotate(4deg);
