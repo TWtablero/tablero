@@ -78,11 +78,19 @@ define([
           var issuesArrayJson = project.repo[0].responseJSON || [];
           _.each(issuesArrayJson, function(issue,index) {
             issue.projectName = project.projectName;
-            issue.repoUrl = issue.url.match(/https:\/\/([a-zA-Z._*\d-]+\/){4}/)[0];
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
             allIssues.push(issue);
-          });
-        });
+          }.bind(this));
+        }.bind(this));
         return allIssues;
+      };
+
+      this.getRepoURLFromIssue = function(issueUrl){
+        var delimeter = '/';
+        if(issueUrl){
+          var result = issueUrl.split(delimeter).reverse().slice(2).reverse().join(delimeter) + delimeter;
+          return result;
+        }
       };
 
       this.fetchIssues = function (ev, data) {
