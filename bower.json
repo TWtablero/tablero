@@ -13,8 +13,7 @@
     "neat": "1.4.0",
     "pace": "~1.0.2",
     "blockui": "*",
-    "zeroclipboard": "*",
-    "font-awesome": "*"
+    "tipsy": "3545aa6ae2"
   },
   "devDependencies": {
     "jasmine-flight": "~3.0.0"

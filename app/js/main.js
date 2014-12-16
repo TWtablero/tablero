@@ -6,8 +6,8 @@ requirejs.config({
     'config': '../js/config',
     'component': '../js/component',
     'page': '../js/page',
-    'flight': '../bower_components/flight',
-    'zeroclipboard': '../bower_components/zeroclipboard/dist/ZeroClipboard.min'
+    'clipboard': '../js/clipboard',
+    'flight': '../bower_components/flight'
   }
 });
 
@@ -22,8 +22,8 @@ require(
   ],
 
   function(compose, registry, advice, withLogging, debug) {
-  // debug.enable(true);
-  // DEBUG.events.logAll();
+    // debug.enable(true);
+    // debug.events.logAll();
     compose.mixin(registry, [advice.withAdvice]);
 
     require(['page/default', 'config/config_bootstrap'], function(initializeDefault, config) {

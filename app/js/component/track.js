@@ -16,10 +16,9 @@
 define(
   [
     'flight/lib/component',
-    'component/templates/issue_template',
-    'zeroclipboard'
+    'component/templates/issue_template'
   ],
-  function (defineComponent, withIssueTemplate, ZeroClipboard) {
+  function (defineComponent, withIssueTemplate) {
     return defineComponent(track, withIssueTemplate);
 
     function track() {
@@ -88,7 +87,13 @@ define(
       };
 
       this.makeCopyable = function(evt) {
-        new ZeroClipboard($('.copy-button', evt.target));
+        $('.title').tipsy({delayIn: 1000, delayOut: 0, title: 'data-hint'});
+        $('.issue').hover(function() {
+            var toCopy = $('.title', this).text();
+            $('#clipboard').text(toCopy).focus().select();
+        }, function(){
+            $('#clipboard').text('').empty();
+        });
       }
 
       this.after('initialize', function () {
