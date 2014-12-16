@@ -13,6 +13,9 @@ app.use(sass.middleware({
 
 app.use(express.static('app'));
 
+var bodyParser = require('body-parser');
+app.use( bodyParser.json() );
+
 app.get('/config', function (req, res) {
   res.send(configClient);
 });
@@ -38,6 +41,8 @@ app.get('/request_auth_token', function (req, res) {
 
   res.redirect('/#' + url.parse(fakeUrl, true).query['access_token']);
 });
+
+require('./lib/priorization')(app, {url: configServer.redisUrl});
 
 port = process.env.PORT || 3000;
 app.listen(port);

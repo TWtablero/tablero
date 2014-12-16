@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
+ define(
   [
-    'flight/lib/component',
-    'component/templates/issue_template'
+  'flight/lib/component',
+  'component/templates/issue_template'
   ],
   function (defineComponent, withIssueTemplate) {
     return defineComponent(track, withIssueTemplate);
@@ -37,7 +37,17 @@ define(
         filteredIssues = _.filter(issues, this.isIssueOnThisTrack, this);
         this.attr.issues = filteredIssues;
 
-        return _.sortBy(filteredIssues.reverse(), function (issue) { issue.number });
+        return filteredIssues;
+      };
+
+
+      this.sortIssues = function(){
+        var divList = $(".issue", this.node);
+        divList.sort(function(a, b){ return $(a).attr('data-priority') -  $(b).attr('data-priority') });
+
+        //$(".issue-track", this.node).html(divList);
+        divList.appendTo(this.node);
+
       };
 
       this.displayIssues = function (ev, data) {
@@ -64,11 +74,18 @@ define(
         this.attr.issuesCount = 0;
       };
 
-      this.moveIssue = function(movedToTrackName) {
-        if(this.attr.trackType === "4 - Done") {
+      this.moveIssue = function(movedToTrackName , params) {
+        var labelDone = "4 - Done";
+        if(this.attr.trackType === labelDone && params.label === labelDone) {
           this.attr.issuesCount++;
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }
+      };
+
+
+
+      this.priorityChanged = function(event, elementChanged){
+        $("#"+elementChanged.id).attr('data-priority',elementChanged.priority);
       };
 
       this.renderIssue = function (issue) {
@@ -84,11 +101,48 @@ define(
         return renderedIssue;
       };
 
-      this.after('initialize', function () {
-        this.on(document, 'data:issues:refreshed', this.displayIssues);
-        this.on(document, 'data:issues:cleanCount', this.cleanCount);
-        this.on(document, 'data:issues:issueMoved', this.moveIssue);
-      });
+      this.getIssues = function(event,eventCallback){
+        var issues = $(".issue", this.$node);
+
+        var map = {
+          track : this.attr.trackType,
+          issues :  _.map(issues, function(val) {
+            return {id: val.id, priority: val.dataset.priority };
+          })};
+
+
+          this.trigger(eventCallback.eventCallback, map);
+      };
+
+      this.fillPriority = function(event, issues){
+          var UIissues = $('.issue', this.$node);
+
+          _.each(UIissues, function(val) {
+
+             var objIssue = _.findWhere(issues.issues , { id : val.id});
+             if(objIssue)
+                val.dataset.priority = objIssue.priority;
+             else if(!val.dataset.priority)
+                val.dataset.priority = val.id;
+
+          });
+
+          this.trigger(document, 'ui:issues:ended');
+      };
+
+
+
+        this.after('initialize', function () {
+          this.on(document, 'data:issues:refreshed', this.displayIssues);
+          this.on(document, 'data:issues:cleanCount', this.cleanCount);
+          this.on(document, 'data:issues:issueMoved', this.moveIssue);
+          this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
+          this.on(document, 'ui:issues:ended', this.sortIssues);
+          this.on(document, 'data:needs:issues', this.getIssues);
+          this.on(document, 'data:got:priority', this.fillPriority);
+
+
+        });
+      }
     }
-  }
-);
+    );

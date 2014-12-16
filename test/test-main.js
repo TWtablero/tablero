@@ -12,7 +12,8 @@ requirejs.config({
     'config': '../js/config',
     'component': '../js/component',
     'page': '../js/page',
-    'flight': '../bower_components/flight'
+    'flight': '../bower_components/flight',
+    'with-request': '../bower_components/flight-request/lib/with_request'
   },
 
   // ask Require.js to load these files (all our tests)

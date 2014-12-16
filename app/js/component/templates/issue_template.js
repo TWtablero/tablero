@@ -18,7 +18,12 @@ define([],
     return issueTemplate;
 
        function issueTemplate() {
-        var colorMap = {};
+        var colorMap = {
+          'project-issues' : 'color0',
+          'user-agent' : 'color3',
+          'platform' : 'color1',
+          'dispatcher' : 'color2'
+        };
         var numOfRepos = 4;
 
      
@@ -69,7 +74,7 @@ define([],
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
-          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}">' +
+          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}" data-priority="{{priority}}">' +
             '<div class="issue-header">'+
               '<a class="assigns-myself">' +
                 '<span class="empty-avatar">+</span>' +

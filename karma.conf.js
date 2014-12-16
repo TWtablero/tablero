@@ -24,6 +24,7 @@ module.exports = function (config) {
       'app/bower_components/hogan/lib/compiler.js',
       // loaded with require
       {pattern: 'app/bower_components/flight/**/*.js', included: false},
+      {pattern: 'app/bower_components/flight-request/**/*.js', included: false},
       {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'test/spec/**/*.spec.js', included: false},
       // test config
