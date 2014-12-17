@@ -3,8 +3,8 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var app = express();
-var configServer = require('./config_server.js');
-var configClient = require('./config_client.js');
+var configServer = require('./config/server.js');
+var configClient = require('./config/client.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
