@@ -6,7 +6,7 @@ requirejs.config({
     'config': '../js/config',
     'component': '../js/component',
     'page': '../js/page',
-    'clipboard': '../js/clipboard',
+    'clipboard': '../js/page/clipboard',
     'flight': '../bower_components/flight',
     'with-request': 'flight-request/lib/with_request'
   }

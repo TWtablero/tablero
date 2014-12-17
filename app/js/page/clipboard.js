@@ -1,4 +1,8 @@
 define([], function () {
+  var options = {
+    hidden: "#clipboard"
+  };
+
   $(document).keydown(function(e) {
     var _ref, _ref2;
     if (!this.value || !(e.ctrlKey || e.metaKey)) {
@@ -13,10 +17,12 @@ define([], function () {
     if ((_ref2 = document.selection) != null ? _ref2.createRange().text : void 0) {
       return;
     }
-  }, this);
+  });
   $(document).keyup(function(e) {
     if ($(e.target).is("#clipboard")) {
       return $("#clipboard").text('');
     }
   });
+
+  return options;
 });

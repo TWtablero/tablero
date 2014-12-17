@@ -15,9 +15,10 @@
  */
  define(
   [ 'flight/lib/component',
-    'component/templates/issue_template'],
-  function (defineComponent, withIssueTemplate) {
-    return defineComponent(track, withIssueTemplate);
+    'component/templates/issue_template',
+    'component/ui/copyable'],
+  function (defineComponent, withIssueTemplate, copyable) {
+    return defineComponent(track, withIssueTemplate, copyable);
 
     function track() {
       this.defaultAttrs({
@@ -98,16 +99,6 @@
         }.bind(this));
         return renderedIssue;
       };
-
-      this.makeCopyable = function(evt) {
-        $('.title').tipsy({delayIn: 1000, delayOut: 0, title: 'data-hint'});
-        $('.issue').hover(function() {
-            var toCopy = $('.title', this).text();
-            $('#clipboard').text(toCopy).focus().select();
-        }, function(){
-            $('#clipboard').text('').empty();
-        });
-      }
 
       this.getIssues = function(event,eventCallback){
         var issues = $(".issue", this.$node);
