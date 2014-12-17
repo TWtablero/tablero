@@ -18,7 +18,12 @@ define([],
     return issueTemplate;
 
       function issueTemplate() {
-        var colorMap = {};
+        var colorMap = {
+          'project-issues' : 'color0',
+          'user-agent' : 'color3',
+          'platform' : 'color1',
+          'dispatcher' : 'color2'
+        };
         var numOfRepos = 4;
 
         this.getRepoColor = function (projectName) {
@@ -65,30 +70,30 @@ define([],
           return renderedIssue;
         };
 
-        this.before('initialize', function () {
-          this.template = Hogan.compile(
-            '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}">' +
-              '<div class="issue-header">'+
-                '<a class="assigns-myself">' +
-                  '<span class="empty-avatar">+</span>' +
-                  '<span class="empty-avatar-label">ASSIGN ME</span>' +
-                  '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
-                '</a>' +
-                '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
-              '</div>' +
-              '<div class="issue-body">' +
-                '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}" data-hint="Ctrl+C to Copy">' +
-                  '{{title}}' +
-                '</a>' +
-              '</div>' +
-              '<div class="labels">'+
-                '{{#labelsName}}' +
-                  '<span class="label" style="background: #{{color}};">{{name}}</span>' +
-                '{{/labelsName}}' +
-              '</div>' +
-            '</div>'
-          );
-        });
+      this.before('initialize', function () {
+        this.template = Hogan.compile(
+          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}" data-priority="{{priority}}">' +
+            '<div class="issue-header">'+
+              '<a class="assigns-myself">' +
+                '<span class="empty-avatar">+</span>' +
+                '<span class="empty-avatar-label">ASSIGN ME</span>' +
+                '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
+              '</a>' +
+              '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
+            '</div>' +
+            '<div class="issue-body">' +
+              '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}" data-hint="Ctrl+C to Copy">' +
+                '{{title}}' +
+              '</a>'+
+            '</div>' +
+            '<div class="labels">'+
+              '{{#labelsName}}' +
+                '<span class="label" style="background: #{{color}};">{{name}}</span>' +
+              '{{/labelsName}}' +
+            '</div>' +
+          '</div>'
+        );
+      });
     }
   }
 );

@@ -18,9 +18,10 @@ define(
     'component/data/github_user',
     'component/data/github_issues',
     'component/track',
-    'component/data/issues_exporter'
+    'component/data/issues_exporter',
+    'component/data/prioritization_manager'
   ],
-  function (githubUser, githubIssues, track, issuesExporter) {
+  function (githubUser, githubIssues, track, issuesExporter,prioritizationManager) {
     'use strict';
 
     return initialize;
@@ -29,6 +30,7 @@ define(
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
+      prioritizationManager.attachTo(document);
 
       track.attachTo('.issue-track.backlog', {
         trackType: '0 - Backlog'

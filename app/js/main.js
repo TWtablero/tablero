@@ -7,7 +7,8 @@ requirejs.config({
     'component': '../js/component',
     'page': '../js/page',
     'clipboard': '../js/clipboard',
-    'flight': '../bower_components/flight'
+    'flight': '../bower_components/flight',
+    'with-request': 'flight-request/lib/with_request'
   }
 });
 
