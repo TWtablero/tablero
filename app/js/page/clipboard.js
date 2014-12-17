@@ -5,7 +5,7 @@ define([], function () {
 
   $(document).keydown(function(e) {
     var _ref, _ref2;
-    if (!this.value || !(e.ctrlKey || e.metaKey)) {
+    if (!(e.ctrlKey || e.metaKey)) {
       return;
     }
     if ($(e.target).is("input:visible,textarea:visible")) {
