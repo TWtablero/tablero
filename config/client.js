@@ -1,10 +1,13 @@
-var config = {};
+var repos = {};
+var env = process.env;
 
-config.repos = {
-  'user-agent': process.env.PX_USER_AGENT,
-  'dispatcher': process.env.PX_DISPATCHER,
-  'platform': process.env.PX_PLATFORM,
-  'project-issues': process.env.PX_PROJECT_ISSUES
-};
+function addRepo(name, key) {
+  env[key] && (repos[name] = env[key]);
+}
+addRepo('user-agent', 'PX_USER_AGENT');
+addRepo('dispatcher', 'PX_DISPATCHER');
+addRepo('platform', 'PX_PLATFORM');
+addRepo('project-issues', 'PX_PROJECT_ISSUES');
+addRepo('pages', 'PX_PAGES');
 
-module.exports = config;
+module.exports = {repos: repos};
