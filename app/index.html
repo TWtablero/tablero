@@ -5,10 +5,12 @@
     <title>RocketBoard</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
     <link rel="stylesheet" href="/css/main.css">
     <script src="/bower_components/hogan/lib/template.js"></script>
     <script src="/bower_components/hogan/lib/compiler.js"></script>
     <script src="/bower_components/underscore/underscore.js"></script>
+
   </head>
   <body role="document">
     <header>
@@ -22,12 +24,12 @@
         <input type="checkbox" id="repository-1" checked="true" repo="project-issues">
         <label for="repository-1"><i class=" icon-eye-open color0"></i> project-issues</label>
       </span>
-      
+
       <span class="filter-repo right">
         <input type="checkbox" id="repository-2" checked="true" repo="platform">
         <label for="repository-2"><i class=" icon-eye-open color1"></i> platform</label>
       </span>
-      
+
       <span class="filter-repo right">
         <input type="checkbox" id="repository-3" checked="true" repo="dispatcher">
         <label for="repository-3"><i class="icon-eye-open color2"></i> dispatcher</label>
@@ -112,6 +114,7 @@
     <![endif]-->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="/bower_components/tipsy/src/javascripts/jquery.tipsy.js"></script>
     <script src="/bower_components/blockui/jquery.blockUI.js"></script>
     <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
     <script src="/bower_components/pace/pace.min.js"></script>
@@ -134,5 +137,9 @@
       ga('create','');ga('send','pageview');
     </script>
     -->
+
+    <div id="clipboard-container" style='position fixed; left: 0px;top: 0px;width: 0px;height: 0px; opacity: 0;'>
+      <textarea id="clipboard" style="width: 1px; height: 1px;"></textarea>
+    </div>
   </body>
 </html>

@@ -13,7 +13,8 @@
     "neat": "1.4.0",
     "flight-request": "*",
     "pace": "~1.0.2",
-    "blockui": "*"
+    "blockui": "*",
+    "tipsy": "3545aa6ae2"
   },
   "devDependencies": {
     "jasmine-flight": "~3.0.0"

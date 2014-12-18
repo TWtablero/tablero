@@ -18,14 +18,14 @@ define([
   'component/mixins/with_auth_token_from_hash',
   'component/mixins/repositories_urls',
   'component/templates/popover_template'
-  ], 
+  ],
   function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
 
       this.defaultAttrs({
-          issues : [] 
+          issues : []
       });
 
 
@@ -50,7 +50,7 @@ define([
           }.bind(this)
         });
 
-      
+
       };
 
       this.addIssue = function (ev, data) {
@@ -143,7 +143,7 @@ define([
             }
 
             if (issuesFromProjects.length > 0) {
-  
+
               this.trigger('ui:needs:issues', data);
             } else {
               this.trigger('ui:needs:priority');
