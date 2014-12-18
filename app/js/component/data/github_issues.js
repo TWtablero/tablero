@@ -18,14 +18,14 @@ define([
   'component/mixins/with_auth_token_from_hash',
   'component/mixins/repositories_urls',
   'component/templates/popover_template'
-  ], 
+  ],
   function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
 
       this.defaultAttrs({
-          issues : [] 
+          issues : []
       });
 
 
@@ -50,7 +50,7 @@ define([
           }.bind(this)
         });
 
-      
+
       };
 
       this.addIssue = function (ev, data) {
@@ -74,8 +74,8 @@ define([
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        _.each(projects, function(project,index) {
-          var issuesArrayJson = project.repo[0].responseJSON || [];
+        _.each(projects, function(project, index) {
+          var issuesArrayJson = project.repo[0] || [];
           _.each(issuesArrayJson, function(issue,index) {
             issue.projectName = project.projectName;
             issue.repoUrl = this.getRepoURLFromIssue(issue.url);
@@ -94,43 +94,25 @@ define([
       };
 
       this.fetchIssues = function (ev, data) {
-        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
-
-
         $(document).trigger('ui:blockUI');
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
-        userAgentIssuesDeferred = $.Deferred();
-        dispatcherIssuesDeferred = $.Deferred();
-        platformIssuesDeferred = $.Deferred();
-        projectIssuesIssuesDeferred = $.Deferred();
+        var issuesPromises = this.fetchAllIssues(data.page);
+        var queries = _(issuesPromises).map(function(v,k) {return v;});
+        var names = _(issuesPromises).map(function(v,k) {return k;});
+        $.when.apply(this, queries).done(
+          function () {
+            var issuesResults = arguments;
+            var projects = _(names).map(function(name, idx) {
+              return {
+                'projectName': name,
+                'repo': issuesResults[idx]
+              }
+            });
 
-        this.fetchUserAgentIssues(data.page).complete(userAgentIssuesDeferred.resolve);
-        this.fetchDispatcherIssues(data.page).complete(dispatcherIssuesDeferred.resolve);
-        this.fetchPlatformIssues(data.page).complete(platformIssuesDeferred.resolve);
-        this.fetchProjectIssues(data.page).complete(projectIssuesIssuesDeferred.resolve);
-
-
-        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred).done(
-          function (userAgentIssues, dispatcherIssues, platformIssues, projectIssuesIssues) {
-
-            var projects = [{
-                'projectName': 'project-issues',
-                'repo': projectIssuesIssues
-              },  {
-                'projectName': 'platform',
-                'repo': platformIssues
-              }, {
-                'projectName': 'dispatcher',
-                'repo': dispatcherIssues
-              }, {
-                'projectName': 'user-agent',
-                'repo': userAgentIssues
-              }],
-              filteredProjects = this.filterProjectsByName(projects, data.projectName),
-              issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
-
+            var filteredProjects = this.filterProjectsByName(projects, data.projectName),
+            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
             this.trigger('data:issues:refreshed', {
               issues: issuesFromProjects
@@ -143,7 +125,7 @@ define([
             }
 
             if (issuesFromProjects.length > 0) {
-  
+
               this.trigger('ui:needs:issues', data);
             } else {
               this.trigger('ui:needs:priority');
@@ -282,9 +264,9 @@ define([
 
         var label = this.parseLabel(event.target.id);
 
-        var issueMovedParam = { 
+        var issueMovedParam = {
           label : label ,
-          element : this.DOMObjectToIssueMovedParam(ui.item[0]), 
+          element : this.DOMObjectToIssueMovedParam(ui.item[0]),
           previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
           nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
         };
@@ -318,7 +300,7 @@ define([
             $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
             $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
 
-           
+
 
             if (label == "4 - Done") {
               this.triggerRocketAnimation();

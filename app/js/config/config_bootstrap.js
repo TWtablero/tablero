@@ -9,6 +9,9 @@ define([],
     return {
       getConfig: function () {
         return config;
+      },
+      getRepos: function() {
+        return config.repos
       }
     }
 
