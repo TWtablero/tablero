@@ -60,6 +60,10 @@ define([
       }
 
       this.filterProjectsByName = function (projects, projectNames) {
+        if(! projectNames) {
+           return projects;
+         }
+
         var filteredRepos = [];
 
         _.each(projects, function (project) {

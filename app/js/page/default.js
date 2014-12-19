@@ -48,9 +48,7 @@ define(
         trackType: '4 - Done'
       });
 
-      $(document).trigger('ui:needs:issues', {
-        projectName: ['user-agent', 'platform', 'dispatcher', 'project-issues']
-      });
+      $(document).trigger('ui:needs:issues', {});
 
       $("#create_issue").click(function () {
         $(document).trigger('ui:create:issue', {
