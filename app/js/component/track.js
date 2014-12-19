@@ -14,12 +14,11 @@
  * limitations under the License.
  */
  define(
-  [
-  'flight/lib/component',
-  'component/templates/issue_template'
-  ],
-  function (defineComponent, withIssueTemplate) {
-    return defineComponent(track, withIssueTemplate);
+  [ 'flight/lib/component',
+    'component/templates/issue_template',
+    'component/ui/copyable'],
+  function (defineComponent, withIssueTemplate, copyable) {
+    return defineComponent(track, withIssueTemplate, copyable);
 
     function track() {
       this.defaultAttrs({
@@ -68,6 +67,8 @@
         if(this.attr.trackType === "4 - Done") {
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }
+
+        this.trigger('ui:issues:displayed');
       };
 
       this.cleanCount = function() {
@@ -81,8 +82,6 @@
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
         }
       };
-
-
 
       this.priorityChanged = function(event, elementChanged){
         $("#"+elementChanged.id).attr('data-priority',elementChanged.priority);
@@ -130,19 +129,15 @@
           this.trigger(document, 'ui:issues:ended');
       };
 
-
-
-        this.after('initialize', function () {
-          this.on(document, 'data:issues:refreshed', this.displayIssues);
-          this.on(document, 'data:issues:cleanCount', this.cleanCount);
-          this.on(document, 'data:issues:issueMoved', this.moveIssue);
-          this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
-          this.on(document, 'ui:issues:ended', this.sortIssues);
-          this.on(document, 'data:needs:issues', this.getIssues);
-          this.on(document, 'data:got:priority', this.fillPriority);
-
-
-        });
-      }
+      this.after('initialize', function () {
+        this.on(document, 'data:issues:refreshed', this.displayIssues);
+        this.on(document, 'data:issues:cleanCount', this.cleanCount);
+        this.on(document, 'data:issues:issueMoved', this.moveIssue);
+        this.on(document, 'data:issue:priorityChanged', this.priorityChanged);
+        this.on(document, 'ui:issues:ended', this.sortIssues);
+        this.on(document, 'data:needs:issues', this.getIssues);
+        this.on(document, 'data:got:priority', this.fillPriority);
+        this.on(this.$node, 'ui:issues:displayed', this.makeCopyable);
+      });
     }
-    );
+  });
