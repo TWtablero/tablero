@@ -41,7 +41,7 @@ define([
       }
 
       this.addProjects = function() {
-        var template = Hogan.compile('<option value="{{value}}">{{label}}</option>')
+        var template = Hogan.compile('<option value="{{name}}">{{label}}</option>')
         _(labels).each(function (label, name) {
           $("#projects").append(template.render({name: name, label: label}));
         }.bind(this));
