@@ -64,6 +64,7 @@ public class ManageBoardTests {
 		String [] platform = {"platform"};
 		String [] userAgent = {"userAgent"};
 		String [] projectIssue = {"projectIssue"};
+		String [] pages = {"pages"};
 		String [] all = {"all"};
 
 		RocketboardPage.waitingLoading();
@@ -77,7 +78,6 @@ public class ManageBoardTests {
 		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.clickRepo(platform);
 
-
 		RocketboardPage.clickRepo(userAgent);
 		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.clickRepo(userAgent);
@@ -85,11 +85,16 @@ public class ManageBoardTests {
 		RocketboardPage.clickRepo(projectIssue);
 		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.clickRepo(projectIssue);
+		
+		RocketboardPage.clickRepo(pages);
+		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		RocketboardPage.clickRepo(pages);
 
 		RocketboardPage.clickRepo(all);
 		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
+		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
 	}
 }
