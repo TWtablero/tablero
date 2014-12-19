@@ -17,16 +17,15 @@ define([],
   function () {
     return issueTemplate;
 
-       function issueTemplate() {
-        var colorMap = {
-          'project-issues' : 'color0',
-          'user-agent' : 'color3',
-          'platform' : 'color1',
-          'dispatcher' : 'color2'
-        };
-        var numOfRepos = 4;
-
-     
+     function issueTemplate() {
+      var colorMap = {
+        'project-issues' : 'color0',
+        'user-agent' : 'color3',
+        'platform' : 'color1',
+        'dispatcher' : 'color2',
+        'pages' : 'color4'
+      };
+      var numOfRepos = colorMap.length;
 
       this.getRepoColor = function (projectName) {
           if (!(projectName in colorMap)) {

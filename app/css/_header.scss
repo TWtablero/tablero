@@ -13,13 +13,17 @@ header {
 		margin-top: 1.5em;
 	}
 
+	.filter-container {
+		font-size: 0.9em;
+		margin-top: 0.9em;
+	}
+
 	.filter-repo {
-		margin-right: 20px;
+		display: inline-block;
+		width: 32%;
 		color: white;
 		cursor: pointer;
-		font-size: 0.9em;
-		margin-right: 2em;
-		margin-top: 1.5em;
+		margin-bottom: 10px;
 
 		label {
 			cursor: pointer;
