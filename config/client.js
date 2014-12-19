@@ -6,10 +6,10 @@ function addRepo(name, key, label) {
   env[key] && (repos[name] = env[key]);
   env[key] && (labels[name] = (label || repos[name]));
 }
-addRepo('project-issues', 'PX_PROJECT_ISSUES', 'User Agent');
-addRepo('platform', 'PX_PLATFORM', 'Dispatcher');
-addRepo('dispatcher', 'PX_DISPATCHER', 'Platform');
-addRepo('user-agent', 'PX_USER_AGENT', 'Project Issues');
+addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
+addRepo('platform', 'PX_PLATFORM', 'Platform');
+addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
+addRepo('user-agent', 'PX_USER_AGENT', 'User Agent');
 addRepo('pages', 'PX_PAGES', 'Pages');
 
 for(i = 0; i < 5; i++) {
