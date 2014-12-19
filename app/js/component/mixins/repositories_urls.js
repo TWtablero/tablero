@@ -1,10 +1,12 @@
 define(['config/config_bootstrap'],
   function (config) {
     return function () {
+
       this.fetchAllIssues = function (page) {
           return _.object (_(config.getRepos()).map(function (url, name) {
             return [name, $.getJSON(this.repoIssuesURL(url, page))];
           }.bind(this)));
+
       };
 
       this.defaultOptions = function () {
@@ -37,4 +39,4 @@ define(['config/config_bootstrap'],
       };
     }
   }
-);
+  );

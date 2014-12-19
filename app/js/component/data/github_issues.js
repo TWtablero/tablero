@@ -25,7 +25,8 @@ define([
     function githubIssues() {
 
       this.defaultAttrs({
-          issues : []
+          issues : [],
+          blockedRepos : [] 
       });
 
 
@@ -78,13 +79,17 @@ define([
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        _.each(projects, function(project, index) {
-          var issuesArrayJson = project.repo[0] || [];
-          _.each(issuesArrayJson, function(issue,index) {
-            issue.projectName = project.projectName;
-            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-            allIssues.push(issue);
-          }.bind(this));
+        _.each(projects, function(project,index) {
+          var issuesArrayJson = project.repo[0].responseJSON || [];
+          if(project.repo[1] === 'error'){
+            $(document).trigger('ui:issues:hidePrivateRepos', project.projectName);
+          } else {
+            _.each(issuesArrayJson, function(issue,index) {
+              issue.projectName = project.projectName;
+              issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+              allIssues.push(issue);
+            }.bind(this));
+          }
         }.bind(this));
         return allIssues;
       };
@@ -100,6 +105,8 @@ define([
       this.fetchIssues = function (ev, data) {
         $(document).trigger('ui:blockUI');
 
+
+
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
         var issuesPromises = this.fetchAllIssues(data.page);
@@ -114,6 +121,7 @@ define([
                 'repo': issuesResults[idx]
               }
             });
+
 
             var filteredProjects = this.filterProjectsByName(projects, data.projectName),
             issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
@@ -417,6 +425,10 @@ define([
         this.attr.issues = [];
       };
 
+      this.hidePrivateRepos = function(evt,repoName) { 
+        this.attr.blockedRepos.push(repoName);
+      };
+
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.fetchIssues);
         this.on('ui:add:issue', this.addIssue);
@@ -429,7 +441,8 @@ define([
         this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:blockUI', this.blockUI);
         this.on('ui:unblockUI', this.unblockUI);
-        this.on('ui:clear:issue', this.clearIssues)
+        this.on('ui:clear:issue', this.clearIssues);
+        this.on('ui:issues:hidePrivateRepos', this.hidePrivateRepos);
 
       });
     }

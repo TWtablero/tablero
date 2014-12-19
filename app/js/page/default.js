@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
+ define(
   [
     'component/data/github_user',
     'component/data/github_issues',
@@ -55,8 +55,17 @@ define(
 
       $(document).trigger('ui:needs:issues', {});
 
+      $(document).on('ui:issues:hidePrivateRepos', function() {
+        $('.private-repo').hide();
+      });
+
+
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');
       $(document).trigger('ui:needs:githubUser');
+  
+   
     }
+
   });
+
