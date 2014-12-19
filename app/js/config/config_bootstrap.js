@@ -12,6 +12,9 @@ define([],
       },
       getRepos: function() {
         return config.repos
+      },
+      getReposNames: function() {
+        return Object.keys(config.repos);
       }
     }
 
