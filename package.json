@@ -27,7 +27,7 @@
     "livereload": "gulp",
     "start": "node app.js",
     "test": "karma start --single-run",
-    "functional-test": "mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.RocketboardTests test",
+    "functional-test": "mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.* test",
     "watch": "npm run start > server.log & npm run livereload",
     "watch-test": "karma start",
     "postinstall": "bower install"
