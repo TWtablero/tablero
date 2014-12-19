@@ -19,14 +19,17 @@ define(
     'component/data/github_issues',
     'component/track',
     'component/data/issues_exporter',
-    'component/data/prioritization_manager'
+    'component/data/prioritization_manager',
+    'component/ui/issues_filter'
   ],
-  function (githubUser, githubIssues, track, issuesExporter,prioritizationManager) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter) {
     'use strict';
 
     return initialize;
 
     function initialize() {
+      issuesFilter.attachTo($('#filters'));
+
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
@@ -63,25 +66,6 @@ define(
 
       $("#projects").change(function () {
         $(document).trigger("ui:issue:createIssuesURL", $(this).val());
-      });
-
-      $('.filter-repo').change(function () {
-        $('.issue').remove();
-        var reposToFilter = [];
-        $(document).trigger("data:issues:cleanCount");
-
-        $('.filter-repo').each(function () {
-          if ($(this).find('input').is(":checked")) {
-            reposToFilter.push($(this).find('input').attr('repo'));
-          }
-        });
-
-        $(document).trigger('ui:clear:issue');
-
-        $(document).trigger('ui:needs:issues', {
-          projectName: reposToFilter
-        });
-
       });
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
