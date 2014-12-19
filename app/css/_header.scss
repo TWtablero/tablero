@@ -1,5 +1,6 @@
 header {
 	background: url('/img/back.png');
+	height: 78px;
 
 	.logo {
 		padding: 0.8em;
@@ -12,13 +13,17 @@ header {
 		margin-top: 1.5em;
 	}
 
+	.filter-container {
+		font-size: 0.9em;
+		margin-top: 0.9em;
+	}
+
 	.filter-repo {
-		margin-right: 20px;
+		display: inline-block;
+		width: 32%;
 		color: white;
 		cursor: pointer;
-		font-size: 0.9em;
-		margin-right: 2em;
-		margin-top: 1.5em;
+		margin-bottom: 10px;
 
 		label {
 			cursor: pointer;
@@ -40,21 +45,11 @@ header {
 		input[type="checkbox"]:checked + label {
 			i {
 				color: white;
-
-				&.color0 {
-					background-color: #cba50b;
-				}
-
-				&.color1 {
-					background-color: #69b4df;
-				}
-
-				&.color2 {
-					background-color: #ef689e;
-				}
-
-				&.color3 {
-					background-color: #3cb878;
+				@each $color in $repo-colors {
+					$i: index($repo-colors, $color) - 1;
+					&.color#{$i} {
+						background-color: $color;
+					}
 				}
 			}
 		}

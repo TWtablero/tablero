@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([],
-  function () {
+define(['config/config_bootstrap'],
+  function (config) {
     return issueTemplate;
 
-      function issueTemplate() {
-        var colorMap = {
-          'project-issues' : 'color0',
-          'user-agent' : 'color3',
-          'platform' : 'color1',
-          'dispatcher' : 'color2'
-        };
-        var numOfRepos = 4;
-
-        this.getRepoColor = function (projectName) {
-            if (!(projectName in colorMap)) {
-                colorMap[projectName] = 'color' + (numOfRepos-1-_.size(colorMap));
-            }
-            return colorMap[projectName];
-        };
+     function issueTemplate() {
+      var repoNames = config.getReposNames();
+      this.getRepoColor = function (projectName) {
+          var idx = repoNames.indexOf(projectName);
+          return 'color' + idx;
+      };
 
         this.clearHuboardInfo = function (issue) {
           var clearedIssue, issueParts;

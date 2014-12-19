@@ -19,14 +19,19 @@ define(
     'component/data/github_issues',
     'component/track',
     'component/data/issues_exporter',
-    'component/data/prioritization_manager'
+    'component/data/prioritization_manager',
+    'component/ui/issues_filter',
+    'component/ui/new_issue'
   ],
-  function (githubUser, githubIssues, track, issuesExporter,prioritizationManager) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
     'use strict';
 
     return initialize;
 
     function initialize() {
+      issuesFilter.attachTo($('#filters'));
+      newIssue.attachTo('#myModal');
+
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
@@ -48,43 +53,7 @@ define(
         trackType: '4 - Done'
       });
 
-      $(document).trigger('ui:needs:issues', {
-        projectName: ['user-agent', 'platform', 'dispatcher', 'project-issues']
-      });
-
-      $("#create_issue").click(function () {
-        $(document).trigger('ui:create:issue', {
-          'issueTitle': $("#issueTitle").val(),
-          'issueBody': $("#issueBody").val(),
-          'projectName': $("#projects").val()
-        });
-
-        $("#myModal").modal('hide')
-        $("#myModal input, textarea").val('')
-      });
-
-      $("#projects").change(function () {
-        $(document).trigger("ui:issue:createIssuesURL", $(this).val());
-      });
-
-      $('.filter-repo').change(function () {
-        $('.issue').remove();
-        var reposToFilter = [];
-        $(document).trigger("data:issues:cleanCount");
-
-        $('.filter-repo').each(function () {
-          if ($(this).find('input').is(":checked")) {
-            reposToFilter.push($(this).find('input').attr('repo'));
-          }
-        });
-
-        $(document).trigger('ui:clear:issue');
-
-        $(document).trigger('ui:needs:issues', {
-          projectName: reposToFilter
-        });
-
-      });
+      $(document).trigger('ui:needs:issues', {});
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');

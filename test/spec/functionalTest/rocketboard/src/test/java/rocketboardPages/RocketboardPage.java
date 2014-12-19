@@ -55,17 +55,20 @@ public class RocketboardPage {
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
 
-	@FindBy(css="header > span:nth-of-type(1) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
 	WebElement projectIssue;
 	
-	@FindBy(css="header > span:nth-of-type(2) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
 	WebElement platform;
 	
-	@FindBy(css="header > span:nth-of-type(3) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
 	WebElement dispatcher;
 	
-	@FindBy(css="header > span:nth-of-type(4) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
 	WebElement userAgent;
+	
+	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	WebElement pages;
 
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
@@ -145,6 +148,7 @@ public class RocketboardPage {
 			checkRepositoryPosition(userAgent);
 			checkRepositoryPosition(platform);
 			checkRepositoryPosition(projectIssue);
+			checkRepositoryPosition(pages);
 
 		}else {
 			waitingLoading();
@@ -161,6 +165,10 @@ public class RocketboardPage {
 				
 				if (repoUsed[i].contains("projectIssue")){
 					checkRepositoryPosition(projectIssue);
+				}
+				
+				if (repoUsed[i].contains("pages")){
+					checkRepositoryPosition(pages);
 				}
 			}
 		}
@@ -183,6 +191,7 @@ public class RocketboardPage {
 		uncheckRepositoryPosition(userAgent);	
 		uncheckRepositoryPosition(platform);
 		uncheckRepositoryPosition(projectIssue);
+		uncheckRepositoryPosition(pages);
 	} 
 
 
@@ -191,28 +200,35 @@ public class RocketboardPage {
 
 		if (repo == "dispatcher")
 		{
-			if (driver.findElement(By.id("repository-3")).isSelected())
+			if (driver.findElement(By.id("repository-2")).isSelected())
 				retorno = true; 
 			else retorno = false;
 		}
 
 		else if (repo == "platform")
 		{
-			if (driver.findElement(By.id("repository-2")).isSelected())
+			if (driver.findElement(By.id("repository-1")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 
 		else if (repo == "userAgent")
 		{
-			if (driver.findElement(By.id("repository-4")).isSelected())
+			if (driver.findElement(By.id("repository-3")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 		
 		else if (repo == "projectIssue")
 		{
-			if (driver.findElement(By.id("repository-1")).isSelected())
+			if (driver.findElement(By.id("repository-0")).isSelected())
+				retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "pages")
+		{
+			if (driver.findElement(By.id("repository-4")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
