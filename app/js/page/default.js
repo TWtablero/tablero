@@ -20,15 +20,17 @@ define(
     'component/track',
     'component/data/issues_exporter',
     'component/data/prioritization_manager',
-    'component/ui/issues_filter'
+    'component/ui/issues_filter',
+    'component/ui/new_issue'
   ],
-  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
     'use strict';
 
     return initialize;
 
     function initialize() {
       issuesFilter.attachTo($('#filters'));
+      newIssue.attachTo('#myModal');
 
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
@@ -52,21 +54,6 @@ define(
       });
 
       $(document).trigger('ui:needs:issues', {});
-
-      $("#create_issue").click(function () {
-        $(document).trigger('ui:create:issue', {
-          'issueTitle': $("#issueTitle").val(),
-          'issueBody': $("#issueBody").val(),
-          'projectName': $("#projects").val()
-        });
-
-        $("#myModal").modal('hide')
-        $("#myModal input, textarea").val('')
-      });
-
-      $("#projects").change(function () {
-        $(document).trigger("ui:issue:createIssuesURL", $(this).val());
-      });
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');

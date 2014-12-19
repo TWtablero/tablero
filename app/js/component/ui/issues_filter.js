@@ -20,6 +20,7 @@ define([
   ],
   function (defineComponent, issueFilterTemplate, config) {
     var repoNames = config.getReposNames();
+
     return defineComponent(issuesFilter, issueFilterTemplate);
     function issuesFilter() {
 
@@ -45,7 +46,7 @@ define([
 
       this.addFilters = function() {
         repoNames.forEach(function (name, idx) {
-          this.$node.prepend(this.renderFilter({name: name, index: idx}));
+          this.$node.append(this.renderFilter({name: name, index: idx}));
         }.bind(this));
       }
 
