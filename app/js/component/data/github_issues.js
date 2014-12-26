@@ -58,7 +58,7 @@
         this.trigger('data:issues:refreshed', {
           issues: data
         });
-      }
+      };
 
       this.filterProjectsByName = function (projects, projectNames) {
         if(! projectNames) {

@@ -15,15 +15,16 @@
  */
  define(
   [
-    'component/data/github_user',
-    'component/data/github_issues',
-    'component/track',
-    'component/data/issues_exporter',
-    'component/data/prioritization_manager',
-    'component/ui/issues_filter',
-    'component/ui/new_issue'
+  'component/data/github_user',
+  'component/data/github_issues',
+  'component/track',
+  'component/data/issues_exporter',
+  'component/data/prioritization_manager',
+  'component/ui/issues_filter',
+  'component/ui/new_issue',
+  'component/ui/permissions_gateway'
   ],
-  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway) {
     'use strict';
 
     return initialize;
@@ -31,6 +32,8 @@
     function initialize() {
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
+      permissionsGateway.attachTo('#permissionsGateway');
+
 
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
@@ -58,23 +61,26 @@
       });
 
       var getParameterByName = function(name) {
-         var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-         return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-      };
+       var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+       return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+     };
 
-      if(getParameterByName('private_repo') !== true){
-        $(document).trigger('ui:issues:hidePrivateRepos',  { repos : [ 'project-issues']} );
-      }
+     if(getParameterByName('private_repo') !== 'true'){
+      $(document).trigger('ui:issues:hidePrivateRepos',  { repos : [ 'project-issues']} );
+    }
 
-      $(document).trigger('ui:needs:githubUser');
-      
+    $(document).trigger('ui:needs:githubUser');
+
+    $(document).on('data:githubUser:here', function() {
+
       $(document).trigger('ui:needs:issues', {});
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');
-  
-   
-    }
+    });
 
-  });
+
+  }
+
+});
 
