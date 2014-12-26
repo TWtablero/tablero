@@ -36,10 +36,13 @@ app.get('/request_auth_token', function (req, res) {
   xhr.send();
 
   var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
+  var showPrivateRepo = url.parse(fakeUrl,true).query['scope'] === 'repo';
+
   console.log('got auth token: ');
   console.log(url.parse(fakeUrl, true));
 
-  res.redirect('/#' + url.parse(fakeUrl, true).query['access_token']);
+
+  res.redirect('/?private_repo='+showPrivateRepo + '#' + url.parse(fakeUrl, true).query['access_token']);
 });
 
 require('./lib/priorization')(app, {url: configServer.redisUrl});
