@@ -1,7 +1,5 @@
 package rocketboard;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -104,6 +102,7 @@ public class AssigneTests {
 		RocketboardPage.visible(idCard);
 		RocketboardPage.alreadyAssignee(idCard);
 		RocketboardPage.unassignConfirm(idCard);
+		
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
 	}
 	
