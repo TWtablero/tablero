@@ -132,7 +132,8 @@ define([
 
               this.trigger('ui:needs:issues', data);
             } else {
-              this.trigger('ui:needs:priority');
+              var projectIdentifiers =  { projects :  this.getAllProjectsIdentifiers( _.map(filteredProjects, function(proj) { return proj.projectName;  }))};
+              this.trigger('ui:needs:priority', projectIdentifiers);
             }
           }.bind(this)
         );
@@ -365,8 +366,11 @@ define([
       };
 
       this.DOMObjectToIssueMovedParam = function(element) {
-        if(element && element.id)
-          return { id : element.id, priority : element.dataset.priority  };
+        if(element && element.id){
+          var projectUrl =  $(element).find('.issue-header a')[1].href;
+          var projectIdentifier = this.getProjectIdentifier(projectUrl) || '';
+          return { id : element.id, priority : element.dataset.priority , project : projectIdentifier };
+        }
         return { id : 0, priority : 0};
       };
 
