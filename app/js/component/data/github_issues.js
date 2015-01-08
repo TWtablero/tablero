@@ -366,12 +366,16 @@ define([
       };
 
       this.DOMObjectToIssueMovedParam = function(element) {
+        var returnObject = { id : 0 , priority : 0 };
         if(element && element.id){
-          var projectUrl =  $(element).find('.issue-header a')[1].href;
-          var projectIdentifier = this.getProjectIdentifier(projectUrl) || '';
-          return { id : element.id, priority : element.dataset.priority , project : projectIdentifier };
+          returnObject.id = element.id;
+          returnObject.priority = element.dataset.priority;
         }
-        return { id : 0, priority : 0};
+        var projectUrl =  $(element).find('.issue-header a')[1];
+        if(projectUrl){
+          returnObject.project =  this.getProjectIdentifier(projectUrl) || '';
+        }
+        return returnObject;
       };
 
       this.parseLabel = function (label) {

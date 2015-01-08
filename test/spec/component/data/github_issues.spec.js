@@ -38,6 +38,8 @@ describeComponent('component/data/github_issues', function () {
       dataset : { priority : 1}
     };
 
+    $(sandbox({ id : 1,  dataset: { priority: 1},  })).append(sandbox());
+
     var result = this.component.DOMObjectToIssueMovedParam(element);
 
     expect(result).toEqual({ id : 1 , priority : 1});
