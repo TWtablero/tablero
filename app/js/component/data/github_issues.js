@@ -373,7 +373,7 @@ define([
         }
         var projectUrl =  $(element).find('.issue-header a')[1];
         if(projectUrl){
-          returnObject.project =  this.getProjectIdentifier(projectUrl) || '';
+          returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
         }
         return returnObject;
       };
