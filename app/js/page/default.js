@@ -53,6 +53,10 @@ define(
         trackType: '4 - Done'
       });
 
+      $(document).on('ui:toggle:backlog',function() {
+        $('.column').first().toggle("slide");
+      });
+
       $(document).trigger('ui:needs:issues', {});
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
