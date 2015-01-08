@@ -26,7 +26,6 @@
 
       this.defaultAttrs({
         issues : [],
-        blockedRepos : [] 
       });
 
 
@@ -423,11 +422,6 @@ this.clearIssues = function(){
   this.attr.issues = [];
 };
 
-this.hidePrivateRepos = function(evt,data) {
-  _.each(data.repos, function(val,index) {
-    this.attr.blockedRepos.push(val);
-  }.bind(this)); 
-};
 
 this.after('initialize', function () {
   this.on('ui:needs:issues', this.fetchIssues);
@@ -442,7 +436,6 @@ this.after('initialize', function () {
   this.on('ui:blockUI', this.blockUI);
   this.on('ui:unblockUI', this.unblockUI);
   this.on('ui:clear:issue', this.clearIssues);
-  this.on('ui:issues:hidePrivateRepos', this.hidePrivateRepos);
 
 });
 }

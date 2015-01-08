@@ -56,19 +56,6 @@
         trackType: '4 - Done'
       });
 
-      $(document).on('ui:issues:hidePrivateRepos', function() {
-        $('.private-repo').hide();
-      });
-
-      var getParameterByName = function(name) {
-       var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-       return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-     };
-
-     if(getParameterByName('private_repo') !== 'true'){
-      $(document).trigger('ui:issues:hidePrivateRepos',  { repos : [ 'project-issues']} );
-    }
-
     $(document).trigger('ui:needs:githubUser');
 
     $(document).on('data:githubUser:here', function() {
