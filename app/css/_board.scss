@@ -24,22 +24,12 @@
 		transform: rotate(4deg);
 	}
 
-	&.color0 .issue-number {
-		background-color: #cba50b;
+	@each $color in $repo-colors {
+		$i: index($repo-colors, $color) - 1;
+		&.color#{$i} .issue-number {
+			background-color: $color;
+		}
 	}
-
-	&.color1 .issue-number {
-		background-color: #69b4df;
-	}
-
-	&.color2 .issue-number {
-		background-color: #ef689e;
-	}
-
-	&.color3 .issue-number {
-		background-color: #3cb878;
-	}
-
 }
 
 .labels {

@@ -19,23 +19,29 @@ define(
     'component/data/github_issues',
     'component/track',
     'component/data/issues_exporter',
-		'jquery',
-		'blockUI'
+    'component/data/prioritization_manager',
+    'component/ui/issues_filter',
+    'component/ui/new_issue',
+    'jquery',
+    'blockUI'
   ],
-  function (githubUser, githubIssues, track, issuesExporter, $, blockUI) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
     'use strict';
 
     return initialize;
 
     function initialize() {
+      issuesFilter.attachTo($('#filters'));
+      newIssue.attachTo('#myModal');
 		
-	    $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
-	    $.blockUI.defaults.ignoreIfBlocked = true;
-	    $(document).ajaxStop($.unblockUI);
+	  $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	  $.blockUI.defaults.ignoreIfBlocked = true;
+	  $(document).ajaxStop($.unblockUI);
 			
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
+      prioritizationManager.attachTo(document);
 
       track.attachTo('.issue-track.backlog', {
         trackType: '0 - Backlog'
@@ -53,43 +59,7 @@ define(
         trackType: '4 - Done'
       });
 
-      $(document).trigger('ui:needs:issues', {
-        projectName: ['user-agent', 'platform', 'dispatcher', 'project-issues']
-      });
-
-      $("#create_issue").click(function () {
-        $(document).trigger('ui:create:issue', {
-          'issueTitle': $("#issueTitle").val(),
-          'issueBody': $("#issueBody").val(),
-          'projectName': $("#projects").val()
-        });
-
-        $("#myModal").modal('hide')
-        $("#myModal input, textarea").val('')
-      });
-
-      $("#projects").change(function () {
-        $(document).trigger("ui:issue:createIssuesURL", $(this).val());
-      });
-
-      $('.filter-repo').change(function () {
-        $('.issue').remove();
-        var reposToFilter = [];
-        $(document).trigger("data:issues:cleanCount");
-
-        $('.filter-repo').each(function () {
-          if ($(this).find('input').is(":checked")) {
-            reposToFilter.push($(this).find('input').attr('repo'));
-          }
-        });
-
-        $(document).trigger('ui:clear:issue');
-
-        $(document).trigger('ui:needs:issues', {
-          projectName: reposToFilter
-        });
-
-      });
+      $(document).trigger('ui:needs:issues', {});
 
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');

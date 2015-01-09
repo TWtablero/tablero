@@ -1,28 +1,14 @@
 define(['config/config_bootstrap'],
   function (config) {
     return function () {
-      this.fetchUserAgentIssues = function (page) {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("user-agent"), page));
-      };
-
-      this.fetchDispatcherIssues = function (page) {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("dispatcher"), page));
-      };
-
-      this.fetchPlatformIssues = function (page) {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("platform"), page));
-      };
-
-      this.fetchProjectIssues = function (page) {
-        return $.getJSON(this.repoIssuesURL(this.getURLFromProject("project-issues"), page));
-      };
-
-      this.fetchConfigInfo = function (data) {
-        return $.getJSON('/config', data);
+      this.fetchAllIssues = function (page) {
+          return _.object (_(config.getRepos()).map(function (url, name) {
+            return [name, $.getJSON(this.repoIssuesURL(url, page))];
+          }.bind(this)));
       };
 
       this.defaultOptions = function () {
-        return "per_page=100&state=all&" 
+        return "per_page=100&state=all&"
       };
 
       this.getPageParam = function(page){
@@ -33,7 +19,7 @@ define(['config/config_bootstrap'],
         return url + this.accessToken();
       }
 
-      this.repoIssuesURL = function (repo, page) {      
+      this.repoIssuesURL = function (repo, page) {
         return this.authRequest(repo + '/issues?' + this.defaultOptions() + this.getPageParam(page));
       };
 

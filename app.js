@@ -3,8 +3,8 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var app = express();
-var configServer = require('./config_server.js');
-var configClient = require('./config_client.js');
+var configServer = require('./config/server.js');
+var configClient = require('./config/client.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
@@ -12,6 +12,9 @@ app.use(sass.middleware({
 }));
 
 app.use(express.static('app'));
+
+var bodyParser = require('body-parser');
+app.use( bodyParser.json() );
 
 app.get('/config', function (req, res) {
   res.send(configClient);
@@ -38,6 +41,8 @@ app.get('/request_auth_token', function (req, res) {
 
   res.redirect('/#' + url.parse(fakeUrl, true).query['access_token']);
 });
+
+require('./lib/priorization')(app, {url: configServer.redisUrl});
 
 port = process.env.PORT || 3000;
 app.listen(port);

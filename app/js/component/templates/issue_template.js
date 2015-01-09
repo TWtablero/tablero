@@ -13,63 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([],
-  function () {
+define(['config/config_bootstrap'],
+  function (config) {
     return issueTemplate;
 
-       function issueTemplate() {
-        var colorMap = {};
-        var numOfRepos = 4;
-
-     
-
+     function issueTemplate() {
+      var repoNames = config.getReposNames();
       this.getRepoColor = function (projectName) {
-          if (!(projectName in colorMap)) {
-              colorMap[projectName] = 'color' + (numOfRepos-1-_.size(colorMap));
-          }
-          return colorMap[projectName];
+          var idx = repoNames.indexOf(projectName);
+          return 'color' + idx;
       };
 
-      this.clearHuboardInfo = function (issue) {
-        var clearedIssue, issueParts;
-        clearedIssue = _.clone(issue);
+        this.clearHuboardInfo = function (issue) {
+          var clearedIssue, issueParts;
+          clearedIssue = _.clone(issue);
 
-        clearedIssue.body = issue.body.slice(0, issue.body.indexOf("<!---")-2);
+          clearedIssue.body = issue.body.slice(0, issue.body.indexOf("<!---")-2);
 
-        return clearedIssue;
-      }
+          return clearedIssue;
+        }
 
-      this.getLabels = function(labels, columnLabelFilter) {
-        return _.filter(labels, columnLabelFilter);
-      }
+        this.getLabels = function(labels, columnLabelFilter) {
+          return _.filter(labels, columnLabelFilter);
+        }
 
-      var columnLabelRegex = /\d+ - \w+/;
+        var columnLabelRegex = /\d+ - \w+/;
 
-      this.removeColumnsLabels = function(labels) {
-        return this.getLabels(labels, function(label) {
-          return !(label.name.match(columnLabelRegex))
-        })
-      }
+        this.removeColumnsLabels = function(labels) {
+          return this.getLabels(labels, function(label) {
+            return !(label.name.match(columnLabelRegex))
+          })
+        }
 
-      this.getColumnLabel = function(labels) {
-        return this.getLabels(labels, function(label) {
-          return (label.name.match(columnLabelRegex))
-        });
-      }
+        this.getColumnLabel = function(labels) {
+          return this.getLabels(labels, function(label) {
+            return (label.name.match(columnLabelRegex))
+          });
+        }
 
-      this.render = function (issue) {
-        var renderedIssue;
-        issue.repoName = issue.projectName;
-        issue.colorClass = this.getRepoColor(issue.projectName);
-        issue.labelsName = this.removeColumnsLabels(issue.labels);
-        issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
-        renderedIssue = this.template.render(this.clearHuboardInfo(issue));
-        return renderedIssue;
-      };
+        this.render = function (issue) {
+          var renderedIssue;
+          issue.repoName = issue.projectName;
+          issue.colorClass = this.getRepoColor(issue.projectName);
+          issue.labelsName = this.removeColumnsLabels(issue.labels);
+          issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
+          renderedIssue = this.template.render(this.clearHuboardInfo(issue));
+          return renderedIssue;
+        };
 
       this.before('initialize', function () {
         this.template = Hogan.compile(
-          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}">' +
+          '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}" data-priority="{{priority}}">' +
             '<div class="issue-header">'+
               '<a class="assigns-myself">' +
                 '<span class="empty-avatar">+</span>' +
@@ -79,7 +73,7 @@ define([],
               '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
             '</div>' +
             '<div class="issue-body">' +
-              '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}">' +
+              '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}" data-hint="Ctrl+C to Copy">' +
                 '{{title}}' +
               '</a>'+
             '</div>' +

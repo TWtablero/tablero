@@ -18,14 +18,14 @@ define([
   'component/mixins/with_auth_token_from_hash',
   'component/mixins/repositories_urls',
   'component/templates/popover_template'
-  ], 
+  ],
   function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
 
       this.defaultAttrs({
-          issues : [] 
+          issues : []
       });
 
 
@@ -50,7 +50,7 @@ define([
           }.bind(this)
         });
 
-      
+
       };
 
       this.addIssue = function (ev, data) {
@@ -60,6 +60,10 @@ define([
       }
 
       this.filterProjectsByName = function (projects, projectNames) {
+        if(! projectNames) {
+           return projects;
+         }
+
         var filteredRepos = [];
 
         _.each(projects, function (project) {
@@ -74,54 +78,45 @@ define([
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
 
-        _.each(projects, function(project,index) {
-          var issuesArrayJson = project.repo[0].responseJSON || [];
+        _.each(projects, function(project, index) {
+          var issuesArrayJson = project.repo[0] || [];
           _.each(issuesArrayJson, function(issue,index) {
             issue.projectName = project.projectName;
-            issue.repoUrl = issue.url.match(/https:\/\/([a-zA-Z._*\d-]+\/){4}/)[0];
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
             allIssues.push(issue);
-          });
-        });
+          }.bind(this));
+        }.bind(this));
         return allIssues;
       };
 
+      this.getRepoURLFromIssue = function(issueUrl){
+        var delimeter = '/';
+        if(issueUrl){
+          var result = issueUrl.split(delimeter).reverse().slice(2).reverse().join(delimeter) + delimeter;
+          return result;
+        }
+      };
+
       this.fetchIssues = function (ev, data) {
-        var userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred;
-
-
         $(document).trigger('ui:blockUI');
 
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
-        userAgentIssuesDeferred = $.Deferred();
-        dispatcherIssuesDeferred = $.Deferred();
-        platformIssuesDeferred = $.Deferred();
-        projectIssuesIssuesDeferred = $.Deferred();
+        var issuesPromises = this.fetchAllIssues(data.page);
+        var queries = _(issuesPromises).map(function(v,k) {return v;});
+        var names = _(issuesPromises).map(function(v,k) {return k;});
+        $.when.apply(this, queries).done(
+          function () {
+            var issuesResults = arguments;
+            var projects = _(names).map(function(name, idx) {
+              return {
+                'projectName': name,
+                'repo': issuesResults[idx]
+              }
+            });
 
-        this.fetchUserAgentIssues(data.page).complete(userAgentIssuesDeferred.resolve);
-        this.fetchDispatcherIssues(data.page).complete(dispatcherIssuesDeferred.resolve);
-        this.fetchPlatformIssues(data.page).complete(platformIssuesDeferred.resolve);
-        this.fetchProjectIssues(data.page).complete(projectIssuesIssuesDeferred.resolve);
-
-
-        $.when(userAgentIssuesDeferred, dispatcherIssuesDeferred, platformIssuesDeferred, projectIssuesIssuesDeferred).done(
-          function (userAgentIssues, dispatcherIssues, platformIssues, projectIssuesIssues) {
-
-            var projects = [{
-                'projectName': 'project-issues',
-                'repo': projectIssuesIssues
-              },  {
-                'projectName': 'platform',
-                'repo': platformIssues
-              }, {
-                'projectName': 'dispatcher',
-                'repo': dispatcherIssues
-              }, {
-                'projectName': 'user-agent',
-                'repo': userAgentIssues
-              }],
-              filteredProjects = this.filterProjectsByName(projects, data.projectName),
-              issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
+            var filteredProjects = this.filterProjectsByName(projects, data.projectName),
+            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
             this.trigger('data:issues:refreshed', {
               issues: issuesFromProjects
@@ -134,8 +129,10 @@ define([
             }
 
             if (issuesFromProjects.length > 0) {
-  
+
               this.trigger('ui:needs:issues', data);
+            } else {
+              this.trigger('ui:needs:priority');
             }
           }.bind(this)
         );
@@ -264,13 +261,29 @@ define([
             $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
           }
         });
-      }
+      };
+
+
+      this.updateDraggable = function(event, ui){
+
+        var label = this.parseLabel(event.target.id);
+
+        var issueMovedParam = {
+          label : label ,
+          element : this.DOMObjectToIssueMovedParam(ui.item[0]),
+          previousElement : this.DOMObjectToIssueMovedParam(ui.item[0].previousElementSibling),
+          nextElement : this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
+        };
+
+        this.trigger(document, 'data:issues:issueMoved' , issueMovedParam);
+      };
 
       this.draggable = function (ev, data) {
         $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
           items: '.issue',
           connectWith: '.list-group',
           cancel: '.popover',
+          update : this.updateDraggable.bind(this),
           receive: function (event, ui) {
             var label, url , oldLabel, state;
 
@@ -278,6 +291,8 @@ define([
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
+
+
 
             url = this.getIssueUrlFromDraggable(ui);
             label = this.parseLabel(event.target.id);
@@ -289,8 +304,9 @@ define([
             $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
             $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
 
+
+
             if (label == "4 - Done") {
-              this.trigger(document, 'data:issues:issueMoved');
               this.triggerRocketAnimation();
               $.ajax({
                 type: 'PATCH',
@@ -346,7 +362,13 @@ define([
             }, 600);
           });
         });
-      }
+      };
+
+      this.DOMObjectToIssueMovedParam = function(element) {
+        if(element && element.id)
+          return { id : element.id, priority : element.dataset.priority  };
+        return { id : 0, priority : 0};
+      };
 
       this.parseLabel = function (label) {
         var fullLabel = '';

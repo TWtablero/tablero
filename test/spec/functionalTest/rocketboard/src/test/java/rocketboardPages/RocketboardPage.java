@@ -16,7 +16,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import rocketboard.RocketboardTests;
+import rocketboard.EndToEndTests;
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -55,14 +55,20 @@ public class RocketboardPage {
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
 
-	@FindBy(css="header > span:nth-of-type(1) > label > i")
-	WebElement userAgent;
-
-	@FindBy(css="header > span:nth-of-type(2) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
+	WebElement projectIssue;
+	
+	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
 	WebElement platform;
-
-	@FindBy(css="header > span:nth-of-type(3) > label > i")
+	
+	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
 	WebElement dispatcher;
+	
+	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
+	WebElement userAgent;
+	
+	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	WebElement pages;
 
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
@@ -74,7 +80,7 @@ public class RocketboardPage {
 	public RocketboardPage(WebDriver driver) {
 		super();
 		this.driver = driver;
-		driver.get(RocketboardTests.baseUrl + RocketboardTests.serviceUrl);
+		driver.get(EndToEndTests.baseUrl + EndToEndTests.serviceUrl);
 
 	}
 
@@ -136,15 +142,16 @@ public class RocketboardPage {
 		waitingLoading();
 	}
 
-	public void selectRepo(String[] repoUsed) throws Exception {
+	public void clickRepo(String[] repoUsed) throws Exception {
 		if (repoUsed[0].contains("all")){
 			checkRepositoryPosition(dispatcher);
 			checkRepositoryPosition(userAgent);
 			checkRepositoryPosition(platform);
+			checkRepositoryPosition(projectIssue);
+			checkRepositoryPosition(pages);
 
 		}else {
 			waitingLoading();
-			uncheckAllRepo();
 			for (int i=0;i<repoUsed.length;i++){
 				if (repoUsed[i].contains("dispatcher")){
 					checkRepositoryPosition(dispatcher);
@@ -154,6 +161,14 @@ public class RocketboardPage {
 				}
 				if (repoUsed[i].contains("platform")){
 					checkRepositoryPosition(platform);
+				}
+				
+				if (repoUsed[i].contains("projectIssue")){
+					checkRepositoryPosition(projectIssue);
+				}
+				
+				if (repoUsed[i].contains("pages")){
+					checkRepositoryPosition(pages);
 				}
 			}
 		}
@@ -174,7 +189,9 @@ public class RocketboardPage {
 	public void uncheckAllRepo() throws InterruptedException{
 		uncheckRepositoryPosition(dispatcher);
 		uncheckRepositoryPosition(userAgent);	
-		uncheckRepositoryPosition(platform);	
+		uncheckRepositoryPosition(platform);
+		uncheckRepositoryPosition(projectIssue);
+		uncheckRepositoryPosition(pages);
 	} 
 
 
@@ -183,28 +200,35 @@ public class RocketboardPage {
 
 		if (repo == "dispatcher")
 		{
-			if (driver.findElement(By.id("repository-3")).isSelected())
+			if (driver.findElement(By.id("repository-2")).isSelected())
 				retorno = true; 
 			else retorno = false;
 		}
 
 		else if (repo == "platform")
 		{
-			if (driver.findElement(By.id("repository-2")).isSelected())
+			if (driver.findElement(By.id("repository-1")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 
 		else if (repo == "userAgent")
 		{
-			if (driver.findElement(By.id("repository-4")).isSelected())
+			if (driver.findElement(By.id("repository-3")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 		
-		else if (repo == "projetIssue")
+		else if (repo == "projectIssue")
 		{
-			if (driver.findElement(By.id("repository-1")).isSelected())
+			if (driver.findElement(By.id("repository-0")).isSelected())
+				retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "pages")
+		{
+			if (driver.findElement(By.id("repository-4")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
@@ -275,8 +299,8 @@ public class RocketboardPage {
 				System.out.print("Checking Title Present INSIDE WHILE: "+present);
 				timeout++;
 			}
-			waitMessage(RocketboardTests.messageSucessRocket);
-			waitMessage(RocketboardTests.messageDone);
+			waitMessage(EndToEndTests.messageSucessRocket);
+			waitMessage(EndToEndTests.messageDone);
 		}
 		Thread.sleep(800);
 		values[1] = getCount(getColumn);
@@ -365,7 +389,7 @@ public class RocketboardPage {
 	 */
 	public void waitingLoading() throws InterruptedException{
 		Thread.sleep(3000);
-		while(driver.getPageSource().contains(RocketboardTests.messageLoading)){
+		while(driver.getPageSource().contains(EndToEndTests.messageLoading)){
 			Thread.sleep(500);
 		}
 	}
@@ -472,7 +496,7 @@ public class RocketboardPage {
 
 	public void restRequest(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+RocketboardTests.serviceUrl.substring(1);
+		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+EndToEndTests.serviceUrl.substring(1);
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
@@ -502,7 +526,7 @@ public class RocketboardPage {
 	
 	public void restAssign(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+RocketboardTests.serviceUrl.substring(1);
+		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+EndToEndTests.serviceUrl.substring(1);
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT

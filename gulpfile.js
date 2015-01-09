@@ -27,6 +27,7 @@ gulp.task('rjs', function() {
         underscore: "../bower_components/underscore/underscore",
         jquery: "../bower_components/jquery/dist/jquery",
         jqueryUI: "../bower_components/jquery-ui/jquery-ui",
+        tipsy: "../bower_components/tipsy/src/javascripts/jquery.tipsy",
         hogan: "../bower_components/hogan",
         flight: "../bower_components/flight",
         blockUI: "../bower_components/blockui/jquery.blockUI",

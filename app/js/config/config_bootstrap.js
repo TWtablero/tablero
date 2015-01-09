@@ -9,6 +9,15 @@ define([],
     return {
       getConfig: function () {
         return config;
+      },
+      getRepos: function() {
+        return config.repos
+      },
+      getReposNames: function() {
+        return Object.keys(config.repos);
+      },
+      getLabels: function() {
+        return config.labels;
       }
     }
 

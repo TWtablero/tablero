@@ -1,3 +1,5 @@
+$repo-colors: #cba50b #69b4df #ef689e #3cb878 #808af6;
+
 body {
   font-family: "OpenSans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   font-size: 16px !important;
@@ -57,15 +59,6 @@ a {
 
 .right {
   float: right;
-}
-
-#filter-repo {
-  background: white;
-  margin-left: 2em;
-  top: 0px;
-  position: relative;
-  outline: none;
-  border: none;
 }
 
 .modal-dialog select {
