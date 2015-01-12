@@ -12,7 +12,8 @@ addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
 addRepo('user-agent', 'PX_USER_AGENT', 'User Agent');
 addRepo('website', 'PX_PAGES', 'Website');
 
-for(i = 0; i < 5; i++) {
+var maxDynaReposQuantity = 5;
+for(i = 0; i < maxDynaReposQuantity; i++) {
   addRepo(env['REPO_' + i + '_NAME'] || i + 'th', 'REPO_' + i + '_URL');
 }
 
