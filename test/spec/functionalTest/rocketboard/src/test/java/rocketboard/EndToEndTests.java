@@ -43,8 +43,8 @@ public class EndToEndTests {
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		this.driver.get("http://localhost:3000"+ serviceUrl);
-		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);	 
+		RocketboardPage = new RocketboardPage(this.driver,this.baseUrl);
+		PageFactory.initElements(this.driver,(Object) RocketboardPage);
 
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
