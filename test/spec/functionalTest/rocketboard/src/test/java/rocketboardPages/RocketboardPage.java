@@ -77,11 +77,10 @@ public class RocketboardPage {
 	WebElement options;
 
 
-	public RocketboardPage(WebDriver driver) {
+	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
 		this.driver = driver;
-		driver.get(EndToEndTests.baseUrl + EndToEndTests.serviceUrl);
-
+		driver.get(baseUrl);
 	}
 
 	/**
