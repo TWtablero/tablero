@@ -60,6 +60,7 @@
         }.bind(this));
 
         $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+        $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
         $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
         $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
         $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');

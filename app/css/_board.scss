@@ -2,6 +2,24 @@
 	margin-right: 2.2%;
 }
 
+.backlog-sidebar{
+	height: 100%;
+	width: 50px;	
+}
+
+.backlog-sidebar .backlog-vertical-title {
+	transform: rotate(270deg);
+	transform-origin: left top;
+	position: relative;
+	top : 58%;
+	left : 10px;
+	width: 200px;
+}
+
+.backlog-sidebar .panel-body { 
+	background-color: #eaeaea;
+}
+
 .issue {
 	margin-bottom: 0.7em;
 	border: 1px solid #d6d6d6;
@@ -82,7 +100,9 @@
 
 .panel-heading {
 	margin-top: 0.5em;
-	margin-bottom: 0.5em;
+	margin-bottom: 0.5em;	
+    display: inline-block;
+    width: 100%;
 }
 
 .panel-body {
@@ -194,11 +214,18 @@ h3 {
 }
 
 .small-text {
-	font-family: "Opens sans";
+	font-family: "Open Sans";
 	font-size: 11;
 	font-weight: 600;
 }
 
-.hide-icon {
-	
+.hide-icon , .hide-icon-sidebar {
+  cursor: pointer;
+}
+
+.panel-heading .hide-icon {
+  position: absolute;
+  right: 0.8em;
+  top: 0.9em;
+
 }

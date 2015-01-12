@@ -53,9 +53,15 @@ define(
         trackType: '4 - Done'
       });
 
-      $(document).on('ui:toggle:backlog',function() {
-        $('.column').first().toggle("slide");
+      $('.backlog-column .hide-icon').first().click(function() {
+        $('.backlog-column').toggle('slide');
+        $('.backlog-sidebar').toggle('slide');
       });
+      $('.backlog-sidebar .hide-icon-sidebar').first().click(function() {
+        $('.backlog-column').toggle('slide');
+        $('.backlog-sidebar').toggle('slide');
+      });
+
 
       $(document).trigger('ui:needs:issues', {});
 
