@@ -32,7 +32,7 @@ function (config) {
 
     this.before('initialize', function () {
       this.template = Hogan.compile(
-        '<span class="filter-repo">' +
+        '<span class="filter-repo right">' +
           '<input type="checkbox" id="repository-{{index}}" checked="true" repo="{{name}}">' +
           '<label for="repository-{{index}}"><i class=" icon-eye-open {{colorClass}}"></i> {{name}}</label>' +
         '</span>'
