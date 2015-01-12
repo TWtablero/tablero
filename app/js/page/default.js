@@ -21,7 +21,9 @@ define(
     'component/data/issues_exporter',
     'component/data/prioritization_manager',
     'component/ui/issues_filter',
-    'component/ui/new_issue'
+    'component/ui/new_issue',
+    'jquery',
+    'blockUI'
   ],
   function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
     'use strict';
@@ -31,7 +33,11 @@ define(
     function initialize() {
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
-
+		
+	  $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	  $.blockUI.defaults.ignoreIfBlocked = true;
+	  $(document).ajaxStop($.unblockUI);
+			
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
