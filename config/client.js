@@ -17,6 +17,20 @@ for(i = 0; i < maxDynaReposQuantity; i++) {
   addRepo(env['REPO_' + i + '_NAME'] || i + 'th', 'REPO_' + i + '_URL');
 }
 
+if(env.REPOS) {
+  var chunks = env.REPOS.split(';');
+  chunks.forEach(function(chunk) {
+    var val = chunk,
+    nameRegex = /(https:\/\/api\.github\.com\/repos\/)?(.*)/;
+    name = nameRegex.exec(val)[2],
+    key = name.toLowerCase().replace('/', '_'); 
+
+    var gitHubApiPrefix = 'https://api.github.com/repos/'; 
+    repos[key] = gitHubApiPrefix + name;
+    labels[key] = name;
+  });
+};
+
 module.exports = {
   repos: repos,
   labels: labels
