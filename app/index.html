@@ -7,10 +7,6 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
     <link rel="stylesheet" href="/css/main.css">
-    <script src="/bower_components/hogan/lib/template.js"></script>
-    <script src="/bower_components/hogan/lib/compiler.js"></script>
-    <script src="/bower_components/underscore/underscore.js"></script>
-
   </head>
   <body role="document">
     <header>
@@ -24,7 +20,6 @@
       <div id="filters" class="filter-container right">
       </div>
     </header>
-
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -40,6 +35,10 @@
            <br/>
            <label for="projects">Project</label>
            <select id="projects" class="form-control">
+             <option value="user-agent">User Agent</option>
+             <option value="dispatcher">Dispatcher</option>
+             <option value="platform">Platform</option>
+             <option value="project-issues">Project Issues</option>
            </select>
           </div>
           <div class="modal-footer">
@@ -112,19 +111,7 @@
     <script src="/bower_components/es5-shim/es5-shim.js"></script>
     <script src="/bower_components/es5-shim/es5-sham.js"></script>
     <![endif]-->
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="/bower_components/tipsy/src/javascripts/jquery.tipsy.js"></script>
-    <script src="/bower_components/blockui/jquery.blockUI.js"></script>
-    <script src="/bower_components/components-bootstrap/js/bootstrap.min.js"></script>
-    <script src="/bower_components/pace/pace.min.js"></script>
-    <script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script>
-
-    <script type="text/javascript">
-      $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
-      $.blockUI.defaults.ignoreIfBlocked = true;
-      $(document).ajaxStop($.unblockUI);
-    </script>
+    <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
 
     <!-- Google Analytics -->
     <!--

@@ -5,4 +5,5 @@ app/bower_components
 .DS_Store
 app/.DS_Store
 app/css/main.css
+app/dist/*.js
 coverage

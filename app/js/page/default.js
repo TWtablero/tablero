@@ -15,14 +15,17 @@
  */
  define(
   [
-  'component/data/github_user',
-  'component/data/github_issues',
-  'component/track',
-  'component/data/issues_exporter',
-  'component/data/prioritization_manager',
-  'component/ui/issues_filter',
-  'component/ui/new_issue',
-  'component/ui/permissions_gateway'
+    'component/data/github_user',
+    'component/data/github_issues',
+    'component/track',
+    'component/data/issues_exporter',
+    'component/data/prioritization_manager',
+    'component/ui/issues_filter',
+    'component/ui/new_issue',
+    'component/ui/permissions_gateway',
+    'jquery',
+    'blockUI'
+
   ],
   function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway) {
     'use strict';
@@ -33,8 +36,11 @@
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
       permissionsGateway.attachTo('#permissionsGateway');
-
-
+		
+	  $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	  $.blockUI.defaults.ignoreIfBlocked = true;
+	  $(document).ajaxStop($.unblockUI);
+			
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
