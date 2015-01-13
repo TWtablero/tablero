@@ -1,22 +1,16 @@
 package rocketboard;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-
 import rocketboardPages.RocketboardPage;
-
 
 public class AssigneTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#6af857bcfaf0a14a2a8ee276ce6c7d4f8a994b2a"; // KEY FROM "TESTUSERTWBR", user created to automated tests
 
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
@@ -25,6 +19,8 @@ public class AssigneTests {
 	public static String desc;
 	public String project;
 	String[] repoUsed = {"userAgent"};
+	boolean privateRepo = true;
+
 
 	int[] checkValue = null;
 	String selectedOption = "";
@@ -42,10 +38,15 @@ public class AssigneTests {
 	@Before
 	public void setUp() throws Exception {
 
+
+
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,this.baseUrl);
+		RocketboardPage = new RocketboardPage(this.driver,CreateIssueTests.baseUrl);
 		PageFactory.initElements(this.driver,(Object) RocketboardPage);
+		
+		RocketboardPage.accessRepo(privateRepo);
+		RocketboardPage.waitingLoading();
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
 		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
@@ -72,7 +73,7 @@ public class AssigneTests {
 		RocketboardPage.createIssue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
 		RocketboardPage.visible(idCard);
 		RocketboardPage.alreadyAssignee(idCard);
 		String btn1 = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/div/div[2]/div/button[1]")).getText();
@@ -87,7 +88,7 @@ public class AssigneTests {
 		RocketboardPage.createIssue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
 		RocketboardPage.visible(idCard);
 		RocketboardPage.alreadyAssignee(idCard);
 		RocketboardPage.unassignCancel(idCard);
@@ -100,7 +101,7 @@ public class AssigneTests {
 		RocketboardPage.createIssue(title, desc, repoCreateIssue);
 		String href = RocketboardPage.getInfo(title, "href");
 		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"lmarquezini\"}");
+		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
 		RocketboardPage.visible(idCard);
 		RocketboardPage.alreadyAssignee(idCard);
 		RocketboardPage.unassignConfirm(idCard);
@@ -119,8 +120,6 @@ public class AssigneTests {
 	}
 	
 	
-	
-//last  :)	
 }
 	
 	

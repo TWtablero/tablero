@@ -1,9 +1,6 @@
 package rocketboard;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
@@ -25,6 +22,9 @@ public class UpdateIssueTests {
 	public static String desc;
 	public String project;
 	String[] repoUsed = {"userAgent"};
+	boolean privateRepo = false;
+
+	
 
 	int[] checkValue = null;
 	String selectedOption = "";
@@ -44,8 +44,11 @@ public class UpdateIssueTests {
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,this.baseUrl);
+		RocketboardPage = new RocketboardPage(this.driver,CreateIssueTests.baseUrl);
 		PageFactory.initElements(this.driver,(Object) RocketboardPage);
+		
+		RocketboardPage.accessRepo(privateRepo);
+		RocketboardPage.waitingLoading();
 
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);

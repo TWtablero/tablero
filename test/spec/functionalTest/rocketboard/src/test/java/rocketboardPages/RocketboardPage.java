@@ -2,13 +2,16 @@ package rocketboardPages;
 
 import java.util.List;
 import java.util.ArrayList;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+
 import rocketboard.EndToEndTests;
 
 public class RocketboardPage {
@@ -75,6 +79,24 @@ public class RocketboardPage {
 
 	@FindBy(className="link")
 	WebElement options;
+	
+	@FindBy(id = "showPublicBtn")
+	WebElement btPublicRepo;
+	
+	@FindBy(id = "showPublicAndPrivateBtn")
+	WebElement btAllRepo;
+	
+	@FindBy(id = "login_field")
+	WebElement loginGit;
+	
+	@FindBy(id = "password")
+	WebElement passwordGit;
+	
+	@FindBy(name = "commit")
+	WebElement submitGit;
+	
+	@FindBy(name = "authorize")
+	WebElement authorizeGit;
 
 
 	public RocketboardPage(WebDriver driver , String baseUrl) {
@@ -146,10 +168,16 @@ public class RocketboardPage {
 			checkRepositoryPosition(dispatcher);
 			checkRepositoryPosition(userAgent);
 			checkRepositoryPosition(platform);
-			checkRepositoryPosition(projectIssue);
 			checkRepositoryPosition(pages);
-
-		}else {
+			try{
+				checkRepositoryPosition(projectIssue);
+			}
+			catch (org.openqa.selenium.NoSuchElementException e){
+				
+			}
+	
+		}
+		else {
 			waitingLoading();
 			for (int i=0;i<repoUsed.length;i++){
 				if (repoUsed[i].contains("dispatcher")){
@@ -185,12 +213,15 @@ public class RocketboardPage {
 		} 
 	}
 
-	public void uncheckAllRepo() throws InterruptedException{
+	public void uncheckAllRepo(boolean privateRepo) throws InterruptedException{
 		uncheckRepositoryPosition(dispatcher);
 		uncheckRepositoryPosition(userAgent);	
 		uncheckRepositoryPosition(platform);
-		uncheckRepositoryPosition(projectIssue);
 		uncheckRepositoryPosition(pages);
+		if (privateRepo == true){
+			uncheckRepositoryPosition(projectIssue);
+		}
+		
 	} 
 
 
@@ -261,7 +292,6 @@ public class RocketboardPage {
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
 		if (column == "done" || column =="5"){
-//			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
 			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
 		}
 		else {
@@ -606,6 +636,30 @@ public class RocketboardPage {
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		WebElement element = wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
+	}
+
+	public void accessRepo(boolean privateRepo) {
+		if (privateRepo == false) { 
+			btPublicRepo.click();
+		}
+		
+		else {
+			btAllRepo.click();
+		}
+		
+		loginGit.sendKeys("testusertwbr");
+		passwordGit.sendKeys("t3stus3r");
+		submitGit.click();
+		
+		try {
+			   driver.findElement(By.name("authorize"));
+			   authorizeGit.click();
+			} 
+		catch (NoSuchElementException e) {
+			  
+			}
+
+		
 	}
 	
 }
