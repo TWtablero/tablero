@@ -8,8 +8,15 @@ define(['config/config_bootstrap'],
 
 
         return _.object(_(repos).map(function (url, name) {
-            var request = $.getJSON(this.repoIssuesURL(url, page));
-            return [name,request ];
+          var request = $.getJSON(this.repoIssuesURL(url, page));
+          var request2 = $.ajax( {dataType: "json",
+            url: this.repoIssuesURL(url,page),
+            timeout: 2000
+          }).fail( function( xhr, status ) {
+             this.trigger(document, 'ui:show:messageFailConnection');
+          }.bind(this));
+
+          return [name,request2 ];
         }.bind(this)));
 
       };

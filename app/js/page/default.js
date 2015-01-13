@@ -23,11 +23,13 @@
     'component/ui/issues_filter',
     'component/ui/new_issue',
     'component/ui/permissions_gateway',
-    'jquery',
-    'blockUI'
+    'component/mixins/with_auth_token_from_hash',
+
+    // 'jquery',
+    // 'blockUI'
 
   ],
-  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway, authToken) {
     'use strict';
 
     return initialize;
@@ -67,10 +69,20 @@
     $(document).on('data:githubUser:here', function() {
 
       $(document).trigger('ui:needs:issues', {});
-
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');
     });
+
+    $(document).on('ui:show:messageFailConnection', function(event){
+      $.unblockUI();
+      $('#failConnectionModal').modal('toggle');
+    });
+
+    $('#redirectToPublicBtn').click(function(){
+      var token = window.location.hash.slice(1);
+
+      window.location = '/?private_repo=false#'+token;
+    }.bind(this));
 
 
   }
