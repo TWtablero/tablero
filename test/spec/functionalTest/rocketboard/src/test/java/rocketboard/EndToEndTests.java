@@ -12,7 +12,7 @@ import rocketboardPages.RocketboardPage;
 public class EndToEndTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#62d022d6253e284757638a0e4c8f3300a3bb510f"; // KEY FROM "TESTUSERTWBR", user created to automated tests
+	public static String serviceUrl = "#601d71d328b88f26a354439cad2b2db952e742a7"; // KEY FROM "TESTUSERTWBR", user created to automated tests
 
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;

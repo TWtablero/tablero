@@ -115,6 +115,9 @@ public class ManageBoardTests {
 		String [] all = {"all"};
 
 		RocketboardPage.waitingLoading();
+		assertThat(RocketboardPage.isPrivatePresent(), equalTo(Boolean.FALSE));
+		
+		
 		RocketboardPage.uncheckAllRepo(privateRepo);
 		
 		RocketboardPage.clickRepo(dispatcher);

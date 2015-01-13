@@ -58,22 +58,22 @@ public class RocketboardPage {
 
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
-
-	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
-	WebElement projectIssue;
 	
-	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
 	WebElement platform;
 	
-	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
 	WebElement dispatcher;
 	
-	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
 	WebElement userAgent;
 	
-	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
 	WebElement pages;
 
+	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	WebElement projectIssue;
+	
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
 
@@ -201,6 +201,19 @@ public class RocketboardPage {
 		}
 	}
 
+	public boolean isPrivatePresent () {
+		boolean privatePresent = true;		
+
+			try { 
+				driver.findElement(By.id("repository-4"));
+				privatePresent = true;
+			} 
+			catch (org.openqa.selenium.NoSuchElementException e) {
+				privatePresent = false;
+			}
+			return privatePresent;
+	}
+	
 	public void checkRepositoryPosition(WebElement object) throws InterruptedException{
 		if (!object.isSelected()){
 			object.click();
@@ -228,14 +241,14 @@ public class RocketboardPage {
 	public boolean IsRepoSelected(String repo) throws InterruptedException{
 		boolean retorno = false;		
 
-		if (repo == "dispatcher")
+		if (repo == "platform")
 		{
-			if (driver.findElement(By.id("repository-2")).isSelected())
+			if (driver.findElement(By.id("repository-0")).isSelected())
 				retorno = true; 
 			else retorno = false;
 		}
 
-		else if (repo == "platform")
+		else if (repo == "dispatcher")
 		{
 			if (driver.findElement(By.id("repository-1")).isSelected())
 				retorno = true;
@@ -244,19 +257,19 @@ public class RocketboardPage {
 
 		else if (repo == "userAgent")
 		{
+			if (driver.findElement(By.id("repository-2")).isSelected())
+				retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "pages")
+		{
 			if (driver.findElement(By.id("repository-3")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 		
 		else if (repo == "projectIssue")
-		{
-			if (driver.findElement(By.id("repository-0")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-		
-		else if (repo == "pages")
 		{
 			if (driver.findElement(By.id("repository-4")).isSelected())
 				retorno = true;
@@ -292,7 +305,7 @@ public class RocketboardPage {
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
 		if (column == "done" || column =="5"){
-			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
+			d2 = driver.findElement(By.id("4-done"));
 		}
 		else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
@@ -304,7 +317,7 @@ public class RocketboardPage {
 		dragAndDrop.moveToElement(d2).build().perform();
 		Thread.sleep(400);
 		dragAndDrop.release(d2).build().perform();
-		waitingLoading();
+		Thread.sleep(400);
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -312,20 +325,17 @@ public class RocketboardPage {
 		String idCard = null;
 		getColumn = columnName(column);
 		values[0] = getCount(getColumn);
+		
 		if (column =="5" || column =="done"){
 			idCard = getInfo(issueTitle, "id");
 		}
+		
 		moveIssue(issueTitle, column);
 		if (column =="5" || column =="done"){
 			boolean present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
-			System.out.print("Checking Title Present before WHILE: "+present);
 			while(present == true && timeout <= 10){
-				System.out.print("Checking Title Present: "+driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed());
-				System.out.print("Timeout value: "+timeout);
 				moveIssue(issueTitle, column);
-				visible(idCard);
 				present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
-				System.out.print("Checking Title Present INSIDE WHILE: "+present);
 				timeout++;
 			}
 			waitMessage(EndToEndTests.messageSucessRocket);
@@ -555,7 +565,9 @@ public class RocketboardPage {
 	
 	public void restAssign(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+EndToEndTests.serviceUrl.substring(1);
+		String currentUrl = driver.getCurrentUrl();
+		String token = currentUrl.substring(currentUrl.length()-40);
+		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+token;
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
