@@ -1,17 +1,18 @@
 package rocketboard;
 
 import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+
 import rocketboardPages.RocketboardPage;
 
 public class AssigneTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -42,9 +43,10 @@ public class AssigneTests {
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,CreateIssueTests.baseUrl);
+		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
 		PageFactory.initElements(this.driver,(Object) RocketboardPage);
 		
+		boolean privateRepo = true;
 		RocketboardPage.accessRepo(privateRepo);
 		RocketboardPage.waitingLoading();
 		

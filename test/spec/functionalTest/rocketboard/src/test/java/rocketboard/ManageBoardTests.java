@@ -2,8 +2,11 @@ package rocketboard;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -13,8 +16,6 @@ import rocketboardPages.RocketboardPage;
 public class ManageBoardTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#6af857bcfaf0a14a2a8ee276ce6c7d4f8a994b2a"; // KEY FROM "TESTUSERTWBR", user created to automated tests
-
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -78,20 +79,29 @@ public class ManageBoardTests {
 		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.clickRepo(userAgent);
 		
-		RocketboardPage.clickRepo(projectIssue);
-		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(projectIssue);
+		try {
+			   driver.findElement(By.id("repository-4"));
+			   RocketboardPage.clickRepo(projectIssue);
+			   assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
+			   RocketboardPage.clickRepo(projectIssue);
+			     
+			} 
+		catch (NoSuchElementException e) { }
 		
 		RocketboardPage.clickRepo(pages);
 		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
 		RocketboardPage.clickRepo(pages);
 
 		RocketboardPage.clickRepo(all);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
+		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
 		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		try {
+			   driver.findElement(By.id("repository-4"));
+			   assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));			     
+			} 
+		catch (NoSuchElementException e) { }
 		
 		driver.quit();
 	}

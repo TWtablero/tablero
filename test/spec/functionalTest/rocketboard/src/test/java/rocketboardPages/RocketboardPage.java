@@ -231,11 +231,16 @@ public class RocketboardPage {
 		uncheckRepositoryPosition(userAgent);	
 		uncheckRepositoryPosition(platform);
 		uncheckRepositoryPosition(pages);
-		if (privateRepo == true){
-			uncheckRepositoryPosition(projectIssue);
-		}
 		
-	} 
+		try {
+			   driver.findElement(By.id("repository-4"));
+			   uncheckRepositoryPosition(projectIssue);			   
+			} 
+		catch (NoSuchElementException e) {
+			  
+			}
+		
+		}
 
 
 	public boolean IsRepoSelected(String repo) throws InterruptedException{
@@ -317,7 +322,6 @@ public class RocketboardPage {
 		dragAndDrop.moveToElement(d2).build().perform();
 		Thread.sleep(400);
 		dragAndDrop.release(d2).build().perform();
-		Thread.sleep(400);
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -535,7 +539,9 @@ public class RocketboardPage {
 
 	public void restRequest(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+EndToEndTests.serviceUrl.substring(1);
+		String currentUrl = driver.getCurrentUrl();
+		String token = currentUrl.substring(currentUrl.length()-40);
+		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+token;
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
@@ -650,7 +656,9 @@ public class RocketboardPage {
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
 	}
 
-	public void accessRepo(boolean privateRepo) {
+	public boolean accessRepo(boolean privateRepo) {
+		boolean permission = false;
+		
 		if (privateRepo == false) { 
 			btPublicRepo.click();
 		}
@@ -666,11 +674,30 @@ public class RocketboardPage {
 		try {
 			   driver.findElement(By.name("authorize"));
 			   authorizeGit.click();
+			   
 			} 
 		catch (NoSuchElementException e) {
 			  
 			}
-
+		
+		finally{
+					try {  
+						boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
+						if (button == true)
+							{
+								driver.findElement(By.id("redirectToPublicBtn")).click();
+								permission = false;
+							}
+						else 
+							{
+								permission = true;
+							}
+					} 
+					catch (NoSuchElementException e) { 
+						permission = true;
+					}	
+		}
+		return permission;
 		
 	}
 	

@@ -1,6 +1,9 @@
 package rocketboard;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
@@ -13,8 +16,6 @@ import rocketboardPages.RocketboardPage;
 public class UpdateIssueTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#6af857bcfaf0a14a2a8ee276ce6c7d4f8a994b2a"; // KEY FROM "TESTUSERTWBR", user created to automated tests
-
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -44,12 +45,12 @@ public class UpdateIssueTests {
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,CreateIssueTests.baseUrl);
+		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
 		PageFactory.initElements(this.driver,(Object) RocketboardPage);
 		
+		boolean privateRepo = true;
 		RocketboardPage.accessRepo(privateRepo);
 		RocketboardPage.waitingLoading();
-
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
 		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
@@ -66,13 +67,13 @@ public class UpdateIssueTests {
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
 		RocketboardPage.waitCreatedIssue(title);
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
-		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
+		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "3");
-		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
+		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "4");
-		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
+		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "5");
-		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
+		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 	}
 
 	@Test

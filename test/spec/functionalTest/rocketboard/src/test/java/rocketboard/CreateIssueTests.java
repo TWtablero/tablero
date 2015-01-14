@@ -14,7 +14,6 @@ public class CreateIssueTests {
 	
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -38,11 +37,11 @@ public class CreateIssueTests {
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,CreateIssueTests.baseUrl);
+		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
 		PageFactory.initElements(this.driver,(Object) RocketboardPage);
 		
+		boolean privateRepo = true;
 		RocketboardPage.accessRepo(privateRepo);
-		RocketboardPage.waitingLoading();
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
 		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
