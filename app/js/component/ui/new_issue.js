@@ -20,8 +20,11 @@ define([
   function (defineComponent, config) {
     var labels = config.getLabels();
 
+  
+
     return defineComponent(component);
     function component() {
+
 
       this.setUp = function (){
         $("#create_issue").click(function () {
@@ -41,11 +44,13 @@ define([
       }
 
       this.addProjects = function() {
+      
         var template = Hogan.compile('<option value="{{name}}">{{label}}</option>')
         _(labels).each(function (label, name) {
-          $("#projects").append(template.render({name: name, label: label}));
+            $("#projects").append(template.render({name: name, label: label}));
         }.bind(this));
       };
+
 
       this.after('initialize', function () {
         this.addProjects();

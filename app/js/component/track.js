@@ -27,7 +27,7 @@
       });
 
       this.isIssueOnThisTrack = function (issue) {
-        var customName; 
+        var customName;
         if (issue.state === "open"){
           if (issue.labels.length == 0){
               customName = "0 - Backlog";
@@ -39,10 +39,11 @@
         }
 
         if(issue.labels.length === 0){
-          issue.labels.push({ name : customName});          
+          issue.labels.push({ name : customName});
         }
 
         return customName === this.attr.trackType;
+
       };
 
       this.filterAndReorderIssues = function (issues) {
