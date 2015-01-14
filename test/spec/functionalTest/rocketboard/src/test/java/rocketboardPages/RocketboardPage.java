@@ -20,7 +20,6 @@ import rocketboard.EndToEndTests;
 
 public class RocketboardPage {
 	private WebDriver driver;
-	private Boolean issueCreated;
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
@@ -256,18 +255,12 @@ public class RocketboardPage {
 	}
 
 	public void moveIssue(String issueTitle, String column) throws Exception {
-		if(column.length()<=2){
-			column=columnName(column);
-		}
+		
+		column=columnName(column);
+		
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
-		WebElement d2;
-		if (column == "done" || column =="5"){
-//			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
-			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
-		}
-		else {
-			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
-		}
+		WebElement d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
+		
 		Actions builder = new Actions(driver);
 		Actions dragAndDrop = builder.clickAndHold(d1).moveToElement(d2);
 		dragAndDrop.build().perform();
@@ -275,7 +268,7 @@ public class RocketboardPage {
 		dragAndDrop.moveToElement(d2).build().perform();
 		Thread.sleep(400);
 		dragAndDrop.release(d2).build().perform();
-		waitingLoading();
+		Thread.sleep(400);
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -289,10 +282,7 @@ public class RocketboardPage {
 		moveIssue(issueTitle, column);
 		if (column =="5" || column =="done"){
 			boolean present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
-			System.out.print("Checking Title Present before WHILE: "+present);
 			while(present == true && timeout <= 10){
-				System.out.print("Checking Title Present: "+driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed());
-				System.out.print("Timeout value: "+timeout);
 				moveIssue(issueTitle, column);
 				visible(idCard);
 				present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
@@ -310,7 +300,7 @@ public class RocketboardPage {
 	public void waitMessage(String message) throws Exception {
 		int timeout=0;
 		while(driver.getPageSource().contains(message) == false && timeout != 20 ){
-			Thread.sleep(500);
+			Thread.sleep(600);
 			timeout++;
 		}
 	}
@@ -471,17 +461,13 @@ public class RocketboardPage {
 	public void assignMe(String id) throws Exception {
 		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
 		assign.click();
-		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
+		Thread.sleep(1000);
 	}
 	
 	public void unassignMe(String id) throws Exception {
 		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
 		unassign.click();
-		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]")));
+		Thread.sleep(1000);
 	}
 	
 	public void alreadyAssignee(String id) throws Exception {
@@ -596,17 +582,13 @@ public class RocketboardPage {
 	public void unassignCancel(String id) throws Exception {
 		WebElement unassignCancelBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[2]"));
 		unassignCancelBtn.click();
-		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
+		Thread.sleep(400);
 	}
 	
 	public void unassignConfirm(String id) throws Exception {
 		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[1]"));
 		unassignConfirmBtn.click();
-		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
+		Thread.sleep(1000);
 	}
 	
 }
