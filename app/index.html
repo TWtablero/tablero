@@ -11,10 +11,11 @@
   <body role="document">
     <header>
       <img class="logo" src="/img/rocketboard.png" />
-      <button id="open_modal_issue" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">
+      <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
               + CREATE ISSUE
       </button>
-      <a id="export_csv" class="btn btn-success btn-xs" href="javascript:void(0)">EXPORT TO CSV </a>
+      <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
+
 
       <div id="filters" class="filter-container right">
       </div>
@@ -86,6 +87,44 @@
         </div>
       </div>
     </div>
+  
+
+    <!-- Permissions gateway modal -->
+
+    <div class="modal fade" id="permissionsGateway" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">RocketBoard Access</h4>
+          </div>
+          <div class="modal-body">
+              <p> Please select below what type of repository access you allow the rocketboard to have </p>
+              <button type="button" class="btn  btn-xs" id="showPublicBtn"> PUBLIC ONLY</button>
+              <button type="button" class="btn  btn-xs" id="showPublicAndPrivateBtn" > PUBLIC AND PRIVATE </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Modal about error to get issues -->
+    
+     <div class="modal fade" id="failConnectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" >Oops...</h4>
+          </div>
+          <div class="modal-body">
+              <p> It seems you have no read permission on private repositories, so we will display only the issues of public repositories.</p>
+              <button type="button" class="btn  btn-xs" id="redirectToPublicBtn"> OK </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
 
     <!--[if lt IE 9]>
     <script src="/bower_components/es5-shim/es5-shim.js"></script>

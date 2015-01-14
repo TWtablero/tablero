@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -15,8 +14,6 @@ import rocketboardPages.RocketboardPage;
 public class EndToEndTests {
 	WebDriver driver;
 	public static String baseUrl = "http://localhost:3000/";
-	public static String serviceUrl = "#6af857bcfaf0a14a2a8ee276ce6c7d4f8a994b2a"; // KEY FROM "TESTUSERTWBR", user created to automated tests
-
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
@@ -24,7 +21,7 @@ public class EndToEndTests {
 	public static String desc;
 	public String project;
 	String[] repoUsed = {"userAgent"};
-
+	boolean privateRepo = false;
 	int[] checkValue = null;
 	String selectedOption = "";
 	private RocketboardPage RocketboardPage;
@@ -32,20 +29,18 @@ public class EndToEndTests {
 	public static String messageDone="Drop here to launch";
 	public static String messageLoading="Please wait...";
 
-	/**
-	 * DriverManager instance
-	 */
-	DriverManager managerDriver = new DriverManager();
-
-
 	@Before
 	public void setUp() throws Exception {
+		DriverManager managerDriver = new DriverManager();
 
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		this.driver.get("http://localhost:3000"+ serviceUrl);
-		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);	 
-
+		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
+		PageFactory.initElements(this.driver,(Object) RocketboardPage);
+		
+		boolean privateRepo = true;
+		RocketboardPage.accessRepo(privateRepo);
+		RocketboardPage.waitingLoading();
 		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
 		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
