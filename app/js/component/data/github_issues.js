@@ -129,7 +129,6 @@ define([
             }
 
             if (issuesFromProjects.length > 0) {
-
               this.trigger('ui:needs:issues', data);
             } else {
               this.trigger('ui:needs:priority');

@@ -1,9 +1,9 @@
 define([],
   function () {
-    var config;
-
+    var config = { repos : [] , labels : [] } ;
+    
     $.getJSON('/config', function (data) {
-      config = data;
+      config = data || { repos : [] , labels : [] } ;
     });
 
     return {

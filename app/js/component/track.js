@@ -27,8 +27,22 @@
       });
 
       this.isIssueOnThisTrack = function (issue) {
+        var customName; 
+        if (issue.state === "open"){
+          if (issue.labels.length == 0){
+              customName = "0 - Backlog";
+          } else {
+              customName = issue.labels[0].name;
+          }
+        } else if ( issue.state === "closed"){
+          customName = "4 - Done";
+        }
 
-        return issue.labels[0] != undefined && issue.labels[0].name === this.attr.trackType;
+        if(issue.labels.length === 0){
+          issue.labels.push({ name : customName});          
+        }
+
+        return customName === this.attr.trackType;
       };
 
       this.filterAndReorderIssues = function (issues) {
