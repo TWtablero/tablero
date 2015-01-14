@@ -13,7 +13,9 @@ define(['config/config_bootstrap'],
             url: this.repoIssuesURL(url,page),
             timeout: 2000
           }).fail( function( xhr, status ) {
+            if(xhr.status === 404){
              this.trigger(document, 'ui:show:messageFailConnection');
+            }
           }.bind(this));
 
           return [name,request2 ];
