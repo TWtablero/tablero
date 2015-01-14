@@ -11,6 +11,8 @@ addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
 addRepo('platform', 'PX_PLATFORM', 'Platform');
 addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
 addRepo('website', 'PX_PAGES', 'Website');
+addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
+
 
 var maxDynaReposQuantity = 5;
 for(i = 0; i < maxDynaReposQuantity; i++) {

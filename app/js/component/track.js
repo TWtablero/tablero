@@ -28,7 +28,7 @@
 
       this.isIssueOnThisTrack = function (issue) {
 
-        return issue.labels[0] != undefined && issue.labels[0].name === this.attr.trackType;
+        return issue.labels && issue.labels[0] != undefined && issue.labels[0].name === this.attr.trackType;
       };
 
       this.filterAndReorderIssues = function (issues) {
