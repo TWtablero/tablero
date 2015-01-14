@@ -11,11 +11,11 @@ describeComponent('component/track', function () {
 
       expect(this.component).not.toBe(undefined); 
 
-      console.log(this.component.isIssueOnThisTrack(issue)); 
+      this.component.attr.trackType = "0 - Backlog";  
 
-      // var result = this.component.isIssueOnThisTrack(issue).bind({ attr : { trackType : "0 - Backlog"}});
+      var result = this.component.isIssueOnThisTrack(issue);
 
-      // expect(true).toEqual(result);
+      expect(true).toEqual(result);
     });
   });
 }); 
