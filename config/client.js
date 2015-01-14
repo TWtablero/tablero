@@ -6,10 +6,10 @@ function addRepo(name, key, label) {
   env[key] && (repos[name] = env[key]);
   env[key] && (labels[name] = (label || repos[name]));
 }
-addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
-addRepo('platform', 'PX_PLATFORM', 'Platform');
-addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
 addRepo('user-agent', 'PX_USER_AGENT', 'User Agent');
+addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
+addRepo('platform', 'PX_PLATFORM', 'Platform');
+addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
 addRepo('website', 'PX_PAGES', 'Website');
 
 var maxDynaReposQuantity = 5;
