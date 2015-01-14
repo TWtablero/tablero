@@ -2,6 +2,7 @@ describeComponent('component/track', function () {
   'use script';
   beforeEach(function () {
     this.setupComponent();
+    expect(this.component).not.toBe(undefined);  
   });
 
   describe("get labeled issue", function(){
@@ -9,7 +10,7 @@ describeComponent('component/track', function () {
       
       var issue = { labels : [] , state : "open"};
 
-      expect(this.component).not.toBe(undefined); 
+      
 
       this.component.attr.trackType = "0 - Backlog";  
 
