@@ -431,9 +431,7 @@ public class RocketboardPage {
 	 * @throws InterruptedException 
 	 */
 	public void waitingLoading() throws InterruptedException{
-//		Thread.sleep(3000);
 		while(driver.getPageSource().contains(EndToEndTests.messageLoading)){
-//			Thread.sleep(500);
 		}
 	}
 
@@ -530,7 +528,6 @@ public class RocketboardPage {
 	public void alreadyAssignee(String id) throws Exception {
 		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
 		unassign.click();
-//		Thread.sleep(2000);
 		Thread.sleep(500);
 	}
 
