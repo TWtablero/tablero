@@ -50,12 +50,38 @@
       </div>
     </div>
     <div class="container">
-      <div class="column">
+
+       <div class="column backlog-sidebar" style="display:none">
+      
+          <div class="panel-heading">  
+            <div style="height: 8px"></div>
+            <span class="hide-icon-sidebar">
+                <span class="small-text">SHOW&nbsp;</span><i class="icon-double-angle-right icon-large"></i>
+            </span>
+          </div>
+           <div class="panel-body ">
+             <div class="backlog-vertical-title">
+                <h3>Backlog<span class="issues-count"></span></h3>
+             </div>
+           </div>
+      </div>
+
+      <div class="column backlog-column">
         <div class="panel panel-default">
-          <div class="panel-heading backlog-header"><h3>Backlog</h3><span class="issues-count"></span></div>
+          <div class="panel-heading backlog-header">
+            <h3>Backlog</h3><span class="issues-count"></span>
+            <span class="hide-icon">
+                <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
+            </span>
+          </div>
           <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
+
+
         </div>
       </div>
+      
+     
+
       <div class="column">
         <div class="panel panel-default">
           <div class="panel-heading ready-header"><h3>Ready</h3><span class="issues-count"></div>

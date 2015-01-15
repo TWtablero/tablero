@@ -297,19 +297,16 @@
             return;
           }
 
-
-
           url = this.getIssueUrlFromDraggable(ui);
           label = this.parseLabel(event.target.id);
           oldLabel = this.parseLabel(ui.sender[0].id);
           state = this.getState(event.target.className);
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+          $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
           $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
           $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
           $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
-
-
 
           if (label == "4 - Done") {
             this.triggerRocketAnimation();
