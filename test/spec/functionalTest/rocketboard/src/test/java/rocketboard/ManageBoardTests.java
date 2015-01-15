@@ -2,11 +2,11 @@ package rocketboard;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -28,7 +28,7 @@ public class ManageBoardTests {
 
 	int[] checkValue = null;
 	String selectedOption = "";
-	private RocketboardPage RocketboardPage;
+	private RocketboardPage rocketboardPage;
 	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
 	public static String messageDone="Drop here to launch";
 	public static String messageLoading="Please wait...";
@@ -41,13 +41,11 @@ public class ManageBoardTests {
 
 	@Before
 	public void setUp() throws Exception {
-
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
 		this.driver.get("http://localhost:3000"+ serviceUrl);
-		RocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);	 
+		rocketboardPage = PageFactory.initElements(this.driver, RocketboardPage.class);
 
-		
 		title = "title_"+RandomStringUtils.randomAlphabetic(6);
 		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
 	}
@@ -67,34 +65,49 @@ public class ManageBoardTests {
 		String [] pages = {"pages"};
 		String [] all = {"all"};
 
-		RocketboardPage.waitingLoading();
-		RocketboardPage.uncheckAllRepo();
+		rocketboardPage.waitingLoading();
+		rocketboardPage.uncheckAllRepo();
 		
-		RocketboardPage.clickRepo(dispatcher);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(dispatcher);
+		rocketboardPage.clickRepo(dispatcher);
+		assertTrue(rocketboardPage.isRepoSelected(dispatcher[0]));
+		rocketboardPage.clickRepo(dispatcher);
 
-		RocketboardPage.clickRepo(platform);
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(platform);
+		rocketboardPage.clickRepo(platform);
+		assertTrue(rocketboardPage.isRepoSelected(platform[0]));
+		rocketboardPage.clickRepo(platform);
 
-		RocketboardPage.clickRepo(userAgent);
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(userAgent);
+		rocketboardPage.clickRepo(userAgent);
+		assertTrue(rocketboardPage.isRepoSelected(userAgent[0]));
+		rocketboardPage.clickRepo(userAgent);
 		
-		RocketboardPage.clickRepo(projectIssue);
-		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(projectIssue);
+		rocketboardPage.clickRepo(projectIssue);
+		assertTrue(rocketboardPage.isRepoSelected(projectIssue[0]));
+		rocketboardPage.clickRepo(projectIssue);
 		
-		RocketboardPage.clickRepo(pages);
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(pages);
+		rocketboardPage.clickRepo(pages);
+		assertTrue(rocketboardPage.isRepoSelected(pages[0]));
+		rocketboardPage.clickRepo(pages);
 
-		RocketboardPage.clickRepo(all);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(all);
+		assertTrue(rocketboardPage.isRepoSelected(dispatcher[0]));
+		assertTrue(rocketboardPage.isRepoSelected(platform[0]));
+		assertTrue(rocketboardPage.isRepoSelected(userAgent[0]));
+		assertTrue(rocketboardPage.isRepoSelected(projectIssue[0]));
+		assertTrue(rocketboardPage.isRepoSelected(pages[0]));
+	}
+
+	@Test
+	public void toggleBacklog() throws Exception {
+		rocketboardPage.waitingLoading();
+
+		Integer backlogCount = rocketboardPage.getCount("backlog");
+		rocketboardPage.hideBacklog();
+
+		assertFalse(rocketboardPage.getColumn("backlog").isDisplayed());
+		assertThat(rocketboardPage.getSidebarCount("backlog"), is(backlogCount));
+
+		rocketboardPage.showBacklog();
+		assertTrue(rocketboardPage.getColumn("backlog").isDisplayed());
+		assertThat(rocketboardPage.getCount("backlog"), is(backlogCount));
 	}
 }
