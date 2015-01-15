@@ -27,13 +27,15 @@
     		} else {
 
           $.getJSON('https://api.github.com/user', {access_token: token}, function (userData, textStatus, request) {
-            var newData = _.clone(previousData);
+            var newData = _.clone(previousData.data);
             if (newData != undefined) {
-              newData.user = userData
+              newData.user = userData;
             }
 
-
-            this.trigger(document,'data:githubUser:here', newData);
+            if(previousData.callback){
+              previousData.callback.call(previousData.context,ev,newData);
+            }
+            //this.trigger(document,'data:githubUser:here', newData);
 
           }.bind(this));
         }

@@ -64,14 +64,15 @@
         trackType: '4 - Done'
       });
 
-    $(document).trigger('ui:needs:githubUser');
 
-    $(document).on('data:githubUser:here', function() {
-
+    var mountBoard = function(){
       $(document).trigger('ui:needs:issues', {});
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');
-    });
+    };
+
+    $(document).trigger('ui:needs:githubUser',{ callback : mountBoard } );
+
 
     $(document).on('ui:show:messageFailConnection', function(event){
       $.unblockUI();

@@ -143,7 +143,7 @@
         );
     };
 
-    this.assignMyselfToIssue = function (ev, assignData) {
+    this.assignMyselfToIssue = function (ev,assignData) {
 
       var user, issue, url;
       if (assignData != undefined) {
@@ -156,7 +156,7 @@
       }
 
       if (!user) {
-        this.trigger(document, 'ui:needs:githubUser', assignData);
+        this.trigger(document, 'ui:needs:githubUser', { data: assignData, callback : this.assignMyselfToIssue , context: this} );
         return;
       }
 
@@ -176,7 +176,7 @@
             popover_confirm = $('<div class="popover-confirm"></div>'),
             popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
             popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
-            pop = $(this.popover({
+            pop = $(that.popover({
               title: '', body: ''
             })).appendTo(issue_header);
 
@@ -221,7 +221,7 @@
       });
     };
 
-    this.unassignMyselfToIssue = function(ev, assignData) {
+    this.unassignMyselfToIssue = function(ev,assignData) {
       var user, issue, url, currentData;
       if (assignData != undefined) {
         user = assignData.user;
@@ -233,7 +233,7 @@
       }
 
       if (!user) {
-        this.trigger(document, 'ui:needs:githubUser', assignData);
+        this.trigger(document, 'ui:needs:githubUser', { data: assignData, callback : this.assignMyselfToIssue , context: this});
         return;
       }
 
