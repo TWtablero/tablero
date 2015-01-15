@@ -4,7 +4,7 @@
 
 .backlog-sidebar{
 	height: 100%;
-	width: 50px;	
+	width: 50px;
 }
 
 .backlog-sidebar .backlog-vertical-title {
@@ -16,7 +16,7 @@
 	width: 200px;
 }
 
-.backlog-sidebar .panel-body { 
+.backlog-sidebar .panel-body {
 	background-color: #eaeaea;
 }
 
@@ -100,7 +100,7 @@
 
 .panel-heading {
 	margin-top: 0.5em;
-	margin-bottom: 0.5em;	
+	margin-bottom: 0.5em;
     display: inline-block;
     width: 100%;
 }
@@ -227,5 +227,10 @@ h3 {
   position: absolute;
   right: 0.8em;
   top: 0.9em;
+}
 
+#failConnectionModal #redirectToPublicBtn {
+    margin: auto;
+    display: block;
+    width: 90px;
 }

@@ -2,13 +2,16 @@ package rocketboardPages;
 
 import java.util.List;
 import java.util.ArrayList;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+
 import rocketboard.EndToEndTests;
 
 public class RocketboardPage {
@@ -53,34 +57,51 @@ public class RocketboardPage {
 
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
-
-	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
-	WebElement projectIssue;
 	
-	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
 	WebElement platform;
 	
-	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
 	WebElement dispatcher;
 	
-	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
 	WebElement userAgent;
 	
-	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
 	WebElement pages;
 
+	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
+	WebElement projectIssue;
+	
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
 
 	@FindBy(className="link")
 	WebElement options;
+	
+	@FindBy(id = "showPublicBtn")
+	WebElement btPublicRepo;
+	
+	@FindBy(id = "showPublicAndPrivateBtn")
+	WebElement btAllRepo;
+	
+	@FindBy(id = "login_field")
+	WebElement loginGit;
+	
+	@FindBy(id = "password")
+	WebElement passwordGit;
+	
+	@FindBy(name = "commit")
+	WebElement submitGit;
+	
+	@FindBy(name = "authorize")
+	WebElement authorizeGit;
 
 
-	public RocketboardPage(WebDriver driver) {
+	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
 		this.driver = driver;
-		driver.get(EndToEndTests.baseUrl + EndToEndTests.serviceUrl);
-
+		driver.get(baseUrl);
 	}
 
 	/**
@@ -146,10 +167,16 @@ public class RocketboardPage {
 			checkRepositoryPosition(dispatcher);
 			checkRepositoryPosition(userAgent);
 			checkRepositoryPosition(platform);
-			checkRepositoryPosition(projectIssue);
 			checkRepositoryPosition(pages);
-
-		}else {
+			try{
+				checkRepositoryPosition(projectIssue);
+			}
+			catch (org.openqa.selenium.NoSuchElementException e){
+				
+			}
+	
+		}
+		else {
 			waitingLoading();
 			for (int i=0;i<repoUsed.length;i++){
 				if (repoUsed[i].contains("dispatcher")){
@@ -173,6 +200,19 @@ public class RocketboardPage {
 		}
 	}
 
+	public boolean isPrivatePresent () {
+		boolean privatePresent = true;		
+
+			try { 
+				driver.findElement(By.id("repository-4"));
+				privatePresent = true;
+			} 
+			catch (org.openqa.selenium.NoSuchElementException e) {
+				privatePresent = false;
+			}
+			return privatePresent;
+	}
+	
 	public void checkRepositoryPosition(WebElement object) throws InterruptedException{
 		if (!object.isSelected()){
 			object.click();
@@ -185,26 +225,34 @@ public class RocketboardPage {
 		} 
 	}
 
-	public void uncheckAllRepo() throws InterruptedException{
+	public void uncheckAllRepo(boolean privateRepo) throws InterruptedException{
 		uncheckRepositoryPosition(dispatcher);
 		uncheckRepositoryPosition(userAgent);	
 		uncheckRepositoryPosition(platform);
-		uncheckRepositoryPosition(projectIssue);
 		uncheckRepositoryPosition(pages);
-	} 
+		
+		try {
+			   driver.findElement(By.id("repository-4"));
+			   uncheckRepositoryPosition(projectIssue);			   
+			} 
+		catch (NoSuchElementException e) {
+			  
+			}
+		
+		}
 
 
 	public boolean isRepoSelected(String repo) throws InterruptedException{
 		boolean retorno = false;		
 
-		if (repo == "dispatcher")
+		if (repo == "platform")
 		{
-			if (driver.findElement(By.id("repository-2")).isSelected())
+			if (driver.findElement(By.id("repository-0")).isSelected())
 				retorno = true; 
 			else retorno = false;
 		}
 
-		else if (repo == "platform")
+		else if (repo == "dispatcher")
 		{
 			if (driver.findElement(By.id("repository-1")).isSelected())
 				retorno = true;
@@ -213,19 +261,19 @@ public class RocketboardPage {
 
 		else if (repo == "userAgent")
 		{
+			if (driver.findElement(By.id("repository-2")).isSelected())
+				retorno = true;
+			else retorno = false;	
+		}
+		
+		else if (repo == "pages")
+		{
 			if (driver.findElement(By.id("repository-3")).isSelected())
 				retorno = true;
 			else retorno = false;	
 		}
 		
 		else if (repo == "projectIssue")
-		{
-			if (driver.findElement(By.id("repository-0")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-		
-		else if (repo == "pages")
 		{
 			if (driver.findElement(By.id("repository-4")).isSelected())
 				retorno = true;
@@ -263,8 +311,7 @@ public class RocketboardPage {
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
 		if (column == "done" || column =="5"){
-//			d2 = driver.findElement(By.xpath("html/body/div[2]/div[5]/div/div[1]/img[1]"));
-			d2 = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count"));
+			d2 = driver.findElement(By.id("4-done"));
 		}
 		else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
@@ -276,7 +323,6 @@ public class RocketboardPage {
 		dragAndDrop.moveToElement(d2).build().perform();
 		Thread.sleep(400);
 		dragAndDrop.release(d2).build().perform();
-		waitingLoading();
 	}
 
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
@@ -284,20 +330,17 @@ public class RocketboardPage {
 		String idCard = null;
 		String getColumn = columnName(column);
 		values[0] = getCount(getColumn);
+		
 		if (column =="5" || column =="done"){
 			idCard = getInfo(issueTitle, "id");
 		}
+		
 		moveIssue(issueTitle, column);
 		if (column =="5" || column =="done"){
 			boolean present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
-			System.out.print("Checking Title Present before WHILE: "+present);
 			while(present == true && timeout <= 10){
-				System.out.print("Checking Title Present: "+driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed());
-				System.out.print("Timeout value: "+timeout);
 				moveIssue(issueTitle, column);
-				visible(idCard);
 				present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
-				System.out.print("Checking Title Present INSIDE WHILE: "+present);
 				timeout++;
 			}
 			waitMessage(EndToEndTests.messageSucessRocket);
@@ -497,7 +540,9 @@ public class RocketboardPage {
 
 	public void restRequest(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+EndToEndTests.serviceUrl.substring(1);
+		String currentUrl = driver.getCurrentUrl();
+		String token = currentUrl.substring(currentUrl.length()-40);
+		String urlString = "https://api.github.com/repos/"+urlGit+"/labels?access_token="+token;
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
@@ -527,7 +572,9 @@ public class RocketboardPage {
 	
 	public void restAssign(String urlGit, String labelGit) throws Exception {	
 		// SETUP STRINGS
-		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+EndToEndTests.serviceUrl.substring(1);
+		String currentUrl = driver.getCurrentUrl();
+		String token = currentUrl.substring(currentUrl.length()-40);
+		String urlString = "https://api.github.com/repos/"+urlGit+"?access_token="+token;
 		String infWebSvcRequestMessage = labelGit;
 
 		// CREATE HTTP REQUEST CONTENT
@@ -639,6 +686,51 @@ public class RocketboardPage {
 
 		return parseCount(value);
 
+	}
+
+	public boolean accessRepo(boolean privateRepo) {
+		boolean permission = false;
+		
+		if (privateRepo == false) { 
+			btPublicRepo.click();
+		}
+		
+		else {
+			btAllRepo.click();
+		}
+		
+		loginGit.sendKeys("testusertwbr");
+		passwordGit.sendKeys("t3stus3r");
+		submitGit.click();
+		
+		try {
+			   driver.findElement(By.name("authorize"));
+			   authorizeGit.click();
+			   
+			} 
+		catch (NoSuchElementException e) {
+			  
+			}
+		
+		finally{
+					try {  
+						boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
+						if (button == true)
+							{
+								driver.findElement(By.id("redirectToPublicBtn")).click();
+								permission = false;
+							}
+						else 
+							{
+								permission = true;
+							}
+					} 
+					catch (NoSuchElementException e) { 
+						permission = true;
+					}	
+		}
+		return permission;
+		
 	}
 }
 
