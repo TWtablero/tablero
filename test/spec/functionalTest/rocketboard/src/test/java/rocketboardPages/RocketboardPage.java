@@ -285,7 +285,8 @@ public class RocketboardPage {
 	}	
 
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
-		waitingLoading();
+		WebDriverWait wait = new WebDriverWait(this.driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
 		waitCreatedIssue(title);
@@ -456,7 +457,7 @@ public class RocketboardPage {
 		int timeout=0;
 		while(!regex||timeout>=30){
 			WebDriverWait wait = new WebDriverWait(this.driver, 30);
-			WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]")));;
+			WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class=modal-content]")));
 			regex = element.isDisplayed();
 			timeout++;
 		}
@@ -493,7 +494,7 @@ public class RocketboardPage {
 		/** Find index based the value */
 		if(actual_name.contains(nameIssue)) {  
 			nameID = actual_name.indexOf(nameIssue); 
-		} 
+		}
 
 		/**Find value/href based in the index */
 		String value = actual_role.get(nameID);
