@@ -27,12 +27,28 @@
       });
 
       this.isIssueOnThisTrack = function (issue) {
+        var allowedTags = [
+          '0 - Backlog',
+          '1 - Ready',
+          '2 - Development',
+          '3 - Quality Assurance',
+          '4 - Done'
+        ];
+
+
         var customName;
         if (issue.state === "open"){
-          if (issue.labels.length == 0){
+          if (issue.labels.length === 0){
               customName = "0 - Backlog";
           } else {
-              customName = issue.labels[0].name;
+              var allowed = _.find(issue.labels, function(value, key, list){
+                  return _.contains(allowedTags, value.name);
+              });
+              if(allowed){
+                customName = allowed.name;
+              } else {
+                customName = '0 - Backlog';
+              }
           }
         } else if ( issue.state === "closed"){
           customName = "4 - Done";

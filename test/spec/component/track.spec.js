@@ -17,6 +17,17 @@ describeComponent('component/track', function () {
       expect(true).toEqual(result);
     });
 
+    it('issue open and without labels (of status) should be backlog', function () {
+      
+      var issue = { labels : [ { name : 'Bug' } ] , state : 'open'};
+      
+      this.component.attr.trackType = '0 - Backlog';  
+
+      var result = this.component.isIssueOnThisTrack(issue);
+
+      expect(true).toEqual(result);
+    });
+
      it('issue open and with labels should have status equal yours labels', function () {
       
       var issue = { labels : [ { name : '1 - Ready' } ] , state : 'open'};
