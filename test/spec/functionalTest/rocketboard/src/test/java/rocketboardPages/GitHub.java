@@ -28,11 +28,21 @@ public class GitHub {
         }
 
         public AuthorizePage login() {
-            username.sendKeys(System.getenv("TABLERO_TEST_USER"));
-            password.sendKeys(System.getenv("TABLERO_TEST_PASS"));
+            username.sendKeys(getEnv("TABLERO_TEST_USER"));
+            password.sendKeys(getEnv("TABLERO_TEST_PASS"));
             submit.click();
 
             return PageFactory.initElements(driver, AuthorizePage.class);
+        }
+
+        private static String getEnv(String key) {
+            String value = System.getenv(key);
+
+            if(value == null) {
+                throw new IllegalStateException(String.format("Could not find environment variable value: %s", key));
+            }
+
+            return value;
         }
     }
 
