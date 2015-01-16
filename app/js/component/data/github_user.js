@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
+ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
   function (defineComponent, withAuthTokeFromHash) {
     return defineComponent(githubUser, withAuthTokeFromHash);
 
@@ -21,23 +21,29 @@ define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
       this.getCurrentGithubUser = function (ev, previousData) {
         var token = this.getCurrentAuthToken();
 
-    		if(!token){
-    			window.location.replace("/request_code");
-    		}
+        if(!token){
+          $(document).trigger('ui:show:permissionsModal');
+    			//window.location.replace("/request_code");
+    		} else {
 
-        $.getJSON('https://api.github.com/user', {access_token: token}, function (userData) {
-          var newData = _.clone(previousData);
-          if (newData != undefined) {
-            newData.user = userData
-          }
+          $.getJSON('https://api.github.com/user', {access_token: token}, function (userData, textStatus, request) {
+            var newData = _.clone(previousData.data);
+            if (newData != undefined) {
+              newData.user = userData;
+            }
 
-          this.trigger('data:githubUser:here', newData);
-        }.bind(this));
-      }
+            if(previousData.callback){
+              previousData.callback.call(previousData.context,ev,newData);
+            }
+            //this.trigger(document,'data:githubUser:here', newData);
+
+          }.bind(this));
+        }
+      };
 
       this.after('initialize', function () {
-        this.on('ui:needs:githubUser', this.getCurrentGithubUser);
+        this.on(document,'ui:needs:githubUser', this.getCurrentGithubUser);
       });
     }
   }
-);
+  );

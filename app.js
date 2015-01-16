@@ -22,7 +22,11 @@ app.get('/config', function (req, res) {
 });
 
 app.get('/request_code', function (req, res) {
-  res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=repo');
+  if(req.query.requestPrivateRepositories){
+    res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=repo');
+  } else {
+    res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=public_repo');
+  }
 });
 
 app.get('/request_auth_token', function (req, res) {
@@ -37,10 +41,13 @@ app.get('/request_auth_token', function (req, res) {
   xhr.send();
 
   var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
+  var showPrivateRepo = url.parse(fakeUrl,true).query['scope'] === 'repo';
+
   console.log('got auth token: ');
   console.log(url.parse(fakeUrl, true));
 
-  res.redirect('/#' + url.parse(fakeUrl, true).query['access_token']);
+
+  res.redirect('/?private_repo='+showPrivateRepo + '#' + url.parse(fakeUrl, true).query['access_token']);
 });
 
 require('./lib/priorization')(app, {url: configServer.redisUrl});

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
+ define(
   [
     'component/data/github_user',
     'component/data/github_issues',
@@ -21,9 +21,15 @@ define(
     'component/data/issues_exporter',
     'component/data/prioritization_manager',
     'component/ui/issues_filter',
-    'component/ui/new_issue'
+    'component/ui/new_issue',
+    'component/ui/permissions_gateway',
+    'component/mixins/with_auth_token_from_hash',
+
+    // 'jquery',
+    // 'blockUI'
+
   ],
-  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue) {
+  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway, authToken) {
     'use strict';
 
     return initialize;
@@ -31,7 +37,12 @@ define(
     function initialize() {
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
-
+      permissionsGateway.attachTo('#permissionsGateway');
+		
+	  $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	  $.blockUI.defaults.ignoreIfBlocked = true;
+	  $(document).ajaxStop($.unblockUI);
+			
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
@@ -53,10 +64,29 @@ define(
         trackType: '4 - Done'
       });
 
-      $(document).trigger('ui:needs:issues', {});
 
+    var mountBoard = function(){
+      $(document).trigger('ui:needs:issues', {});
       $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
       $(document).trigger('ui:draggable');
-      $(document).trigger('ui:needs:githubUser');
-    }
-  });
+    };
+
+    $(document).trigger('ui:needs:githubUser',{ callback : mountBoard } );
+
+
+    $(document).on('ui:show:messageFailConnection', function(event){
+      $.unblockUI();
+      $('#failConnectionModal').modal('toggle');
+    });
+
+    $('#redirectToPublicBtn').click(function(){
+      var token = window.location.hash.slice(1);
+
+      window.location = '/?private_repo=false#'+token;
+    }.bind(this));
+
+
+  }
+
+});
+

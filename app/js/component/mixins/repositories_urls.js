@@ -1,14 +1,30 @@
 define(['config/config_bootstrap'],
   function (config) {
     return function () {
+
       this.fetchAllIssues = function (page) {
-          return _.object (_(config.getRepos()).map(function (url, name) {
-            return [name, $.getJSON(this.repoIssuesURL(url, page))];
-          }.bind(this)));
+        var repos = config.getRepos();
+
+
+
+        return _.object(_(repos).map(function (url, name) {
+          var request = $.getJSON(this.repoIssuesURL(url, page));
+          var request2 = $.ajax( {dataType: "json",
+            url: this.repoIssuesURL(url,page),
+            timeout: 2000
+          }).fail( function( xhr, status ) {
+            if(xhr.status === 404){
+             this.trigger(document, 'ui:show:messageFailConnection');
+            }
+          }.bind(this));
+
+          return [name,request2 ];
+        }.bind(this)));
+
       };
 
       this.defaultOptions = function () {
-        return "per_page=100&state=all&"
+        return "per_page=100&state=all&";
       };
 
       this.getPageParam = function(page){
@@ -17,7 +33,7 @@ define(['config/config_bootstrap'],
 
       this.authRequest = function (url) {
         return url + this.accessToken();
-      }
+      };
 
       this.repoIssuesURL = function (repo, page) {
         return this.authRequest(repo + '/issues?' + this.defaultOptions() + this.getPageParam(page));
@@ -32,7 +48,7 @@ define(['config/config_bootstrap'],
         return repositoryURL.replace("api.github.com/repos", "github.com") + "/issues/new";
       };
 
-      this.getURLFromProject = function (projectName) {
+      this.getURLFromProject = function (projectName) { 
         return config.getConfig().repos[projectName] || "not found";
       };
 
@@ -55,4 +71,4 @@ define(['config/config_bootstrap'],
       };
     };
   }
-);
+  );
