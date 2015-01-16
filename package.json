@@ -4,6 +4,7 @@
   "devDependencies": {
     "generator-flight": "~0.8.0",
     "gulp-livereload": "~0.2.0",
+    "jasmine-node": "^1.14.5",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.0",
     "karma-cli": "~0.0.4",
@@ -26,7 +27,9 @@
     "build": "gulp rjs",
     "livereload": "gulp livereload",
     "start": "node app.js",
-    "test": "karma start --single-run",
+    "test": "npm run client-test; npm run server-test",
+    "client-test": "karma start --single-run",
+    "server-test": "jasmine-node test/config",
     "functional-test": "mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.* test",
     "watch": "npm run start > server.log & npm run livereload",
     "watch-test": "karma start",
