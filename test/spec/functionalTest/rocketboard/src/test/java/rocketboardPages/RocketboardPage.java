@@ -1,17 +1,5 @@
 package rocketboardPages;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.RandomUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.*;
-import org.openqa.selenium.support.ui.*;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,12 +7,25 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import rocketboard.EndToEndTests;
 
 public class RocketboardPage {
 	private WebDriver driver;
-	private Boolean issueCreated;
 	Integer repoId = null;
 	String getColumn = "";
 	int[] values = new int[2];
@@ -514,7 +515,7 @@ public class RocketboardPage {
 		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
 		assign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
+		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
 	
@@ -522,14 +523,13 @@ public class RocketboardPage {
 		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
 		unassign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
+		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]")));
 	}
 	
 	public void alreadyAssignee(String id) throws Exception {
 		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
 		unassign.click();
-		Thread.sleep(500);
 	}
 
 	public void pageRefresh() throws Exception {
@@ -623,27 +623,16 @@ public class RocketboardPage {
 		return verify;
 	}
 	
-	public boolean waitCreatedIssue(String label) throws Exception{
-		int i = 0;
-		boolean present = false;
-		while(i<=60 && present == false){
-			try {
-				driver.getPageSource().contains(label);
-	            present = true;
-	        } catch (org.openqa.selenium.NoSuchElementException e) {
-	        	present = false;
-	        }
-			Thread.sleep(1000);
-			i++;
-		}
-		return present;
+	public void waitCreatedIssue(String label) throws Exception{
+		WebDriverWait wait = new WebDriverWait(this.driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(label)));
 	}
 	
 	public void unassignCancel(String id) throws Exception {
 		WebElement unassignCancelBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[2]"));
 		unassignCancelBtn.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
+		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
 	
@@ -651,7 +640,7 @@ public class RocketboardPage {
 		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[1]"));
 		unassignConfirmBtn.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		WebElement element = wait.until(
+		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
 	}
 
