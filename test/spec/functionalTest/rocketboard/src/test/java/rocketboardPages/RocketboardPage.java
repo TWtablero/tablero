@@ -85,19 +85,6 @@ public class RocketboardPage {
 	
 	@FindBy(id = "showPublicAndPrivateBtn")
 	WebElement btAllRepo;
-	
-	@FindBy(id = "login_field")
-	WebElement loginGit;
-	
-	@FindBy(id = "password")
-	WebElement passwordGit;
-	
-	@FindBy(name = "commit")
-	WebElement submitGit;
-	
-	@FindBy(name = "authorize")
-	WebElement authorizeGit;
-
 
 	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
@@ -512,7 +499,7 @@ public class RocketboardPage {
 	}
 
 	public void assignMe(String id) throws Exception {
-		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
+		WebElement assign = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/a[1]/span[2]"));
 		assign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		WebElement element = wait.until(
@@ -666,39 +653,28 @@ public class RocketboardPage {
 		else {
 			btAllRepo.click();
 		}
-		
-		loginGit.sendKeys("testusertwbr");
-		passwordGit.sendKeys("t3stus3r");
-		submitGit.click();
-		
+
+		PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
+				login().
+				authorizeIfNeeded();
+
 		try {
-			   driver.findElement(By.name("authorize"));
-			   authorizeGit.click();
-			   
-			} 
-		catch (NoSuchElementException e) {
-			  
-			}
-		
-		finally{
-					try {  
-						boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
-						if (button == true)
-							{
-								driver.findElement(By.id("redirectToPublicBtn")).click();
-								permission = false;
-							}
-						else 
-							{
-								permission = true;
-							}
-					} 
-					catch (NoSuchElementException e) { 
-						permission = true;
-					}	
+			boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
+			if (button == true)
+				{
+					driver.findElement(By.id("redirectToPublicBtn")).click();
+					permission = false;
+				}
+			else
+				{
+					permission = true;
+				}
 		}
+		catch (NoSuchElementException e) {
+			permission = true;
+		}
+
 		return permission;
-		
 	}
 	
 }
