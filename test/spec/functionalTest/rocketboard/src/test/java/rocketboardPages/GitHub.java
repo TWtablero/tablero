@@ -28,8 +28,8 @@ public class GitHub {
         }
 
         public AuthorizePage login() {
-            username.sendKeys("testusertwbr");
-            password.sendKeys("t3stus3r");
+            username.sendKeys(System.getenv("TABLERO_TEST_USER"));
+            password.sendKeys(System.getenv("TABLERO_TEST_PASS"));
             submit.click();
 
             return PageFactory.initElements(driver, AuthorizePage.class);
@@ -47,6 +47,7 @@ public class GitHub {
             try {
                 authorize();
             } catch (NoSuchElementException e) {
+                //No authorization required
             }
         }
 
