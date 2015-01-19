@@ -119,7 +119,6 @@
             }
           });
 
-
           var filteredProjects = this.filterProjectsByName(projects, data.projectName),
           issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
@@ -134,14 +133,14 @@
           }
 
           if (issuesFromProjects.length > 0) {
-
-            this.trigger('ui:needs:issues', data);
-          } else {
-            this.trigger('ui:needs:priority');
-          }
-        }.bind(this)
-        );
-    };
+           this.trigger('ui:needs:issues', data);
+         } else {
+          var projectIdentifiers =  { projects :  this.getAllProjectsIdentifiers( _.map(filteredProjects, function(proj) { return proj.projectName;  }))};
+          this.trigger('ui:needs:priority', projectIdentifiers);
+        }
+      }.bind(this)
+      );
+};
 
     this.assignMyselfToIssue = function (ev,assignData) {
 
@@ -370,9 +369,16 @@ this.triggerRocketAnimation = function () {
 };
 
 this.DOMObjectToIssueMovedParam = function(element) {
-  if(element && element.id)
-    return { id : element.id, priority : element.dataset.priority  };
-  return { id : 0, priority : 0};
+     var returnObject = { id : 0 , priority : 0 };
+        if(element && element.id){
+          returnObject.id = element.id;
+          returnObject.priority = element.dataset.priority;
+        }
+        var projectUrl =  $(element).find('.issue-header a')[1];
+        if(projectUrl){
+          returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
+        }
+        return returnObject;
 };
 
 this.parseLabel = function (label) {
