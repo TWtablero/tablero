@@ -154,6 +154,7 @@ public class ManageBoardTests {
       public void toggleBacklog() throws Exception {
 		rocketboardPage.accessRepo(true);
 		rocketboardPage.waitingLoading();
+		rocketboardPage.waitingLoading();
 
 		Integer backlogCount = rocketboardPage.getCount("backlog");
 		rocketboardPage.hideBacklog();
