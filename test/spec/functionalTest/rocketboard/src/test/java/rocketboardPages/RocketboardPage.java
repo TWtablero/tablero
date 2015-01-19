@@ -161,7 +161,7 @@ public class RocketboardPage {
 		setIssueDesc(descTxt);
 		selectProjects(repoName);
 		clickbtnCreateIssue();
-		waitingLoading();
+		waitCreatedIssue(titleTxt);
 	}
 
 	public void clickRepo(String[] repoUsed) throws Exception {
