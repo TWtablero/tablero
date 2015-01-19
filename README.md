@@ -83,7 +83,7 @@ Additional tasks can be included in the `gulpfile.js`. For further information
 about using Gulp, please refer to the [Gulp website](http://gulpjs.com/).
 
 
-## Unit tests
+## Unit Tests
 
 A local installation of Karma is used to run the JavaScript unit tests.
 Karma makes it easy to watch files and run unit tests in real browsers:
@@ -105,6 +105,27 @@ npm test
 For further information about configuring Karma, please refer to the [Karma
 website](http://karma-runner.github.io/).
 
+## Functional Tests
+
+Functional tests are written in Java using [Selenium](http://www.seleniumhq.org/) (Firefox web driver by default).
+
+Before executing the test you need to have the application running and __TABLERO_TEST_USER__ and __TABLERO_TEST_PASS__ environment variables set (Test user GitHub credentials).
+
+After that, you can execute them all running:
+```
+npm run functional-test
+```
+or, specifying environment variables on the fly:
+```
+TABLERO_TEST_USER=user TABLERO_TEST_PASS=pass npm run functional-test
+```
+or, if you want to run specific tests, you will need to directly invoke maven (from root directory):
+```
+mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.TEST_CLASS_NAME test
+```
+or, you can run them from as JUnit tests from any IDE. 
+
+It is worth noting, that in this case you __will need to specify the environment variables for its run configuration__. 
 
 ## Contributing to this project
 
