@@ -1,10 +1,9 @@
-# RocketBoard [![Build Status](https://snap-ci.com/RocketBoard/rocketboard/branch/master/build_image)](https://snap-ci.com/RocketBoard/rocketboard/branch/master)
+# RocketBoard [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/RocketBoard/rocketboard/branch/master)
 
-* [Installation](https://github.com/RocketBoard/rocketboard#installation)
-* [Static file server](https://github.com/RocketBoard/rocketboard#static-file-server)
-* [Unit tests](https://github.com/RocketBoard/rocketboard#unit-tests)
-* [Contributing to this project](https://github.com/RocketBoard/rocketboard#contributing-to-this-project)
-
+* [Installation](https://github.com/TWtablero/tablero#installation)
+* [Static file server](https://github.com/TWtablero/tablero#static-file-server)
+* [Unit tests](https://github.com/TWtablero/tablerod#unit-tests)
+* [Contributing to this project](https://github.com/TWtablero/tablero#contributing-to-this-project)
 ## Installation
 
 * Install [Node.js](http://nodejs.org/download/)
