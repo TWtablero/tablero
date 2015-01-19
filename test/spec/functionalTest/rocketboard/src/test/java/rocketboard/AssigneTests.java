@@ -40,9 +40,6 @@ public class AssigneTests {
 
 	@Before
 	public void setUp() throws Exception {
-
-
-
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
 		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");

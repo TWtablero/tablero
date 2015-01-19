@@ -67,7 +67,6 @@ public class UpdateIssueTests {
 	public void moveCheckingValues() throws Exception {
 		RocketboardPage.waitingLoading();
 		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitCreatedIssue(title);
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "2");
 		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 		checkValue = RocketboardPage.moveIssueGettingValue(title, "3");
