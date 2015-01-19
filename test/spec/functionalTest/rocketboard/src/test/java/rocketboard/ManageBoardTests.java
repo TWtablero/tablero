@@ -14,35 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import rocketboardPages.RocketboardPage;
 
 
-public class ManageBoardTests {
-	WebDriver driver;
-	public static String baseUrl = "http://localhost:3000/";
-	public String repoCreateIssue = "User Agent";
-	public Boolean issueCreated;
-	public Boolean issueModalOpened;
-	public static String title;
-	public static String desc;
-	public String project;
-	String[] repoUsed = {"userAgent"};
-	int[] checkValue = null;
-	String selectedOption = "";
-	private RocketboardPage RocketboardPage;
-	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
-	public static String messageDone="Drop here to launch";
-	public static String messageLoading="Please wait...";
-
-	/**
-	 * DriverManager instance
-	 */
-	DriverManager managerDriver = new DriverManager();
-
-
-	@Before
-	public void setUp() throws Exception {
-
-		title = "title_"+RandomStringUtils.randomAlphabetic(6);
-		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
-	}
+public class ManageBoardTests extends AbstractRocketboardTests {
 
 	
 	@Test

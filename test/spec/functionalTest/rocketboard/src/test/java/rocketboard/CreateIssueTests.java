@@ -13,47 +13,8 @@ import org.openqa.selenium.support.PageFactory;
 import rocketboardPages.RocketboardPage;
 
 
-public class CreateIssueTests {
+public class CreateIssueTests extends AbstractRocketboardTests {
 	
-	WebDriver driver;
-	public static String baseUrl = "http://localhost:3000/";
-	public String repoCreateIssue = "User Agent";
-	public Boolean issueCreated;
-	public Boolean issueModalOpened;
-	public static String title;
-	public static String desc;
-	public String project;
-	String[] repoUsed = {"userAgent"};
-	boolean privateRepo = false;
-	
-	int[] checkValue = null;
-	String selectedOption = "";
-	private RocketboardPage RocketboardPage;
-	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
-	public static String messageDone="Drop here to launch";
-	public static String messageLoading="Please wait...";
-
-	@Before
-	public void setUp() throws Exception {
-		
-		DriverManager managerDriver = new DriverManager();
-
-		managerDriver.loadDriver();
-		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
-		PageFactory.initElements(this.driver,(Object) RocketboardPage);
-		
-		boolean privateRepo = true;
-		RocketboardPage.accessRepo(privateRepo);
-		
-		title = "title_"+RandomStringUtils.randomAlphabetic(6);
-		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
-	}
-
-	@After
-	public void tearDown() {  
-		driver.quit();
-	}	
 	
 	/** Create an issue and check if the column backlog is correctly incremented */
 	@Test
