@@ -51,6 +51,24 @@ define(['config/config_bootstrap'],
       this.getURLFromProject = function (projectName) { 
         return config.getConfig().repos[projectName] || "not found";
       };
-    }
+
+      this.getProjectIdentifier = function(projectUrl) {
+
+        if(projectUrl.lastIndexOf('https://api.github.com/repos/',0) === 0) {
+          return projectUrl.slice(29);
+        }
+        if(projectUrl.lastIndexOf('https://github.com/',0) === 0){
+          return projectUrl.slice(19).match(/.*?\/.*?(?=\/)/)[0];
+        }
+      };
+
+
+
+      this.getAllProjectsIdentifiers = function(projectNames) { 
+        var projectUrls = _.map(projectNames, this.getURLFromProject);
+
+        return _.map(projectUrls,this. getProjectIdentifier);
+      };
+    };
   }
   );

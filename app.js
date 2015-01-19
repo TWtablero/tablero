@@ -3,6 +3,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var app = express();
+var _ = require('underscore');
 var configServer = require('./config/server.js');
 var configClient = require('./config/client.js');
 

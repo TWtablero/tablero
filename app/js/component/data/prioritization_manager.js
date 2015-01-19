@@ -4,11 +4,12 @@ define([
 	'component/mixins/repositories_urls',
 	'with-request'
 	], function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withRequest) {
+		'use strict';
 		return defineComponent(prioritizationManager, withAuthTokeFromHash, repositoriesURLs, withRequest);
 
 		function prioritizationManager() {
 
-			this.changePriority = function(movedToTrackName , params){
+			this.changePriority = function(event , params){
 				var newPriority ;
 				if( Number(params.nextElement.priority) === 0) {
 					newPriority = Number(params.previousElement.priority) + 1;
@@ -18,36 +19,39 @@ define([
 
 				var eventCallback = { eventCallback : 'ui:got:issues' };
 				params.element.priority = newPriority;
+				var data = { issue : params.element};
+
 				this.trigger(document,'data:issue:priorityChanged', params.element );
-				this.trigger(document, 'data:needs:issues', eventCallback);
+				this.savePriority(data);
 			};
 
-			this.savePriority = function(event, issues){
-				var itemKey = 'issues-' + issues.track;
+			this.savePriority = function( data){
+				var dataToSend = { 
+					project : data.issue.project ,
+					issue :  data.issue.id,
+					priority : data.issue.priority
+				};				
 
-				var issuesString = JSON.stringify(issues.issues);
 				this.put({
 					url: 'priorities',
-					data: JSON.stringify(issues),
-					contentType: "application/json"
+					data: JSON.stringify(dataToSend),
+					contentType: 'application/json'
 				});
 			};
 
-			this.loadPriority = function(event){
+			this.loadPriority = function(event,projectIdentifiers){
 
-				var getIssues = function(track) {
+				_.each(projectIdentifiers.projects, function(value, key, list){
+
 					this.get({
-					    url: '/priorities?track=' + track,
-					    success: function (data) {
-					    	this.trigger(document,'data:got:priority', data);
-					    }
+						url: '/priorities?project=' + value,
+						success: function (data) {
+							this.trigger(document,'data:got:priority', data);
+						}
 					});
-				}.bind(this);
 
-				var issue0 = getIssues('0 - Backlog');
-				var issue1 = getIssues('1 - Ready');
-				var issue2 = getIssues('2 - Development');
-				var issue3 = getIssues('3 - Quality Assurance');
+				}.bind(this));
+				
 			};
 
 
@@ -55,7 +59,6 @@ define([
 			this.after('initialize', function () {
 				this.on('data:issues:issueMoved', this.changePriority);
 				this.on('data:issues:priorityChanged', this.changePriority);
-				this.on('ui:got:issues', this.savePriority);
 				this.on('ui:needs:priority', this.loadPriority);
 			});
 		}
