@@ -1,6 +1,7 @@
 package rocketboard;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -50,6 +51,10 @@ public class ManageBoardTests {
 		PageFactory.initElements(this.driver,(Object) rocketboardPage);
 	}
 
+	@After
+	public void tearDown() {
+		driver.quit();
+	}
 	
 	@Test
 	public void selectingRepository() throws Exception {
@@ -103,8 +108,6 @@ public class ManageBoardTests {
 			   assertThat(rocketboardPage.isRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
 			} 
 		catch (NoSuchElementException e) { }
-		
-		driver.quit();
 	}
 	
 	@Test
@@ -146,14 +149,11 @@ public class ManageBoardTests {
 		assertThat(rocketboardPage.isRepoSelected(platform[0]), equalTo(Boolean.TRUE));
 		assertThat(rocketboardPage.isRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
 		assertThat(rocketboardPage.isRepoSelected(pages[0]), equalTo(Boolean.TRUE));
-		
-		driver.quit();
 	}
 
-    @Test
-      public void toggleBacklog() throws Exception {
-		rocketboardPage.accessRepo(true);
-		rocketboardPage.waitingLoading();
+	@Test
+	public void toggleBacklog() throws Exception {
+		rocketboardPage.accessRepo(false);
 		rocketboardPage.waitingLoading();
 
 		Integer backlogCount = rocketboardPage.getCount("backlog");
@@ -165,5 +165,5 @@ public class ManageBoardTests {
 		rocketboardPage.showBacklog();
 		assertTrue(rocketboardPage.getColumn("backlog").isDisplayed());
 		assertThat(rocketboardPage.getCount("backlog"), is(backlogCount));
-      }
+	}
 }
