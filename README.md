@@ -1,10 +1,9 @@
-# RocketBoard [![Build Status](https://snap-ci.com/RocketBoard/rocketboard/branch/master/build_image)](https://snap-ci.com/RocketBoard/rocketboard/branch/master)
+# Tablero [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
 
-* [Installation](https://github.com/RocketBoard/rocketboard#installation)
-* [Static file server](https://github.com/RocketBoard/rocketboard#static-file-server)
-* [Unit tests](https://github.com/RocketBoard/rocketboard#unit-tests)
-* [Contributing to this project](https://github.com/RocketBoard/rocketboard#contributing-to-this-project)
-
+* [Installation](https://github.com/TWtablero/tablero#installation)
+* [Static file server](https://github.com/TWtablero/tablero#static-file-server)
+* [Unit tests](https://github.com/TWtablero/tablero#unit-tests)
+* [Contributing to this project](https://github.com/TWtablero/tablero#contributing-to-this-project)
 ## Installation
 
 * Install [Node.js](http://nodejs.org/download/)
@@ -16,7 +15,7 @@ sudo npm install -g bower
 
 * Clone this repository in https
 ```
-git clone https://github.com/RocketBoard/rocketboard.git
+git clone https://github.com/TWtablero/tablero.git
 ```
  
 * Install the project dependences
@@ -26,9 +25,9 @@ npm install && bower install
  
 * Configure development environment: 
 
-  - Register **Rocketboard** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
+  - Register **Tablero** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
 ```
-Application Name: rocketboard
+Application Name: tablero
 Homepage URL: http://localhost
 Authorization callback URL: http://localhost:3000/request_auth_token
 ```
@@ -36,10 +35,10 @@ Authorization callback URL: http://localhost:3000/request_auth_token
 ```
 export PX_CLIENT_ID="your_client_id"
 export PX_CLIENT_SECRET="your_client_secret"
-export PX_USER_AGENT="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
-export PX_DISPATCHER="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
-export PX_PROJECT_ISSUES="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
-export PX_PLATFORM="https://api.github.com/repos/RocketBoard/test_issues_kanboard"
+export PX_USER_AGENT="https://api.github.com/repos/TWtablero/test_issues_kanboard"
+export PX_DISPATCHER="https://api.github.com/repos/TWtablero/test_issues_kanboard"
+export PX_PROJECT_ISSUES="https://api.github.com/repos/TWtablero/test_issues_kanboard"
+export PX_PLATFORM="https://api.github.com/repos/TWtablero/test_issues_kanboard"
 ```
   - Run this to refresh `Terminal` so we can recongnize those new variables:
 ```

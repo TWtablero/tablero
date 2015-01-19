@@ -19,7 +19,7 @@ describeMixin('component/mixins/repositories_urls', function () {
 
       expect(this.component.newIssueURL("user-agent")).toEqual(
         "https://github.com/guipdutra/test_issues_kanboard/issues/new"
-      );
+        );
     });
   });
 
@@ -36,7 +36,26 @@ describeMixin('component/mixins/repositories_urls', function () {
       var project = "https://api.github.com/repos/guipdutra/test_issues_kanboard";
       expect(this.component.repoIssuesURL(project, 1)).toEqual(
         "https://api.github.com/repos/guipdutra/test_issues_kanboard/issues?per_page=100&state=all&page=1&access_token=token666A"
-      );
+        );
     });
+
+    describe("project identifier", function(){
+      it('returns the project identifier by  api url', function(){
+       var url = 'https://api.github.com/repos/guipdutra/test_issues_kanboard';
+
+        expect(this.component.getProjectIdentifier(url)).toEqual(
+          'guipdutra/test_issues_kanboard'
+          );
+      });
+
+       it('returns the project identifier by  issue url', function(){
+       var url = 'https://github.com/guipdutra/test_issues_kanboard/issues/1';
+
+        expect(this.component.getProjectIdentifier(url)).toEqual(
+          'guipdutra/test_issues_kanboard'
+          );
+      });
+    });
+
   });
 });

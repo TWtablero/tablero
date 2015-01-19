@@ -1,11 +1,13 @@
 package rocketboard;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -59,7 +61,7 @@ public class EndToEndTests {
 		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
 		RocketboardPage.moveIssue(title, "2");
 		RocketboardPage.moveIssue(title, "3");
-		RocketboardPage.moveIssue(title, "4");
+		RocketboardPage.moveIssue(title, "4");	
 		RocketboardPage.moveIssue(title, "5");
 		Boolean issueLaunched = RocketboardPage.checkIssueLaunched(messageSucessRocket);
 		assertThat(issueLaunched, equalTo(Boolean.TRUE));
