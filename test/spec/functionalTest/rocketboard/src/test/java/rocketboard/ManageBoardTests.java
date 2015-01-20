@@ -17,45 +17,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class ManageBoardTests {
-	WebDriver driver;
-	public static String baseUrl = "http://localhost:3000/";
-	public String repoCreateIssue = "User Agent";
-	public Boolean issueCreated;
-	public Boolean issueModalOpened;
-	public static String title;
-	public static String desc;
-	public String project;
-	String[] repoUsed = {"userAgent"};
-	int[] checkValue = null;
-	String selectedOption = "";
-	private RocketboardPage rocketboardPage;
-	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
-	public static String messageDone="Drop here to launch";
-	public static String messageLoading="Please wait...";
+public class ManageBoardTests extends AbstractRocketboardTests {
 
-	/**
-	 * DriverManager instance
-	 */
-	DriverManager managerDriver = new DriverManager();
-
-
-	@Before
-	public void setUp() throws Exception {
-		title = "title_"+RandomStringUtils.randomAlphabetic(6);
-		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
-
-		managerDriver.loadDriver();
-		this.driver = managerDriver.getDriver();
-		rocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
-		PageFactory.initElements(this.driver,(Object) rocketboardPage);
-	}
-
-	@After
-	public void tearDown() {
-		driver.quit();
-	}
-	
 	@Test
 	public void selectingRepository() throws Exception {
 		boolean privateRepo = true;
