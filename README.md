@@ -8,7 +8,7 @@
 
 * Install [Node.js](http://nodejs.org/download/)
 
-* Install Bower 
+* Install [Bower](http://bower.io/) 
 ```
 sudo npm install -g bower
 ```
@@ -20,34 +20,54 @@ git clone https://github.com/TWtablero/tablero.git
  
 * Install the project dependences
 ```
-npm install && bower install
+npm install
 ```
  
 * Configure development environment: 
 
-  - Register **Tablero** as a new OAuth application [here](https://github.com/settings/applications/new) with the below configuration:
+  - Register **Tablero** as a [new OAuth application](https://github.com/settings/applications/new) with the following configuration:
 ```
 Application Name: tablero
 Homepage URL: http://localhost
 Authorization callback URL: http://localhost:3000/request_auth_token
 ```
-  - Add this variables to your environment (`~/.profile` on OS X):
-```
-export PX_CLIENT_ID="your_client_id"
-export PX_CLIENT_SECRET="your_client_secret"
-export PX_USER_AGENT="https://api.github.com/repos/TWtablero/test_issues_kanboard"
-export PX_DISPATCHER="https://api.github.com/repos/TWtablero/test_issues_kanboard"
-export PX_PROJECT_ISSUES="https://api.github.com/repos/TWtablero/test_issues_kanboard"
-export PX_PLATFORM="https://api.github.com/repos/TWtablero/test_issues_kanboard"
-```
-  - Run this to refresh `Terminal` so we can recongnize those new variables:
-```
-source ~/.profile
-```  
+  - Set __PX_CLIENT_ID__ and __PX_CLIENT_SECRET__ environment variables with application's client id and client secret values.
+   
+    - To make them persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
+    ```
+    export PX_CLIENT_ID="your_client_id"
+    export PX_CLIENT_SECRET="your_client_secret"
+    ```
+    - Reload `Terminal` settings to set the new variables:
+      ```
+      source ~/.profile
+      ``` 
+ 
+* Use __REPOS__ environment variable to define which repositories you want to display. It is a semi-colon (;) separated list specifying each repository.
+ 
+ For instance, to set [tablero](https://api.github.com/repos/TWtablero/tablero) and [Pages](https://api.github.com/repos/TWtablero/Pages) repositories use:
+ ```
+ REPOS="https://api.github.com/repos/TWtablero/tablero;https://api.github.com/repos/TWtablero/Pages"
+ ```
+ 
+ Optionally, you can just set the owner and name in __Owner/Name__ format. I.e:
+ ```
+ REPOS="TWtablero/tablero;TWtablero/Pages"
+ ```
+ 
+   - To make it persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
+   ```
+   export REPOS="TWtablero/tablero;TWtablero/Pages"
+   ```
+   - Reload `Terminal` settings to set the new variables:
+     ```
+     source ~/.profile
+     ``` 
+ 
 
-*  Run the project with:
+*  Start the application:
 ```
-node app.js
+npm start
 ```
 
 * Access the project through the browser
