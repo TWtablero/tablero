@@ -19,12 +19,14 @@ import static org.junit.Assert.assertTrue;
 
 public class ManageBoardTests extends AbstractRocketboardTests {
 
+
+	@Override
+	public void accessRepo() throws Exception {
+	}
+
 	@Test
 	public void selectingRepository() throws Exception {
-		boolean privateRepo = true;
-		rocketboardPage.accessRepo(privateRepo);
-		rocketboardPage.waitingLoading();
-
+		super.accessRepo();
 		
 		String [] dispatcher = {"dispatcher"};
 		String [] platform = {"platform"};
@@ -75,8 +77,7 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 	
 	@Test
 	public void selectingRepositoryWithoutPrivate() throws Exception {
-		boolean privateRepo = false;
-		rocketboardPage.accessRepo(privateRepo);
+		rocketboardPage.accessRepo(false);
 		rocketboardPage.waitingLoading();
 
 		String [] dispatcher = {"dispatcher"};
