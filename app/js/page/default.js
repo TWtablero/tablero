@@ -64,6 +64,14 @@
         trackType: '4 - Done'
       });
 
+      $('.backlog-column .hide-icon').first().click(function() {
+        $('.backlog-column').toggle('slide');
+        $('.backlog-sidebar').toggle('slide');
+      });
+      $('.backlog-sidebar .hide-icon-sidebar').first().click(function() {
+        $('.backlog-column').toggle('slide');
+        $('.backlog-sidebar').toggle('slide');
+      });
 
     var mountBoard = function(){
       $(document).trigger('ui:needs:issues', {});

@@ -15,8 +15,8 @@ public abstract class AbstractRocketboardTests {
 	public String repoCreateIssue = "User Agent";
 	public Boolean issueCreated;
 	public Boolean issueModalOpened;
-	public static String title;
-	public static String desc;
+	public final static String title = "title_"+RandomStringUtils.randomAlphabetic(6);
+	public final static String desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
 	public String project;
 	String[] repoUsed = {"userAgent"};
 	boolean privateRepo = true;
@@ -24,7 +24,7 @@ public abstract class AbstractRocketboardTests {
 
 	int[] checkValue = null;
 	String selectedOption = "";
-	protected RocketboardPage RocketboardPage;
+	protected RocketboardPage rocketboardPage;
 	public static String messageSucessRocket="Liftoff! We Have a Liftoff!";
 	public static String messageDone="Drop here to launch";
 	public static String messageLoading="Please wait...";
@@ -32,25 +32,21 @@ public abstract class AbstractRocketboardTests {
 	/**
 	 * DriverManager instance
 	 */
-	DriverManager managerDriver = new DriverManager();
-
+	private DriverManager managerDriver = new DriverManager();
 
 	@Before
-	public void setUp() throws Exception {
-
-
-
+	public void loadDriver() throws Exception {
 		managerDriver.loadDriver();
 		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
-		PageFactory.initElements(this.driver,(Object) RocketboardPage);
-		
+		rocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
+		PageFactory.initElements(this.driver,(Object) rocketboardPage);
+	}
+
+	@Before
+	public void accessRepo() throws Exception {
 		boolean privateRepo = true;
-		RocketboardPage.accessRepo(privateRepo);
-		RocketboardPage.waitingLoading();
-		
-		title = "title_"+RandomStringUtils.randomAlphabetic(6);
-		desc = "desc_"+RandomStringUtils.randomAlphabetic(6);
+		rocketboardPage.accessRepo(privateRepo);
+		rocketboardPage.waitingLoading();
 	}
 	
 	@After

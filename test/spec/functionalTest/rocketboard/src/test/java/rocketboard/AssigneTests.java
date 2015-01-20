@@ -9,23 +9,23 @@ public class AssigneTests extends AbstractRocketboardTests {
 	
 	@Test
 	public void AssignMeCard() throws Exception{
-		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitCreatedIssue(title);
-		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.assignMe(idCard);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.createIssue(title, desc, rocketboardPage.chooseProject());
+		rocketboardPage.waitCreatedIssue(title);
+		String idCard = rocketboardPage.getInfo(title, "id");
+		rocketboardPage.assignMe(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
 	}
 	
 	@Test
 	public void UnassignLabel() throws Exception {
-		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssue(title, desc, repoCreateIssue);
-		String href = RocketboardPage.getInfo(title, "href");
-		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
-		RocketboardPage.visible(idCard);
-		RocketboardPage.alreadyAssignee(idCard);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = rocketboardPage.getInfo(title, "href");
+		String idCard = rocketboardPage.getInfo(title, "id");
+		rocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
+		rocketboardPage.visible(idCard);
+		rocketboardPage.alreadyAssignee(idCard);
 		String btn1 = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/div/div[2]/div/button[1]")).getText();
 		assertEquals(btn1.equals("Unassign"), Boolean.TRUE);
 		String btn2 = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/div/div[2]/div/button[2]")).getText();
@@ -34,38 +34,38 @@ public class AssigneTests extends AbstractRocketboardTests {
 	
 	@Test
 	public void CancelUnassignAction() throws Exception {
-		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssue(title, desc, repoCreateIssue);
-		String href = RocketboardPage.getInfo(title, "href");
-		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
-		RocketboardPage.visible(idCard);
-		RocketboardPage.alreadyAssignee(idCard);
-		RocketboardPage.unassignCancel(idCard);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = rocketboardPage.getInfo(title, "href");
+		String idCard = rocketboardPage.getInfo(title, "id");
+		rocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
+		rocketboardPage.visible(idCard);
+		rocketboardPage.alreadyAssignee(idCard);
+		rocketboardPage.unassignCancel(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.TRUE);
 	}
 	
 	@Test
 	public void ConfirmUnassignAction() throws Exception {
-		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssue(title, desc, repoCreateIssue);
-		String href = RocketboardPage.getInfo(title, "href");
-		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
-		RocketboardPage.visible(idCard);
-		RocketboardPage.alreadyAssignee(idCard);
-		RocketboardPage.unassignConfirm(idCard);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.createIssue(title, desc, repoCreateIssue);
+		String href = rocketboardPage.getInfo(title, "href");
+		String idCard = rocketboardPage.getInfo(title, "id");
+		rocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
+		rocketboardPage.visible(idCard);
+		rocketboardPage.alreadyAssignee(idCard);
+		rocketboardPage.unassignConfirm(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
 	}
 	
 	@Test
 	public void UnassignOwnUser() throws Exception{
-		RocketboardPage.waitingLoading();
-		RocketboardPage.createIssue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitCreatedIssue(title);
-		String idCard = RocketboardPage.getInfo(title, "id");
-		RocketboardPage.assignMe(idCard);
-		RocketboardPage.unassignMe(idCard);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.createIssue(title, desc, rocketboardPage.chooseProject());
+		rocketboardPage.waitCreatedIssue(title);
+		String idCard = rocketboardPage.getInfo(title, "id");
+		rocketboardPage.assignMe(idCard);
+		rocketboardPage.unassignMe(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
 	}
 	

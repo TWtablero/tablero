@@ -10,15 +10,15 @@ public class EndToEndTests extends AbstractRocketboardTests{
 
 	@Test
 	public void E2E() throws Exception {
-		RocketboardPage.waitingLoading();
-		checkValue = RocketboardPage.createIssueGettingValue(title, desc, RocketboardPage.chooseProject());
-		RocketboardPage.waitCreatedIssue(title);
+		rocketboardPage.waitingLoading();
+		checkValue = rocketboardPage.createIssueGettingValue(title, desc, rocketboardPage.chooseProject());
+		rocketboardPage.waitCreatedIssue(title);
 		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));
-		RocketboardPage.moveIssue(title, "2");
-		RocketboardPage.moveIssue(title, "3");
-		RocketboardPage.moveIssue(title, "4");	
-		RocketboardPage.moveIssue(title, "5");
-		Boolean issueLaunched = RocketboardPage.checkIssueLaunched(messageSucessRocket);
+		rocketboardPage.moveIssue(title, "2");
+		rocketboardPage.moveIssue(title, "3");
+		rocketboardPage.moveIssue(title, "4");
+		rocketboardPage.moveIssue(title, "5");
+		Boolean issueLaunched = rocketboardPage.checkIssueLaunched(messageSucessRocket);
 		assertThat(issueLaunched, equalTo(Boolean.TRUE));
 	}
 }

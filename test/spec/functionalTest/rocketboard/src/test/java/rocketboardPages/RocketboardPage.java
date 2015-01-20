@@ -28,14 +28,13 @@ import rocketboard.EndToEndTests;
 public class RocketboardPage {
 	private WebDriver driver;
 	Integer repoId = null;
-	String getColumn = "";
 	int[] values = new int[2];
 	Integer indexID = null;
 	Integer nameID = null;
 	String getInfo = "";
 
 	@FindBy(how = How.ID, using = "0-backlog")
-	WebElement columnBacklog;
+	WebElement backlogColumn;
 
 	@FindBy(how = How.ID, using = "issueTitle")
 	WebElement editIssueTitle;
@@ -232,7 +231,7 @@ public class RocketboardPage {
 		}
 
 
-	public boolean IsRepoSelected(String repo) throws InterruptedException{
+	public boolean isRepoSelected(String repo) throws InterruptedException{
 		boolean retorno = false;		
 
 		if (repo == "platform")
@@ -289,9 +288,11 @@ public class RocketboardPage {
 		while(countValueStr == ""){
 			countValueStr = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count")).getText();
 		}
-		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
-		Integer countValueInt = new Integer (countValueStr);
-		return countValueInt;
+		return parseCount(countValueStr);
+	}
+
+	private Integer parseCount(final String value) {
+		return new Integer (value.substring(1, value.length()-1));
 	}
 
 	public void moveIssue(String issueTitle, String column) throws Exception {
@@ -318,7 +319,7 @@ public class RocketboardPage {
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
 		int timeout = 0;
 		String idCard = null;
-		getColumn = columnName(column);
+		String getColumn = columnName(column);
 		values[0] = getCount(getColumn);
 		
 		if (column =="5" || column =="done"){
@@ -608,7 +609,7 @@ public class RocketboardPage {
 	
 	public boolean verifyLabel(String label) throws Exception{
 		boolean verify = driver.getPageSource().contains(label);
-		System.out.print("VERIFY VALUE: "+verify);
+		System.out.print("VERIFY VALUE: " + verify);
 		return verify;
 	}
 	
@@ -631,6 +632,37 @@ public class RocketboardPage {
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
+	}
+
+	public void hideBacklog() throws InterruptedException {
+		getColumn("backlog").
+				findElement(By.cssSelector(".hide-icon")).
+				click();
+		Thread.sleep(200);
+	}
+
+	public WebElement getColumn(String name) {
+		return driver.findElement(By.cssSelector(".panel-heading." + name + "-header"));
+	}
+
+	public WebElement getSidebar(String name) {
+		return driver.findElement(By.cssSelector(".column." + name + "-sidebar"));
+	}
+
+	public void showBacklog() throws InterruptedException {
+		getSidebar("backlog").
+				findElement(By.cssSelector(".hide-icon-sidebar")).
+				click();
+		Thread.sleep(200);
+	}
+
+	public Integer getSidebarCount(String name) {
+		String value = getSidebar(name).
+				findElement(By.cssSelector(".issues-count")).
+				getText();
+
+		return parseCount(value);
+
 	}
 
 	public boolean accessRepo(boolean privateRepo) {
@@ -666,6 +698,5 @@ public class RocketboardPage {
 
 		return permission;
 	}
-	
 }
 

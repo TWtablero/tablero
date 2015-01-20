@@ -1,34 +1,32 @@
 package rocketboard;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-
 import rocketboardPages.RocketboardPage;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class ManageBoardTests extends AbstractRocketboardTests {
 
-	
+
+	@Override
+	public void accessRepo() throws Exception {
+	}
+
 	@Test
 	public void selectingRepository() throws Exception {
-		
-		managerDriver.loadDriver();
-		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
-		PageFactory.initElements(this.driver,(Object) RocketboardPage);
-		
-		boolean privateRepo = true;
-		RocketboardPage.accessRepo(privateRepo);
-		RocketboardPage.waitingLoading();
-
+		super.accessRepo();
 		
 		String [] dispatcher = {"dispatcher"};
 		String [] platform = {"platform"};
@@ -37,59 +35,50 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 		String [] pages = {"pages"};
 		String [] all = {"all"};
 
-		RocketboardPage.waitingLoading();
-		RocketboardPage.uncheckAllRepo(privateRepo);
+		rocketboardPage.waitingLoading();
+		rocketboardPage.uncheckAllRepo(privateRepo);
 		
-		RocketboardPage.clickRepo(dispatcher);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(dispatcher);
+		rocketboardPage.clickRepo(dispatcher);
+		assertTrue(rocketboardPage.isRepoSelected(dispatcher[0]));
+		rocketboardPage.clickRepo(dispatcher);
 
-		RocketboardPage.clickRepo(platform);
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(platform);
+		rocketboardPage.clickRepo(platform);
+		assertTrue(rocketboardPage.isRepoSelected(platform[0]));
+		rocketboardPage.clickRepo(platform);
 
-		RocketboardPage.clickRepo(userAgent);
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(userAgent);
+		rocketboardPage.clickRepo(userAgent);
+		assertTrue(rocketboardPage.isRepoSelected(userAgent[0]));
+		rocketboardPage.clickRepo(userAgent);
 		
 		try {
 			   driver.findElement(By.id("repository-4"));
-			   RocketboardPage.clickRepo(projectIssue);
-			   assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
-			   RocketboardPage.clickRepo(projectIssue);
+			   rocketboardPage.clickRepo(projectIssue);
+			   assertThat(rocketboardPage.isRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
+			   rocketboardPage.clickRepo(projectIssue);
 			     
 			} 
 		catch (NoSuchElementException e) { }
 		
-		RocketboardPage.clickRepo(pages);
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(pages);
+		rocketboardPage.clickRepo(pages);
+		assertThat(rocketboardPage.isRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(pages);
 
-		RocketboardPage.clickRepo(all);
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(all);
+		assertThat(rocketboardPage.isRepoSelected(platform[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(pages[0]), equalTo(Boolean.TRUE));
 		try {
 			   driver.findElement(By.id("repository-4"));
-			   assertThat(RocketboardPage.IsRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));			     
+			   assertThat(rocketboardPage.isRepoSelected(projectIssue[0]), equalTo(Boolean.TRUE));
 			} 
 		catch (NoSuchElementException e) { }
-		
-		driver.quit();
 	}
 	
 	@Test
 	public void selectingRepositoryWithoutPrivate() throws Exception {
-		
-		managerDriver.loadDriver();
-		this.driver = managerDriver.getDriver();
-		RocketboardPage = new RocketboardPage(this.driver,"http://localhost:3000/");
-		PageFactory.initElements(this.driver,(Object) RocketboardPage);
-		
-		boolean privateRepo = false;
-		RocketboardPage.accessRepo(privateRepo);
-		RocketboardPage.waitingLoading();
+		rocketboardPage.accessRepo(false);
+		rocketboardPage.waitingLoading();
 
 		String [] dispatcher = {"dispatcher"};
 		String [] platform = {"platform"};
@@ -97,34 +86,48 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 		String [] pages = {"pages"};
 		String [] all = {"all"};
 
-		RocketboardPage.waitingLoading();
-		assertThat(RocketboardPage.isPrivatePresent(), equalTo(Boolean.FALSE));
+		rocketboardPage.waitingLoading();
+		assertThat(rocketboardPage.isPrivatePresent(), equalTo(Boolean.FALSE));
 		
 		
-		RocketboardPage.uncheckAllRepo(privateRepo);
+		rocketboardPage.uncheckAllRepo(privateRepo);
 		
-		RocketboardPage.clickRepo(dispatcher);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(dispatcher);
+		rocketboardPage.clickRepo(dispatcher);
+		assertThat(rocketboardPage.isRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(dispatcher);
 
-		RocketboardPage.clickRepo(platform);
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(platform);
+		rocketboardPage.clickRepo(platform);
+		assertThat(rocketboardPage.isRepoSelected(platform[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(platform);
 
-		RocketboardPage.clickRepo(userAgent);
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(userAgent);
+		rocketboardPage.clickRepo(userAgent);
+		assertThat(rocketboardPage.isRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(userAgent);
 		
-		RocketboardPage.clickRepo(pages);
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
-		RocketboardPage.clickRepo(pages);
+		rocketboardPage.clickRepo(pages);
+		assertThat(rocketboardPage.isRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+		rocketboardPage.clickRepo(pages);
 
-		RocketboardPage.clickRepo(all);
-		assertThat(RocketboardPage.IsRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(platform[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
-		assertThat(RocketboardPage.IsRepoSelected(pages[0]), equalTo(Boolean.TRUE));
-		
-		driver.quit();
+		rocketboardPage.clickRepo(all);
+		assertThat(rocketboardPage.isRepoSelected(dispatcher[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(platform[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(userAgent[0]), equalTo(Boolean.TRUE));
+		assertThat(rocketboardPage.isRepoSelected(pages[0]), equalTo(Boolean.TRUE));
+	}
+
+	@Test
+	public void toggleBacklog() throws Exception {
+		rocketboardPage.accessRepo(false);
+		rocketboardPage.waitingLoading();
+
+		Integer backlogCount = rocketboardPage.getCount("backlog");
+		rocketboardPage.hideBacklog();
+
+		assertFalse(rocketboardPage.getColumn("backlog").isDisplayed());
+		assertThat(rocketboardPage.getSidebarCount("backlog"), is(backlogCount));
+
+		rocketboardPage.showBacklog();
+		assertTrue(rocketboardPage.getColumn("backlog").isDisplayed());
+		assertThat(rocketboardPage.getCount("backlog"), is(backlogCount));
 	}
 }
