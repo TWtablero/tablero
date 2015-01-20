@@ -103,7 +103,6 @@
       $(document).trigger('ui:blockUI');
 
 
-
       data.page = ('page' in data) ? (data.page + 1) : 1;
 
       var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
@@ -111,7 +110,7 @@
       var names = _(issuesPromises).map(function(v,k) {return k;});
       $.when.apply(this, queries).done(
         function () {
-          var issuesResults = arguments;
+          var issuesResults = names.length > 1 ? arguments : [arguments];
           var projects = _(names).map(function(name, idx) {
             return {
               'projectName': name,
