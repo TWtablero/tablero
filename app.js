@@ -30,7 +30,6 @@ app.get('/request_code', function (req, res) {
 });
 
 app.get('/request_auth_token', function (req, res) {
-  console.log('==== /request_auth_token ====');
   var getAuthTokenUrl = 'https://github.com/login/oauth/access_token?' +
     'client_id=' + configServer.clientId +
     '&client_secret=' + configServer.clientSecret +
@@ -42,9 +41,6 @@ app.get('/request_auth_token', function (req, res) {
 
   var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
   var showPrivateRepo = url.parse(fakeUrl,true).query['scope'] === 'repo';
-
-  console.log('got auth token: ');
-  console.log(url.parse(fakeUrl, true));
 
 
   res.redirect('/?private_repo='+showPrivateRepo + '#' + url.parse(fakeUrl, true).query['access_token']);
