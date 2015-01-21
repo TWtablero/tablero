@@ -103,7 +103,6 @@
       $(document).trigger('ui:blockUI');
 
 
-
       data.page = ('page' in data) ? (data.page + 1) : 1;
 
       var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
@@ -111,7 +110,7 @@
       var names = _(issuesPromises).map(function(v,k) {return k;});
       $.when.apply(this, queries).done(
         function () {
-          var issuesResults = arguments;
+          var issuesResults = names.length > 1 ? arguments : [arguments];
           var projects = _(names).map(function(name, idx) {
             return {
               'projectName': name,
@@ -296,19 +295,16 @@
             return;
           }
 
-
-
           url = this.getIssueUrlFromDraggable(ui);
           label = this.parseLabel(event.target.id);
           oldLabel = this.parseLabel(ui.sender[0].id);
           state = this.getState(event.target.className);
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+          $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
           $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
           $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
           $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
-
-
 
           if (label == "4 - Done") {
             this.triggerRocketAnimation();

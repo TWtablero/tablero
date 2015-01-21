@@ -18,6 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -27,14 +28,13 @@ import rocketboard.EndToEndTests;
 public class RocketboardPage {
 	private WebDriver driver;
 	Integer repoId = null;
-	String getColumn = "";
 	int[] values = new int[2];
 	Integer indexID = null;
 	Integer nameID = null;
 	String getInfo = "";
 
 	@FindBy(how = How.ID, using = "0-backlog")
-	WebElement columnBacklog;
+	WebElement backlogColumn;
 
 	@FindBy(how = How.ID, using = "issueTitle")
 	WebElement editIssueTitle;
@@ -86,19 +86,6 @@ public class RocketboardPage {
 	
 	@FindBy(id = "showPublicAndPrivateBtn")
 	WebElement btAllRepo;
-	
-	@FindBy(id = "login_field")
-	WebElement loginGit;
-	
-	@FindBy(id = "password")
-	WebElement passwordGit;
-	
-	@FindBy(name = "commit")
-	WebElement submitGit;
-	
-	@FindBy(name = "authorize")
-	WebElement authorizeGit;
-
 
 	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
@@ -244,7 +231,7 @@ public class RocketboardPage {
 		}
 
 
-	public boolean IsRepoSelected(String repo) throws InterruptedException{
+	public boolean isRepoSelected(String repo) throws InterruptedException{
 		boolean retorno = false;		
 
 		if (repo == "platform")
@@ -288,6 +275,7 @@ public class RocketboardPage {
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
 		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
 		values[0] = getCount("backlog");
 		createIssue(title, desc, repoName);
 		waitCreatedIssue(title);
@@ -300,9 +288,11 @@ public class RocketboardPage {
 		while(countValueStr == ""){
 			countValueStr = driver.findElement(By.cssSelector("div[class*='panel-heading "+column+"'] > span.issues-count")).getText();
 		}
-		countValueStr = countValueStr.substring(1, countValueStr.length()-1);
-		Integer countValueInt = new Integer (countValueStr);
-		return countValueInt;
+		return parseCount(countValueStr);
+	}
+
+	private Integer parseCount(final String value) {
+		return new Integer (value.substring(1, value.length()-1));
 	}
 
 	public void moveIssue(String issueTitle, String column) throws Exception {
@@ -329,7 +319,7 @@ public class RocketboardPage {
 	public  int[] moveIssueGettingValue(String issueTitle, String column) throws Exception {
 		int timeout = 0;
 		String idCard = null;
-		getColumn = columnName(column);
+		String getColumn = columnName(column);
 		values[0] = getCount(getColumn);
 		
 		if (column =="5" || column =="done"){
@@ -512,7 +502,7 @@ public class RocketboardPage {
 	}
 
 	public void assignMe(String id) throws Exception {
-		WebElement assign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]"));
+		WebElement assign = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/a[1]/span[2]"));
 		assign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(
@@ -520,7 +510,7 @@ public class RocketboardPage {
 	}
 	
 	public void unassignMe(String id) throws Exception {
-		WebElement unassign = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img"));
+		WebElement unassign = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/a[1]/img"));
 		unassign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(
@@ -619,7 +609,7 @@ public class RocketboardPage {
 	
 	public boolean verifyLabel(String label) throws Exception{
 		boolean verify = driver.getPageSource().contains(label);
-		System.out.print("VERIFY VALUE: "+verify);
+		System.out.print("VERIFY VALUE: " + verify);
 		return verify;
 	}
 	
@@ -637,11 +627,42 @@ public class RocketboardPage {
 	}
 	
 	public void unassignConfirm(String id) throws Exception {
-		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[1]"));
+		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/div/div[2]/div/button[1]"));
 		unassignConfirmBtn.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(
 		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
+	}
+
+	public void hideBacklog() throws InterruptedException {
+		getColumn("backlog").
+				findElement(By.cssSelector(".hide-icon")).
+				click();
+		Thread.sleep(200);
+	}
+
+	public WebElement getColumn(String name) {
+		return driver.findElement(By.cssSelector(".panel-heading." + name + "-header"));
+	}
+
+	public WebElement getSidebar(String name) {
+		return driver.findElement(By.cssSelector(".column." + name + "-sidebar"));
+	}
+
+	public void showBacklog() throws InterruptedException {
+		getSidebar("backlog").
+				findElement(By.cssSelector(".hide-icon-sidebar")).
+				click();
+		Thread.sleep(200);
+	}
+
+	public Integer getSidebarCount(String name) {
+		String value = getSidebar(name).
+				findElement(By.cssSelector(".issues-count")).
+				getText();
+
+		return parseCount(value);
+
 	}
 
 	public boolean accessRepo(boolean privateRepo) {
@@ -654,40 +675,28 @@ public class RocketboardPage {
 		else {
 			btAllRepo.click();
 		}
-		
-		loginGit.sendKeys("testusertwbr");
-		passwordGit.sendKeys("t3stus3r");
-		submitGit.click();
-		
+
+		PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
+				login().
+				authorizeIfNeeded();
+
 		try {
-			   driver.findElement(By.name("authorize"));
-			   authorizeGit.click();
-			   
-			} 
-		catch (NoSuchElementException e) {
-			  
-			}
-		
-		finally{
-					try {  
-						boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
-						if (button == true)
-							{
-								driver.findElement(By.id("redirectToPublicBtn")).click();
-								permission = false;
-							}
-						else 
-							{
-								permission = true;
-							}
-					} 
-					catch (NoSuchElementException e) { 
-						permission = true;
-					}	
+			boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
+			if (button == true)
+				{
+					driver.findElement(By.id("redirectToPublicBtn")).click();
+					permission = false;
+				}
+			else
+				{
+					permission = true;
+				}
 		}
+		catch (NoSuchElementException e) {
+			permission = true;
+		}
+
 		return permission;
-		
 	}
-	
 }
 
