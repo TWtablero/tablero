@@ -1,5 +1,17 @@
 .column {
-	margin-right: 2.2%;
+	margin-right: 12px;
+	margin-bottom: 5px;
+	display: block;
+	float: left;
+	width: 20%;
+	padding-left: 10px;
+}
+
+.cards-place {
+	background: #f3f3f3;
+	padding: 10px;
+	padding-right: 6px;
+	border-radius: 3px;
 }
 
 .issue {
@@ -10,12 +22,12 @@
 	@include clearfix;
 
 	.issue-header {
-		padding: 7px;
+		padding: 4px;
 		background: #d6d6d6;
 	}
 
 	.issue-body {
-		background: #eaeaea;
+		background: #f9f9f9;
 		padding: 10px;
 	}
 
@@ -33,19 +45,19 @@
 }
 
 .labels {
-	padding: 10px;
-	padding-top: 0;
+	padding: 0px 0px 8px 10px;
+    background-color: #f9f9f9;
 }
 
 .label {
-	padding: 3px 7px;
-	border-radius: 5px;
+	padding: 0px 8px 0px 8px;
+	border-radius: 3px;
 	color: white;
-	font-size: 0.95em;
-	margin-right: 0.5em;
+	font-size: 0.688em;
 	display: inline-block;
-	margin-bottom: 0.5em;
-
+	margin: 4px 4px 0px 0px;
+	line-height: 18px;
+	text-align: center;
 }
 
 .assignee {
@@ -82,17 +94,20 @@
 
 .panel-heading {
 	margin-top: 0.5em;
-	margin-bottom: 0.5em;
+	margin-bottom: 0.3em;
 }
 
 .panel-body {
-	height: 80vh;
+	height: 78vh;
 	overflow-x: hidden;
-	min-height: 450px;
+	min-height: 400px;
+	border-top: 1px solid #E3E3E3;
+	border-bottom: 1px solid #E3E3E3;
 }
 
 .panel-body.done {
 	overflow: hidden;
+	height: 78vh;
 }
 
 .panel-heading h3 {
@@ -119,6 +134,7 @@
 	transform: translate(-50%, -50%);
 	text-align: center;
 	font-size: 0.7em;
+
 
 	h3 {
 		color: #aaa;
@@ -154,6 +170,17 @@
 	word-wrap: break-word;
 }
 
+h1 {
+	font-size: 4em;
+	margin: 0em;
+	display: inline;
+	font-family: 'Teko', sans-serif;
+	font-weight: 500;
+	color: #ffffff;
+	line-height: 1.25em;
+	padding: 0.3em
+}
+
 h3 {
 	font-family: "OpenSansSemibold";
 	font-weight: normal;
@@ -176,10 +203,11 @@ h3 {
 	top: 2px;
 	position: relative;
 	color: white;
-	font-size: 1.15em;
-	top: -7px;
-	right: -7px;
-	padding: 10px 10px 9px 10px;
+	font-size: 0.875em;
+	top: -1px;
+	right: -1px;
+	padding: 6px 8px 6px 8px;
+	border-radius: 3px;
 
 	&:hover {
 		color: #535353;

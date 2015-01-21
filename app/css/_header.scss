@@ -1,6 +1,6 @@
 header {
 	background: url('/img/back.png');
-	height: 78px;
+	height: 70px;
 
 	.logo {
 		padding: 1.0em;
@@ -8,13 +8,17 @@ header {
 	}
 
 	button.btn-success, a.btn-success {
-		margin-right: 2em;
+		margin-right: 1em;
 		margin-top: 1.5em;
+		display: inline-block;
 	}
 
 	.filter-container {
 		font-size: 0.9em;
-		margin-top: 0.9em;
+		margin-top: 0.7em;
+		display: inline-block;
+		margin-left: 0.1em;
+		max-width: 400px;
 	}
 
 	.filter-repo {
