@@ -11,6 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import rocketboardPages.GithubCredentials;
 import rocketboardPages.RocketboardPage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -79,7 +80,9 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 	
 	@Test
 	public void selectingRepositoryWithoutPrivate() throws Exception {
-		rocketboardPage.accessRepo(false);
+		GithubCredentials credentials = getGithubCredentials();		
+		
+		rocketboardPage.accessRepo(false,credentials.getUserName(),credentials.getPassword());
 		rocketboardPage.waitingLoading();
 
 		String [] dispatcher = {"dispatcher"};
@@ -119,7 +122,9 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 
 	@Test
 	public void toggleBacklog() throws Exception {
-		rocketboardPage.accessRepo(false);
+		GithubCredentials credentials = getGithubCredentials();		
+		rocketboardPage.accessRepo(false,credentials.getUserName(),credentials.getPassword());
+		
 		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));

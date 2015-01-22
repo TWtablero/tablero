@@ -665,7 +665,7 @@ public class RocketboardPage {
 
 	}
 
-	public boolean accessRepo(boolean privateRepo) {
+	public boolean accessRepo(boolean privateRepo, String userNameGithub, String passwordGithub) {
 		boolean permission = false;
 		
 		if (privateRepo == false) { 
@@ -677,7 +677,7 @@ public class RocketboardPage {
 		}
 
 		PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
-				login().
+				login(userNameGithub,passwordGithub).
 				authorizeIfNeeded();
 
 		try {
@@ -698,5 +698,16 @@ public class RocketboardPage {
 
 		return permission;
 	}
+	
+	  protected static String getEnv(String key) {
+          String value = System.getenv(key);
+
+          if(value == null) {
+              throw new IllegalStateException(String.format("Could not find environment variable value: %s", key));
+          }
+
+          return value;
+      }
+	
 }
 
