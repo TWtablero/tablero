@@ -9,7 +9,7 @@ var configClient = require('./config/client.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
-  debug: true
+  debug: false
 }));
 
 app.use(express.static('app'));
