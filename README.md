@@ -8,7 +8,7 @@
 
 * Install [Node.js](http://nodejs.org/download/)
 
-* Install [Bower](http://bower.io/) 
+* Install [Bower](http://bower.io/):
 ```
 sudo npm install -g bower
 ```
@@ -18,7 +18,7 @@ sudo npm install -g bower
 git clone https://github.com/TWtablero/tablero.git
 ```
  
-* Install the project dependences
+* Install the project dependences inside the project directory
 ```
 npm install
 ```
@@ -31,11 +31,16 @@ Application Name: tablero
 Homepage URL: http://localhost
 Authorization callback URL: http://localhost:3000/request_auth_token
 ```
-  - Set __PX_CLIENT_ID__ and __PX_CLIENT_SECRET__ environment variables with application's client id and client secret values.
+  - Set __PX_CLIENT_ID__ and __PX_CLIENT_SECRET__ environment variables with application's client id and client secret values generated in the last step:
+   ![image of applications variable]
+   (http://www.sumoware.com/images/temp/xzqgemqimmkkdcrr.png )
+  
    
     - To make them persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
     ```
     export PX_CLIENT_ID="your_client_id"
+    ```
+     ```
     export PX_CLIENT_SECRET="your_client_secret"
     ```
     - Reload `Terminal` settings to set the new variables:
@@ -47,12 +52,12 @@ Authorization callback URL: http://localhost:3000/request_auth_token
  
  For instance, to set [tablero](https://api.github.com/repos/TWtablero/tablero) and [Pages](https://api.github.com/repos/TWtablero/Pages) repositories use:
  ```
- REPOS="https://api.github.com/repos/TWtablero/tablero;https://api.github.com/repos/TWtablero/Pages"
+ export REPOS="https://api.github.com/repos/TWtablero/tablero;https://api.github.com/repos/TWtablero/Pages"
  ```
  
  Optionally, you can just set the owner and name in __Owner/Name__ format. I.e:
  ```
- REPOS="TWtablero/tablero;TWtablero/Pages"
+ export REPOS="TWtablero/tablero;TWtablero/Pages"
  ```
  
    - To make it persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
@@ -71,7 +76,7 @@ npm start
 ```
 
 * Access the project through the browser
-https://localhost:3000
+http://localhost:3000
  
 ***Before create issues, please check if it is actually pointing to the fake repository!*** 
 

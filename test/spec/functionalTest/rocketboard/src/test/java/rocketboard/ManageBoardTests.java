@@ -8,8 +8,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import rocketboardPages.RocketboardPage;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import rocketboardPages.RocketboardPage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
@@ -118,8 +120,10 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 	@Test
 	public void toggleBacklog() throws Exception {
 		rocketboardPage.accessRepo(false);
-		rocketboardPage.waitingLoading();
-
+		WebDriverWait wait = new WebDriverWait(this.driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
+		
 		Integer backlogCount = rocketboardPage.getCount("backlog");
 		rocketboardPage.hideBacklog();
 
