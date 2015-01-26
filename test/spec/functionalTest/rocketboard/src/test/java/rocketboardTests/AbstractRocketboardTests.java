@@ -1,7 +1,8 @@
-package rocketboard;
+package rocketboardTests;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
@@ -9,22 +10,20 @@ import org.openqa.selenium.support.PageFactory;
 
 import rocketboardPages.GithubCredentials;
 import rocketboardPages.RocketboardPage;
+import tablero.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public abstract class AbstractRocketboardTests {
 
     WebDriver driver;
     public static String baseUrl = "http://localhost:3000/";
-    public String repoCreateIssue = "TWtablero/UserAgent_Test-2014.12";
     public Boolean issueCreated;
     public Boolean issueModalOpened;
     public final static String title = "title_" + RandomStringUtils.randomAlphabetic(6);
     public final static String desc = "desc_" + RandomStringUtils.randomAlphabetic(6);
     public String project;
-    String[] repoUsed = {"userAgent"};
     boolean privateRepo = true;
 
 
@@ -52,6 +51,9 @@ public abstract class AbstractRocketboardTests {
     public void accessRepo() throws Exception {
         boolean privateRepo = true;
         GithubCredentials credentials = getGithubCredentials();
+        List<Repository> repos = getRepos();
+        org.junit.Assert.assertTrue("there isnt any configured repos ",repos.size() > 0);
+
         rocketboardPage.accessRepo(privateRepo, credentials.getUserName(), credentials.getPassword());
         rocketboardPage.waitingLoading();
     }
@@ -75,22 +77,28 @@ public abstract class AbstractRocketboardTests {
         return value;
     }
 
-    protected ArrayList<String> getRepos(){
-        ArrayList<String> repos = new ArrayList<>();
+    protected Repository getRandomProject(){
+        List<Repository> repos = getRepos();
+        return repos.get(RandomUtils.nextInt(0,repos.size()-1));
+    }
+
+    private List<Repository> getRepos(){
+        ArrayList<Repository> repos = new ArrayList<Repository>();
         String reposFull = getEnv("REPOS");
         if(!reposFull.isEmpty()) {
             String[] chunks = reposFull.split(";");
             for (String chunk : chunks){
-
-                String name = chunk.split(chunk)[2],
+                String name = chunk,
                         key = name.toLowerCase().replace('/', '_');
 
                 String gitHubApiPrefix = "https://api.github.com/repos/";
-                repos.add( gitHubApiPrefix + name);
+                repos.add(new Repository(gitHubApiPrefix + name,name));
             };
         }
         return repos;
 
     }
+
+
 
 }

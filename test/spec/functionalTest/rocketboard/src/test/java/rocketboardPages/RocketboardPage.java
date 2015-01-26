@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import rocketboard.EndToEndTests;
+import rocketboardTests.EndToEndTests;
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -405,14 +405,6 @@ public class RocketboardPage {
 		advancedOptions.click();
 	}
 
-	public String chooseProject () throws Exception {
-		String [] listProjects = new String[3];
-		listProjects[0] = "User Agent";
-		listProjects[1] = "Dispatcher";
-		listProjects[2] = "Platform";
-		int index = RandomUtils.nextInt(0, 2);
-		return (listProjects[index]);
-	}
 
 	public boolean checkTitleFrame(String title) {
 		return	driver.findElement(By.linkText(title)).isDisplayed();

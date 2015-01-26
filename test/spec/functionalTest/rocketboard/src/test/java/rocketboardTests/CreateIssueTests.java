@@ -1,4 +1,4 @@
-package rocketboard;
+package rocketboardTests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,7 +14,7 @@ public class CreateIssueTests extends AbstractRocketboardTests {
 	public void createIssue() throws Exception {
 		rocketboardPage.waitingLoading();
 		Integer valueBefore = rocketboardPage.getCount("backlog");
-		rocketboardPage.createIssue(title, desc, rocketboardPage.chooseProject());
+		rocketboardPage.createIssue(title, desc, getRandomProject().getName());
 		rocketboardPage.waitCreatedIssue(title);
 		Integer valueAfter = rocketboardPage.getCount("backlog");
 		assertThat(valueAfter, equalTo(valueBefore+1));
@@ -24,7 +24,7 @@ public class CreateIssueTests extends AbstractRocketboardTests {
 	@Test
 	public void CreateIssueNoDescription() throws Exception {
 		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title,"", rocketboardPage.chooseProject());
+		rocketboardPage.createIssue(title,"", getRandomProject().getName());
 		rocketboardPage.waitCreatedIssue(title);
 		assertThat(rocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
 		}
