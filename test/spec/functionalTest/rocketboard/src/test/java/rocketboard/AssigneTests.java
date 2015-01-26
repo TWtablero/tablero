@@ -1,4 +1,4 @@
-package rocketboardTests;
+package rocketboard;
 
 import static org.junit.Assert.assertEquals;
 

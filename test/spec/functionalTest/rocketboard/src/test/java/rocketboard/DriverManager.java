@@ -1,4 +1,4 @@
-package rocketboardTests;
+package rocketboard;
 
 import java.util.concurrent.TimeUnit;
 
