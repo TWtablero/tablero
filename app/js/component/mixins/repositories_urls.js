@@ -5,23 +5,38 @@ define(['config/config_bootstrap'],
       this.fetchAllIssues = function (page) {
         var repos = config.getRepos();
 
-
-
         return _.object(_(repos).map(function (url, name) {
+          
+          var private_repo = window.location.search.slice(14) == "true";
+
+
+
           var request = $.getJSON(this.repoIssuesURL(url, page));
+        
+
+          var hasData = $.Deferred();
+
           var request2 = $.ajax( {dataType: "json",
-            url: this.repoIssuesURL(url,page),
-            timeout: 2000
-          }).fail( function( xhr, status ) {
-            if(xhr.status === 404){
-             this.trigger(document, 'ui:show:messageFailConnection');
-            }
-          }.bind(this));
+              url: this.repoIssuesURL(url,page),
+              timeout: 2000
+            }).
+            done(function(data) {
+              hasData.resolve(data);
+            }).
+            fail( function( xhr, status ) {
+              if(xhr.status === 404 && private_repo){
+               this.trigger(document, 'ui:show:messageFailConnection');
+               hasData.fail();
+              } else {
+               hasData.resolve();
+              };
+            }.bind(this));
 
-          return [name,request2 ];
-        }.bind(this)));
+            return [name, hasData.promise() ];
+          }.bind(this)));  
 
-      };
+      }
+      
 
       this.defaultOptions = function () {
         return "per_page=100&state=all&";
