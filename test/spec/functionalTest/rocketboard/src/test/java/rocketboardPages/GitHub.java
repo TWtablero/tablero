@@ -22,28 +22,23 @@ public class GitHub {
 
         @FindBy(name = "commit")
         WebElement submit;
+     
 
-        public AuthenticatePage(WebDriver driver) {
+		public AuthenticatePage(WebDriver driver) {
             this.driver = driver;
         }
 
-        public AuthorizePage login() {
-            username.sendKeys(getEnv("TABLERO_TEST_USER"));
-            password.sendKeys(getEnv("TABLERO_TEST_PASS"));
+        public AuthorizePage login(String usernameGithub, String passwordGithub) {
+//            username.sendKeys(getEnv("TABLERO_TEST_USER"));
+//            password.sendKeys(getEnv("TABLERO_TEST_PASS"));
+            username.sendKeys(usernameGithub);
+            password.sendKeys(passwordGithub);
             submit.click();
 
             return PageFactory.initElements(driver, AuthorizePage.class);
         }
 
-        private static String getEnv(String key) {
-            String value = System.getenv(key);
-
-            if(value == null) {
-                throw new IllegalStateException(String.format("Could not find environment variable value: %s", key));
-            }
-
-            return value;
-        }
+      
     }
 
     public static class AuthorizePage {
