@@ -24,6 +24,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import rocketboardTests.EndToEndTests;
+import tablero.Repository;
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -59,22 +60,10 @@ public class RocketboardPage {
 
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
-	
-	@FindBy(css="header > div > span:nth-of-type(1) > label > i")
-	WebElement platform;
-	
-	@FindBy(css="header > div > span:nth-of-type(2) > label > i")
-	WebElement dispatcher;
-	
-	@FindBy(css="header > div > span:nth-of-type(3) > label > i")
-	WebElement userAgent;
-	
-	@FindBy(css="header > div > span:nth-of-type(4) > label > i")
-	WebElement pages;
 
-	@FindBy(css="header > div > span:nth-of-type(5) > label > i")
-	WebElement projectIssue;
-	
+	@FindBy(css = "header > div > span > label > i")
+	List<WebElement> repoFilters;
+
 	@FindBy(linkText="Advanced options")
 	WebElement advancedOptions;
 
@@ -91,6 +80,7 @@ public class RocketboardPage {
 		super();
 		this.driver = driver;
 		driver.get(baseUrl);
+
 	}
 
 	/**
@@ -151,42 +141,14 @@ public class RocketboardPage {
 		waitCreatedIssue(titleTxt);
 	}
 
-	public void clickRepo(String[] repoUsed) throws Exception {
-		if (repoUsed[0].contains("all")){
-			checkRepositoryPosition(dispatcher);
-			checkRepositoryPosition(userAgent);
-			checkRepositoryPosition(platform);
-			checkRepositoryPosition(pages);
-			try{
-				checkRepositoryPosition(projectIssue);
-			}
-			catch (org.openqa.selenium.NoSuchElementException e){
-				
-			}
-	
-		}
-		else {
-			waitingLoading();
-			for (int i=0;i<repoUsed.length;i++){
-				if (repoUsed[i].contains("dispatcher")){
-					checkRepositoryPosition(dispatcher);
-				}
-				if (repoUsed[i].contains("userAgent")){
-					checkRepositoryPosition(userAgent);
-				}
-				if (repoUsed[i].contains("platform")){
-					checkRepositoryPosition(platform);
-				}
-				
-				if (repoUsed[i].contains("projectIssue")){
-					checkRepositoryPosition(projectIssue);
-				}
-				
-				if (repoUsed[i].contains("pages")){
-					checkRepositoryPosition(pages);
-				}
-			}
-		}
+	public void clickRepo(String repoKey) throws Exception {
+		waitingLoading();
+		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + label > i"));
+		if (element != null)
+			checkRepositoryPosition(element);
+		else
+			throw new IllegalArgumentException("cant find the repository");
+
 	}
 
 	public boolean isPrivatePresent () {
@@ -215,62 +177,15 @@ public class RocketboardPage {
 	}
 
 	public void uncheckAllRepo(boolean privateRepo) throws InterruptedException{
-		uncheckRepositoryPosition(dispatcher);
-		uncheckRepositoryPosition(userAgent);	
-		uncheckRepositoryPosition(platform);
-		uncheckRepositoryPosition(pages);
-		
-		try {
-			   driver.findElement(By.id("repository-4"));
-			   uncheckRepositoryPosition(projectIssue);			   
-			} 
-		catch (NoSuchElementException e) {
-			  
-			}
-		
-		}
+		for(WebElement repo : repoFilters)
+			uncheckRepositoryPosition(repo);
+
+	}
 
 
-	public boolean isRepoSelected(String repo) throws InterruptedException{
-		boolean retorno = false;		
-
-		if (repo == "platform")
-		{
-			if (driver.findElement(By.id("repository-0")).isSelected())
-				retorno = true; 
-			else retorno = false;
-		}
-
-		else if (repo == "dispatcher")
-		{
-			if (driver.findElement(By.id("repository-1")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-
-		else if (repo == "userAgent")
-		{
-			if (driver.findElement(By.id("repository-2")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-		
-		else if (repo == "pages")
-		{
-			if (driver.findElement(By.id("repository-3")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-		
-		else if (repo == "projectIssue")
-		{
-			if (driver.findElement(By.id("repository-4")).isSelected())
-				retorno = true;
-			else retorno = false;	
-		}
-
-		return retorno;
-	}	
+	public boolean isRepoSelected(String repoKey) throws InterruptedException{
+		return driver.findElement(By.cssSelector(("input[repo='"+repoKey+"']"))).isSelected();
+	}
 
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
 		WebDriverWait wait = new WebDriverWait(this.driver, 30);

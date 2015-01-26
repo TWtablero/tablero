@@ -82,7 +82,7 @@ public abstract class AbstractRocketboardTests {
         return repos.get(RandomUtils.nextInt(0,repos.size()-1));
     }
 
-    private List<Repository> getRepos(){
+    protected List<Repository> getRepos(){
         ArrayList<Repository> repos = new ArrayList<Repository>();
         String reposFull = getEnv("REPOS");
         if(!reposFull.isEmpty()) {
@@ -92,7 +92,7 @@ public abstract class AbstractRocketboardTests {
                         key = name.toLowerCase().replace('/', '_');
 
                 String gitHubApiPrefix = "https://api.github.com/repos/";
-                repos.add(new Repository(gitHubApiPrefix + name,name));
+                repos.add(new Repository(gitHubApiPrefix + name,name,key));
             };
         }
         return repos;
