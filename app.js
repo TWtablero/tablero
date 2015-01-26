@@ -3,12 +3,13 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var app = express();
+var _ = require('underscore');
 var configServer = require('./config/server.js');
 var configClient = require('./config/client.js');
 
 app.use(sass.middleware({
   src: __dirname + '/app',
-  debug: true
+  debug: false
 }));
 
 app.use(express.static('app'));
@@ -29,7 +30,6 @@ app.get('/request_code', function (req, res) {
 });
 
 app.get('/request_auth_token', function (req, res) {
-  console.log('==== /request_auth_token ====');
   var getAuthTokenUrl = 'https://github.com/login/oauth/access_token?' +
     'client_id=' + configServer.clientId +
     '&client_secret=' + configServer.clientSecret +
@@ -41,9 +41,6 @@ app.get('/request_auth_token', function (req, res) {
 
   var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
   var showPrivateRepo = url.parse(fakeUrl,true).query['scope'] === 'repo';
-
-  console.log('got auth token: ');
-  console.log(url.parse(fakeUrl, true));
 
 
   res.redirect('/?private_repo='+showPrivateRepo + '#' + url.parse(fakeUrl, true).query['access_token']);

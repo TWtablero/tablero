@@ -78,17 +78,19 @@
      this.getIssuesFromProjects = function (projects) {
       var allIssues = [];
 
-      _.each(projects, function(project,index) {
-        var issuesArrayJson = project.repo[0] || [];
-
-        _.each(issuesArrayJson, function(issue,index) {
-          issue.projectName = project.projectName;
-          issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-          allIssues.push(issue);
+      _.filter(projects, function(project){return project.issues}).
+        forEach(function(project,index) {
+          var issuesArrayJson = project.issues[0] || [];
+          
+          _.each(project.issues, function(issue,index) {
+            issue.projectName = project.projectName;
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+            allIssues.push(issue);
+          }.bind(this));
+          
         }.bind(this));
+        return allIssues;
 
-      }.bind(this));
-      return allIssues;
     };
 
     this.getRepoURLFromIssue = function(issueUrl){
@@ -103,19 +105,21 @@
       $(document).trigger('ui:blockUI');
 
 
-
       data.page = ('page' in data) ? (data.page + 1) : 1;
+
+
+
 
       var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
       var queries = _(issuesPromises).map(function(v,k) {return v;});
       var names = _(issuesPromises).map(function(v,k) {return k;});
       $.when.apply(this, queries).done(
         function () {
-          var issuesResults = arguments;
+          var issuesResults = names.length > 1 ? arguments : [arguments];
           var projects = _(names).map(function(name, idx) {
             return {
               'projectName': name,
-              'repo': issuesResults[idx]
+              'issues': issuesResults[idx]
             }
           });
 
@@ -133,16 +137,16 @@
           }
 
           if (issuesFromProjects.length > 0) {
+           this.trigger('ui:needs:issues', data);
+         } else {
+          var projectIdentifiers =  { projects :  this.getAllProjectsIdentifiers( _.map(filteredProjects, function(proj) { return proj.projectName;  }))};
+          this.trigger('ui:needs:priority', projectIdentifiers);
+        }
+      }.bind(this)
+      );
+};
 
-            this.trigger('ui:needs:issues', data);
-          } else {
-            this.trigger('ui:needs:priority');
-          }
-        }.bind(this)
-        );
-    };
-
-    this.assignMyselfToIssue = function (ev, assignData) {
+    this.assignMyselfToIssue = function (ev,assignData) {
 
       var user, issue, url;
       if (assignData != undefined) {
@@ -155,7 +159,7 @@
       }
 
       if (!user) {
-        this.trigger(document, 'ui:needs:githubUser', assignData);
+        this.trigger(document, 'ui:needs:githubUser', { data: assignData, callback : this.assignMyselfToIssue , context: this} );
         return;
       }
 
@@ -175,7 +179,7 @@
             popover_confirm = $('<div class="popover-confirm"></div>'),
             popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
             popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
-            pop = $(this.popover({
+            pop = $(that.popover({
               title: '', body: ''
             })).appendTo(issue_header);
 
@@ -220,7 +224,7 @@
       });
     };
 
-    this.unassignMyselfToIssue = function(ev, assignData) {
+    this.unassignMyselfToIssue = function(ev,assignData) {
       var user, issue, url, currentData;
       if (assignData != undefined) {
         user = assignData.user;
@@ -232,7 +236,7 @@
       }
 
       if (!user) {
-        this.trigger(document, 'ui:needs:githubUser', assignData);
+        this.trigger(document, 'ui:needs:githubUser', { data: assignData, callback : this.assignMyselfToIssue , context: this});
         return;
       }
 
@@ -296,19 +300,16 @@
             return;
           }
 
-
-
           url = this.getIssueUrlFromDraggable(ui);
           label = this.parseLabel(event.target.id);
           oldLabel = this.parseLabel(ui.sender[0].id);
           state = this.getState(event.target.className);
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+          $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
           $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
           $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
           $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
-
-
 
           if (label == "4 - Done") {
             this.triggerRocketAnimation();
@@ -369,9 +370,16 @@ this.triggerRocketAnimation = function () {
 };
 
 this.DOMObjectToIssueMovedParam = function(element) {
-  if(element && element.id)
-    return { id : element.id, priority : element.dataset.priority  };
-  return { id : 0, priority : 0};
+     var returnObject = { id : 0 , priority : 0 };
+        if(element && element.id){
+          returnObject.id = element.id;
+          returnObject.priority = element.dataset.priority;
+        }
+        var projectUrl =  $(element).find('.issue-header a')[1];
+        if(projectUrl){
+          returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
+        }
+        return returnObject;
 };
 
 this.parseLabel = function (label) {

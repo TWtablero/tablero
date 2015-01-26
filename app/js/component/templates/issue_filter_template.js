@@ -34,9 +34,8 @@ function (config) {
 
     this.before('initialize', function () {
       this.template = Hogan.compile(
-        '{{^isPrivate}}<span class="filter-repo">{{/isPrivate}}' +
-        '{{#isPrivate}}<span class="filter-repo private-repo">{{/isPrivate}}' +
-
+        '{{^isPrivate}}<span class="filter-repo right">{{/isPrivate}}' +
+        '{{#isPrivate}}<span class="filter-repo private-repo right">{{/isPrivate}}' +
           '<input type="checkbox" id="repository-{{index}}" checked="true" repo="{{name}}">' +
           '<label for="repository-{{index}}"><i class=" icon-eye-open {{colorClass}}"></i> {{name}}</label>' +
         '</span>'
