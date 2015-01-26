@@ -39,6 +39,7 @@ describe("Configurable", function() {
 
   describe("Verify", function() {
     var configurable,
+      questions,
       promptMock;
     beforeEach(function() {
       promptMock = jasmine.createSpy('prompt mock');
@@ -52,6 +53,10 @@ describe("Configurable", function() {
       mockery.registerMock('inquirer', {
         prompt: promptMock
       });
+      questions = [{
+        key: key,
+        description: 'Description'
+      }];
 
       configurable = require('../../lib/configurable')
     });
@@ -59,15 +64,13 @@ describe("Configurable", function() {
       mockery.disable();
     });
 
-    var questions = [{
-      key: key,
-      description: 'Description'
-    }];
 
     describe('when values is not set', function() {
-      it('prompts for value', function() {
+      beforeEach(function() {
         process.stdout.isTTY = true;
+      });
 
+      it('prompts for value', function() {
         configurable.verify(questions, callback);
 
         expect(promptMock).toHaveBeenCalled();
@@ -76,6 +79,28 @@ describe("Configurable", function() {
         expect(args.name).toBe(key);
         expect(args.message).toMatch(/Description/);
       });
+
+      it('requires mandatory values', function() {
+        configurable.verify(questions, callback);
+
+        expect(promptMock).toHaveBeenCalled();
+        var args = promptMock.argsForCall[0][0][0];
+        var validateFunction = args.validate;
+
+        expect(validateFunction()).toBeFalsy();
+        expect(validateFunction(value)).toBeTruthy();
+      })
+
+      it('allows optional values', function() {
+        questions[0].optional = true;
+        configurable.verify(questions, callback);
+
+        expect(promptMock).toHaveBeenCalled();
+        var args = promptMock.argsForCall[0][0][0];
+        var validateFunction = args.validate;
+
+        expect(validateFunction()).toBeTruthy();
+      })
     });
 
     describe('when non TTY', function() {
