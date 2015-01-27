@@ -3,8 +3,12 @@ package rocketboard;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.*;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -12,13 +16,15 @@ import rocketboardPages.GithubCredentials;
 import rocketboardPages.RocketboardPage;
 import tablero.Repository;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractRocketboardTests {
 
-    WebDriver driver;
+    static WebDriver driver;
     public static String baseUrl = "http://localhost:3000/";
     public Boolean issueCreated;
     public Boolean issueModalOpened;
@@ -38,18 +44,22 @@ public abstract class AbstractRocketboardTests {
     /**
      * DriverManager instance
      */
-    private DriverManager managerDriver = new DriverManager();
+    private static DriverManager managerDriver = new DriverManager();
 
-    @Before
-    public void loadDriver() throws Exception {
+    @Rule
+    public ScreenshotTestRule screenshotTestRule = new ScreenshotTestRule();
+
+    @BeforeClass
+    public static void loadDriver() throws Exception{
         managerDriver.loadDriver();
-        this.driver = managerDriver.getDriver();
-        rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
-        PageFactory.initElements(this.driver, (Object) rocketboardPage);
+        driver = managerDriver.getDriver();
     }
+
 
     @Before
     public void accessRepo() throws Exception {
+        rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
+        PageFactory.initElements(this.driver, (Object) rocketboardPage);
         boolean privateRepo = true;
         GithubCredentials credentials = getGithubCredentials();
         List<Repository> repos = getRepos();
@@ -59,8 +69,8 @@ public abstract class AbstractRocketboardTests {
         rocketboardPage.waitingLoading();
     }
 
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
         driver.quit();
     }
 
@@ -98,6 +108,35 @@ public abstract class AbstractRocketboardTests {
         }
         return repos;
 
+    }
+
+
+
+    class ScreenshotTestRule implements MethodRule {
+        public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, final Object o) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    try {
+                        statement.evaluate();
+                    } catch (Throwable t) {
+                        captureScreenshot(frameworkMethod.getName());
+                        throw t; // rethrow to allow the failure to be reported to JUnit
+                    }
+                }
+
+                public void captureScreenshot(String fileName) {
+                    try {
+                        new File("target/surefire-reports/").mkdirs(); // Insure directory is there
+                        FileOutputStream out = new FileOutputStream("target/surefire-reports/screenshot-" + fileName + ".png");
+                        out.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
+                        out.close();
+                    } catch (Exception e) {
+                        // No need to crash the tests if the screenshot fails
+                    }
+                }
+            };
+        }
     }
 
 
