@@ -80,9 +80,9 @@
 
       _.filter(projects, function(project){return project.issues}).
         forEach(function(project,index) {
-          var issuesArrayJson = project.issues[0] || [];
-          
-          _.each(project.issues, function(issue,index) {
+          var issuesArrayJson = project.issues || [];
+
+          _.each(issuesArrayJson, function(issue,index) {
             issue.projectName = project.projectName;
             issue.repoUrl = this.getRepoURLFromIssue(issue.url);
             allIssues.push(issue);
@@ -115,7 +115,8 @@
       var names = _(issuesPromises).map(function(v,k) {return k;});
       $.when.apply(this, queries).done(
         function () {
-          var issuesResults = names.length > 1 ? arguments : [arguments];
+          //var issuesResults = names.length > 1 ? arguments : [arguments];
+          var issuesResults = arguments;
           var projects = _(names).map(function(name, idx) {
             return {
               'projectName': name,
@@ -320,13 +321,14 @@
                 state: "closed"
               })
             });
+          }else{
+            //label Done não é mais postado
+            $.ajax({
+              type: 'POST',
+              url: url + "/labels" + this.getAccessTokenParam(),
+              data: JSON.stringify([label])
+            });
           }
-
-          $.ajax({
-            type: 'POST',
-            url: url + "/labels" + this.getAccessTokenParam(),
-            data: JSON.stringify([label])
-          });
 
           $.ajax({
             type: 'DELETE',
