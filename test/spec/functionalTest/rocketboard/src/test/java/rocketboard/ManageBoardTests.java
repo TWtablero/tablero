@@ -55,7 +55,7 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 	@Test
 	public void toggleBacklog() throws Exception {
 		GithubCredentials credentials = getGithubCredentials();		
-		rocketboardPage.accessRepo(false,credentials.getUserName(),credentials.getPassword());
+		rocketboardPage.accessRepo(true,credentials.getUserName(),credentials.getPassword());
 		
 		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));

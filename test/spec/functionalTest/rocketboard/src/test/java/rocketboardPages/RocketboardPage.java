@@ -543,7 +543,7 @@ public class RocketboardPage {
 		getColumn("backlog").
 				findElement(By.cssSelector(".hide-icon")).
 				click();
-		Thread.sleep(200);
+		Thread.sleep(2000);
 	}
 
 	public WebElement getColumn(String name) {

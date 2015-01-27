@@ -85,8 +85,6 @@ public abstract class AbstractRocketboardTests {
 
     protected List<Repository> getRepos(){
         ArrayList<Repository> repos = new ArrayList<Repository>();
-        Map<String,String> env = System.getenv();
-        System.out.println(env.keySet());
         String reposFull = getEnv("REPOS");
         if(!reposFull.isEmpty()) {
             String[] chunks = reposFull.split(";");
