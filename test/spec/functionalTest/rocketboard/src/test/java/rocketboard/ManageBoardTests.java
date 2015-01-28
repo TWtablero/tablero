@@ -20,9 +20,9 @@ import static org.junit.Assert.assertTrue;
 public class ManageBoardTests extends AbstractRocketboardTests {
 
 
-	@Override
-	public void accessRepo() throws Exception {
-	}
+//	@Override
+//	public void accessRepo() throws Exception {
+//	}
 
 	@Test
 	public void selectingRepository() throws Exception {
@@ -54,9 +54,6 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 
 	@Test
 	public void toggleBacklog() throws Exception {
-		GithubCredentials credentials = getGithubCredentials();		
-		//rocketboardPage.accessRepo(true,credentials.getUserName(),credentials.getPassword());
-		
 		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
