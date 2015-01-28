@@ -43,7 +43,7 @@ public class DriverManager {
 	public void loadDriver(){
 		this.driver = new FirefoxDriver();
 		this.driver.manage().window().maximize();
-		this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	public WebDriver getDriver(){
