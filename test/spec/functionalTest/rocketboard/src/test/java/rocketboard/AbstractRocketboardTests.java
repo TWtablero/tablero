@@ -22,8 +22,8 @@ public abstract class AbstractRocketboardTests {
     public static String baseUrl = "http://localhost:3000/";
     public Boolean issueCreated;
     public Boolean issueModalOpened;
-    public final static String title = "title_" + RandomStringUtils.randomAlphabetic(6);
-    public final static String desc = "desc_" + RandomStringUtils.randomAlphabetic(6);
+    public String title;
+    public String desc;
     public String project;
     boolean privateRepo = true;
 
@@ -42,6 +42,9 @@ public abstract class AbstractRocketboardTests {
 
     @Before
     public void loadDriver() throws Exception {
+        title = "title_" + RandomStringUtils.randomAlphabetic(6);
+        desc = "desc_" + RandomStringUtils.randomAlphabetic(6);
+
         managerDriver.loadDriver();
         this.driver = managerDriver.getDriver();
         rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
