@@ -1,8 +1,7 @@
 define([],
   function () {
 
-
-    var config;
+    var config = { repos : [] , labels : [] } ;
 
 
     var getParameterByName = function(name) {
@@ -10,17 +9,14 @@ define([],
      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
    };
 
-   
-
-
    $.getJSON('/config', function (data) {
-    config = data;
+    config = data || { repos : [] , labels : [] } ;
 
-    if(getParameterByName('private_repo') !== 'true'){
-      delete config.repos['project-issues'];
-      delete config.labels['project-issues'];
-    }
-  });
+      if(getParameterByName('private_repo') !== 'true'){
+        delete config.repos['project-issues'];
+        delete config.labels['project-issues'];
+      }
+    });
 
    return {
     getConfig: function () {

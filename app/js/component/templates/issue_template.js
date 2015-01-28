@@ -56,7 +56,8 @@ define(['config/config_bootstrap'],
           issue.repoName = issue.projectName;
           issue.colorClass = this.getRepoColor(issue.projectName);
           issue.labelsName = this.removeColumnsLabels(issue.labels);
-          issue.kanbanState = this.getColumnLabel(issue.labels)[0].name;
+          var columnLabel = this.getColumnLabel(issue.labels)[0];
+          issue.kanbanState = columnLabel ? columnLabel.name : '';
           renderedIssue = this.template.render(this.clearHuboardInfo(issue));
           return renderedIssue;
         };
