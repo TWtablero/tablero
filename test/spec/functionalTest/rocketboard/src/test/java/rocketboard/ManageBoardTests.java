@@ -19,15 +19,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ManageBoardTests extends AbstractRocketboardTests {
 
-
-//	@Override
-//	public void accessRepo() throws Exception {
-//	}
-
 	@Test
 	public void selectingRepository() throws Exception {
-		super.accessRepo();
-
 		rocketboardPage.waitingLoading();
 		rocketboardPage.uncheckAllRepo(privateRepo);
 
