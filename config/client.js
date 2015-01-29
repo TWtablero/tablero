@@ -1,7 +1,6 @@
 var repos = {};
 var labels = {};
 var env = process.env;
-var configurable = require('../lib/configurable');
 
 function addRepo(name, key, label) {
   env[key] && (repos[name] = env[key]);
@@ -20,8 +19,8 @@ for(i = 0; i < maxDynaReposQuantity; i++) {
   addRepo(env['REPO_' + i + '_NAME'] || i + 'th', 'REPO_' + i + '_URL');
 }
 
-configurable.get('REPOS', function(value) {
-  var chunks = value.split(';');
+if(env.REPOS) {
+  var chunks = env.REPOS.split(';');
   chunks.forEach(function(chunk) {
     var val = chunk,
     nameRegex = /(https:\/\/api\.github\.com\/repos\/)?(.*)/;
@@ -32,7 +31,7 @@ configurable.get('REPOS', function(value) {
     repos[key] = gitHubApiPrefix + name;
     labels[key] = name;
   });
-});
+};
 
 module.exports = {
   repos: repos,
