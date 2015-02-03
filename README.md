@@ -1,9 +1,17 @@
-# Tablero [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
+# TABLERO [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
 
-* [Installation](https://github.com/TWtablero/tablero#installation)
+A kanban board for developers that connects with GitHub projects and synchronizes the issues of multiple repositories and the contributors that are working on them.
+
+* [GitHub Pre Configuration](https://github.com/TWtablero/tablero#github-pre-configuration)
+* [Quick Installation](https://github.com/TWtablero/tablero#quick-installation)
+* [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
 * [Static file server](https://github.com/TWtablero/tablero#static-file-server)
 * [Unit tests](https://github.com/TWtablero/tablero#unit-tests)
 * [Contributing to this project](https://github.com/TWtablero/tablero#contributing-to-this-project)
+
+## GitHub Pre Configuration
+
+Make sure your GitHub repositories have issues's use permission
 
 ## Quick Installation
 
