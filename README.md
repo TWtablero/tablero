@@ -1,14 +1,30 @@
-# Tablero [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
+# TABLERO [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
 
-* [Installation](https://github.com/TWtablero/tablero#installation)
+A kanban board for developers that connects with GitHub projects and synchronizes the issues of multiple repositories and the contributors that are working on them.
+
+IMPORTANT: For the correct operation of the project, make sure your GitHub repositories have issues' use permission
+
+* [Quick Installation](https://github.com/TWtablero/tablero#quick-installation)
+* [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
 * [Static file server](https://github.com/TWtablero/tablero#static-file-server)
 * [Unit tests](https://github.com/TWtablero/tablero#unit-tests)
 * [Contributing to this project](https://github.com/TWtablero/tablero#contributing-to-this-project)
-## Installation
 
-* Install [Node.js](http://nodejs.org/download/)
 
-* Install [Bower](http://bower.io/):
+## Quick Installation
+
+Open a terminal and execute this:
+```
+wget -qO- https://raw.githubusercontent.com/TWtablero/tablero/install_script/install.sh | sh
+```
+
+This script will check if your system satisfies the pre requisites, download tablero and its dependencies and finally start the application
+
+## Manual Installation
+
+* Install [Node.js](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
+
+* Install [Bower](http://bower.io/) running:
 ```
 sudo npm install -g bower
 ```

@@ -77,18 +77,18 @@
 
      this.getIssuesFromProjects = function (projects) {
       var allIssues = [];
-
-      _.each(projects, function(project,index) {
-        var issuesArrayJson = project.repo[0] || [];
-        
-        _.each(issuesArrayJson, function(issue,index) {
-          issue.projectName = project.projectName;
-          issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-          allIssues.push(issue);
+      _.filter(projects, function(project){return project.issues}).
+        forEach(function(project,index) {
+          var issuesArrayJson = project.issues[0] || [];
+          
+          _.each(project.issues, function(issue,index) {
+            issue.projectName = project.projectName;
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+            allIssues.push(issue);
+          }.bind(this));
+          
         }.bind(this));
-        
-      }.bind(this));
-      return allIssues;
+        return allIssues;
     };
 
     this.getRepoURLFromIssue = function(issueUrl){
@@ -105,6 +105,9 @@
 
       data.page = ('page' in data) ? (data.page + 1) : 1;
 
+
+
+
       var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
       var queries = _(issuesPromises).map(function(v,k) {return v;});
       var names = _(issuesPromises).map(function(v,k) {return k;});
@@ -114,7 +117,7 @@
           var projects = _(names).map(function(name, idx) {
             return {
               'projectName': name,
-              'repo': issuesResults[idx]
+              'issues': issuesResults[idx]
             }
           });
 
