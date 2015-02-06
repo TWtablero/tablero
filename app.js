@@ -3,6 +3,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var app = express();
+var cookieParser = require('cookie-parser');
 var configurable = require('./lib/configurable');
 var _ = require('underscore');
 
@@ -10,6 +11,10 @@ var _ = require('underscore');
 var bootstrap = function() {
   var configServer = require('./config/server.js');
   var configClient = require('./config/client.js');
+
+  var oauthUrl = configServer.oauthUrl;
+  var clientId = configServer.clientId;
+  var clientSecret = configServer.clientSecret;
 
   app.use(sass.middleware({
     src: __dirname + '/app',
@@ -21,22 +26,28 @@ var bootstrap = function() {
   var bodyParser = require('body-parser');
   app.use(bodyParser.json());
 
+  app.use(cookieParser());
+
   app.get('/config', function(req, res) {
     res.send(configClient);
   });
 
   app.get('/request_code', function(req, res) {
-    if (req.query.requestPrivateRepositories) {
-      res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=repo');
-    } else {
-      res.redirect('https://github.com/login/oauth/authorize?client_id=' + configServer.clientId + '&scope=public_repo');
+    var authorizeUrl = oauthUrl + '/authorize?client_id=' + clientId;
+
+    var scope = 'public_repo';
+    var privateRepositories = req.query.requestPrivateRepositories || req.cookies.scope == 'repo'
+    if (privateRepositories) {
+      scope = 'repo';
     }
+    res.cookie('scope', scope, { maxAge: 900000 } );
+    res.redirect(authorizeUrl + '&scope=' + scope);
   });
 
   app.get('/request_auth_token', function(req, res) {
-    var getAuthTokenUrl = 'https://github.com/login/oauth/access_token?' +
-      'client_id=' + configServer.clientId +
-      '&client_secret=' + configServer.clientSecret +
+    var getAuthTokenUrl = oauthUrl + '/access_token?' +
+      'client_id=' + clientId +
+      '&client_secret=' + clientSecret +
       '&code=' + req.query.code;
 
     xhr = new XMLHttpRequest();

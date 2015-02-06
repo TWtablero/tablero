@@ -9,6 +9,7 @@
     "hogan": "~3.0.2",
     "underscore": "~1.7.0",
     "jquery-ui": "1.11",
+    "jquery-cookie": "1.4.x",
     "bourbon": "3.2.0",
     "neat": "1.4.0",
     "flight-request": "*",

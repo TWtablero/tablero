@@ -13,34 +13,51 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-define(['flight/lib/component'],
+define([
+  'flight/lib/component',
+  'jquery-cookie/jquery.cookie'
+  ],
 	function (defineComponent) {
 		'use strict';
 		return defineComponent(permissionsGateway);
 
 		function permissionsGateway() {
-			
-
+      var that = this;
 			this.defaultAttrs({
 
 			});
 
-			this.showPublic = function() { 
-				console.log('perdindo permissao no repositorio no publico');
-    			window.location.replace('/request_code');
+      this.showRepository = function(configs) {
+        console.log('pedindo permissao nos repositorios ' + configs.repositories);
+        window.location.replace('/request_code' + (configs.params || ''));
+      };
+
+			this.showPublic = function() {
+        that.showRepository({
+          repositories: 'publico e privado'
+        })
 			};
 
-			this.showPublicAndPrivate = function() { 
-				console.log('pedindo permissao nos repositorios publico e privado');
-    			window.location.replace('/request_code?requestPrivateRepositories=true');
+			this.showPublicAndPrivate = function() {
+        that.showRepository({
+          repositories: 'publico e privado',
+          params: '?requestPrivateRepositories=true'
+        })
 			};
-
 
 			this.showModal = function() {
-				this.$node.modal({
-					backdrop: 'static',
-					keyboard: false
-				});
+        var already_selected_scope = $.cookie('scope');
+        if(!already_selected_scope) {
+          this.$node.modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+        }
+        else {
+          this.showRepository({
+            repositories: already_selected_scope
+          });
+        }
 			};
 
 			this.setUp = function() {
