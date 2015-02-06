@@ -81,9 +81,9 @@ install() {
   info "Installing tablero dependencies"
   has_and_notify "make"
   has_and_notify "gcc"
-  cd $TARGET && 
+  cd $TARGET &&
     (sudo npm install -g bower &&
-      npm install --production) ||
+      npm install) ||
     (error 'Something went wrong while installing tablero dependencies :(';
       false)
 }
