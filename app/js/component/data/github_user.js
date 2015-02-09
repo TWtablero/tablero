@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- define(['flight/lib/component', 'component/mixins/with_auth_token_from_hash'],
+ define([
+   'flight/lib/component',
+   'component/mixins/with_auth_token_from_hash',
+  'jquery-cookie/jquery.cookie'
+  ],
   function (defineComponent, withAuthTokeFromHash) {
     return defineComponent(githubUser, withAuthTokeFromHash);
 
@@ -22,10 +26,13 @@
         var token = this.getCurrentAuthToken();
 
         if(!token){
-          $(document).trigger('ui:show:permissionsModal');
-    			//window.location.replace("/request_code");
+          var selectedAccess = $.cookie('access');
+          if(selectedAccess) {
+            $(document).trigger('ui:show:permissionSelected', selectedAccess);
+          } else {
+            $(document).trigger('ui:show:permissionsModal');
+          }
     		} else {
-
           $.getJSON('https://api.github.com/user', {access_token: token}, function (userData, textStatus, request) {
             var newData = _.clone(previousData.data);
             if (newData != undefined) {
@@ -33,10 +40,8 @@
             }
 
             if(previousData.callback){
-              previousData.callback.call(previousData.context,ev,newData);
+              previousData.callback.call(previousData.context, ev, newData);
             }
-            //this.trigger(document,'data:githubUser:here', newData);
-
           }.bind(this));
         }
       };

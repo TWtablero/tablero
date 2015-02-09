@@ -10,13 +10,13 @@ define([],
      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
    };
 
-   
+
 
 
    $.getJSON('/config', function (data) {
     config = data;
 
-    if(getParameterByName('private_repo') !== 'true'){
+    if(getParameterByName('access') !== 'repo'){
       delete config.repos['project-issues'];
       delete config.labels['project-issues'];
     }

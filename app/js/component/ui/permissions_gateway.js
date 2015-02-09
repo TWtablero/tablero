@@ -14,8 +14,7 @@
 * limitations under the License.
 */
 define([
-  'flight/lib/component',
-  'jquery-cookie/jquery.cookie'
+  'flight/lib/component'
   ],
 	function (defineComponent) {
 		'use strict';
@@ -27,48 +26,44 @@ define([
 
 			});
 
-      this.showRepository = function(configs) {
-        console.log('pedindo permissao nos repositorios ' + configs.repositories);
-        window.location.replace('/request_code' + (configs.params || ''));
+      this.showRepository = function(repository) {
+        console.log('pedindo permissao nos repositorios "' + repository + '"');
+        window.location.replace('/request_code?access=' + (repository || ''));
       };
 
 			this.showPublic = function() {
-        that.showRepository({
-          repositories: 'publico e privado'
-        })
+        that.showRepository('public_repo');
 			};
 
 			this.showPublicAndPrivate = function() {
-        that.showRepository({
-          repositories: 'publico e privado',
-          params: '?requestPrivateRepositories=true'
-        })
+        that.showRepository('repo');
 			};
 
 			this.showModal = function() {
-        var already_selected_scope = $.cookie('scope');
-        if(!already_selected_scope) {
-          this.$node.modal({
-            backdrop: 'static',
-            keyboard: false
-          });
-        }
-        else {
-          this.showRepository({
-            repositories: already_selected_scope
-          });
-        }
+        this.$node.modal({
+          backdrop: 'static',
+          keyboard: false
+        });
 			};
+
+      this.triggerPermissionModal = function() {
+        $(document).trigger('ui:show:permissionsModal');
+      };
+
+      this.changesSelectedAccess = function(selectedAccess) {
+        this.showRepository(selectedAccess);
+      }.bind(this);
 
 			this.setUp = function() {
 				$('#showPublicBtn').click(this.showPublic);
 				$('#showPublicAndPrivateBtn').click(this.showPublicAndPrivate);
+        $('#changeAccess').click(this.triggerPermissionModal);
 			};
 
 			this.after('initialize', function () {
 				this.setUp();
-				this.on(document,'ui:show:permissionsModal', this.showModal);
+				this.on(document, 'ui:show:permissionsModal', this.showModal.bind(this));
+        this.on(document, 'ui:show:permissionSelected', this.changesSelectedAccess);
 			});
-
 		}
 	});

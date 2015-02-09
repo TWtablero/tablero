@@ -35,13 +35,10 @@ var bootstrap = function() {
   app.get('/request_code', function(req, res) {
     var authorizeUrl = oauthUrl + '/authorize?client_id=' + clientId;
 
-    var scope = 'public_repo';
-    var privateRepositories = req.query.requestPrivateRepositories || req.cookies.scope == 'repo'
-    if (privateRepositories) {
-      scope = 'repo';
-    }
-    res.cookie('scope', scope, { maxAge: 900000 } );
-    res.redirect(authorizeUrl + '&scope=' + scope);
+    var access = req.query.access || req.cookies.access || 'public_repo';
+
+    res.cookie('access', access, { maxAge: 900000 } );
+    res.redirect(authorizeUrl + '&scope=' + access);
   });
 
   app.get('/request_auth_token', function(req, res) {
@@ -55,10 +52,9 @@ var bootstrap = function() {
     xhr.send();
 
     var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
-    var showPrivateRepo = url.parse(fakeUrl, true).query['scope'] === 'repo';
+    var repositoryAccess = url.parse(fakeUrl, true).query['scope'];
 
-
-    res.redirect('/?private_repo=' + showPrivateRepo + '#' + url.parse(fakeUrl, true).query['access_token']);
+    res.redirect('/?access=' + repositoryAccess + '#' + url.parse(fakeUrl, true).query['access_token']);
   });
 
   require('./lib/priorization')(app, {
