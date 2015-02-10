@@ -23,6 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import rocketboard.EndToEndTests;
+import rocketboardPages.GitHub.AuthorizePage;
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -74,6 +75,9 @@ public class RocketboardPage {
 	@FindBy(id = "showPublicAndPrivateBtn")
 	WebElement btAllRepo;
 
+	@FindBy(id = "changeAccess")
+	WebElement btChangeAccess;
+
 	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
 		this.driver = driver;
@@ -111,6 +115,14 @@ public class RocketboardPage {
 		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
+	}
+
+	/**
+	 * click at element CHANGE ACCESS
+	 */
+	public void openChangeAccess() throws InterruptedException {
+		waitingObject(btChangeAccess);
+		btChangeAccess.click();
 	}
 
 	/**
@@ -570,19 +582,12 @@ public class RocketboardPage {
 
 	}
 
-	public boolean accessRepo(boolean privateRepo, String userNameGithub, String passwordGithub) {
+	public boolean accessRepo(boolean privateRepo, String usernameGithub, String passwordGithub) {
 		boolean permission = false;
 		
-		if (privateRepo == false) { 
-			btPublicRepo.click();
-		}
-		
-		else {
-			btAllRepo.click();
-		}
+		selectRepositoryAccess(privateRepo);
 
-		PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
-				login(userNameGithub,passwordGithub).
+		authenticate(usernameGithub, passwordGithub).
 				authorizeIfNeeded();
 
 		try {
@@ -603,8 +608,28 @@ public class RocketboardPage {
 
 		return permission;
 	}
+
+	private AuthorizePage authenticate(String userNameGithub,
+			String passwordGithub) {
+		return PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
+				login(userNameGithub,passwordGithub);
+	}
+
+	public void selectRepositoryAccess(boolean privateRepo) {
+		if (privateRepo == false) { 
+			btPublicRepo.click();
+		}
+		
+		else {
+			btAllRepo.click();
+		}
+	}
 	
-	  protected static String getEnv(String key) {
+	  public void selectAccessToPublicReposOnly() {
+		selectRepositoryAccess(false);
+	}
+
+	protected static String getEnv(String key) {
           String value = System.getenv(key);
 
           if(value == null) {

@@ -1,6 +1,12 @@
 package rocketboard;
 
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.After;
@@ -11,10 +17,6 @@ import org.openqa.selenium.support.PageFactory;
 import rocketboardPages.GithubCredentials;
 import rocketboardPages.RocketboardPage;
 import tablero.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractRocketboardTests {
 
@@ -56,7 +58,7 @@ public abstract class AbstractRocketboardTests {
         boolean privateRepo = true;
         GithubCredentials credentials = getGithubCredentials();
         List<Repository> repos = getRepos();
-        org.junit.Assert.assertTrue("there isnt any configured repos ",repos.size() > 0);
+        assertThat("there isnt any configured repos ", repos.size(), greaterThan(0));
 
         rocketboardPage.accessRepo(privateRepo, credentials.getUserName(), credentials.getPassword());
         rocketboardPage.waitingLoading();
