@@ -4,7 +4,6 @@ REPO="https://github.com/TWtablero/tablero/"
 BRANCH="master"
 ARCHIVE="$REPO/tarball/${BRANCH}"
 TARGET="tablero"
-INTERACTIVE=$([ -t 0 ] && echo 'true' || echo 'false')
 
 NC='\033[0m'
 error() {
@@ -45,20 +44,8 @@ pkg_manager() {
   done
 }
 
-update_manager() {
-  case $(pkg_manager) in
-    apt-get) apt-get update -qqy ;;
-    aptitude) aptitude -y update ;;
-    brew) brew update ;;
-    pacman) pacman --sync --refresh ;;
-    yum) true ;;
-    pkg_add) true ;;
-    *)
-  esac
-}
-
 install_pkgs() {
-  info "Installing $1 using $(pkg_manager)" 
+  info "Installing $1 using $(pkg_manager)"
   case $(pkg_manager) in
     brew) brew install $1 ;;
     apt-get) sudo apt-get install -qqy $1 ;;
@@ -71,9 +58,9 @@ install_pkgs() {
 }
 
 check() {
-  has_and_notify "node"||  
+  has_and_notify "node"||
     (error "Tablero requires node.js, please install it and run this script again.";
-     info "Instructions to install node.js on https://github.com/joyent/node/wiki/installing-node.js-via-package-manager"; 
+     info "Instructions to install node.js on https://github.com/joyent/node/wiki/installing-node.js-via-package-manager";
      false) &&
     (has_and_notify "npm" || error "Could not find npm!")
 }
@@ -83,7 +70,7 @@ download() {
     (info "Cloning repository" &&
       has_and_notify "git" && git clone $REPO --branch $BRANCH --single-branch $TARGET) ||
     (info "Trying to download"
-      has_and_notify "tar" && 
+      has_and_notify "tar" &&
       has_and_notify "wget" &&
       mkdir $TARGET &&
       wget -qO- $ARCHIVE | tar --strip=1 -C $TARGET -zxf -) ||
@@ -94,9 +81,9 @@ install() {
   info "Installing tablero dependencies"
   has_and_notify "make"
   has_and_notify "gcc"
-  cd $TARGET && 
+  cd $TARGET &&
     (sudo npm install -g bower &&
-      npm install --production) ||
+      npm install) ||
     (error 'Something went wrong while installing tablero dependencies :(';
       false)
 }
@@ -107,7 +94,7 @@ start() {
 }
 
 welcome
-check && 
+check &&
   download &&
-  install && 
+  install &&
   start
