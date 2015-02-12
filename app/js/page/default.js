@@ -39,7 +39,7 @@
       newIssue.attachTo('#myModal');
       permissionsGateway.attachTo('#permissionsGateway');
 		
-	  $.blockUI.defaults.message = '<h'+'1 id="load'+'ing" class="load'+'ing">Please '+'wait...</h'+'1>';
+	  $.blockUI.defaults.message = '<h2 id="loading" class="loading">Please wait...</h2>';
 	  $.blockUI.defaults.ignoreIfBlocked = true;
 	  $(document).ajaxStop($.unblockUI);
 			
