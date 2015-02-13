@@ -15,7 +15,7 @@ IMPORTANT: For the correct operation of the project, make sure your GitHub repos
 
 Open a terminal and execute this:
 ```
-wget -qO- https://raw.githubusercontent.com/TWtablero/tablero/install_script/install.sh | sh
+wget -qO- https://raw.githubusercontent.com/TWtablero/tablero/master/install.sh | sh
 ```
 
 This script will check if your system satisfies the pre requisites, download tablero and its dependencies and finally start the application
