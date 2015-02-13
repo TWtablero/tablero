@@ -17,15 +17,13 @@ header {
 		font-size: 0.9em;
 		margin-top: 0.7em;
 		margin-right: 2em;
-		display: inline-block;
 		margin-left: 0.1em;
-		max-width: 400px;
+    width: 391px;
 	}
 
 	.filter-repo {
 		display: inline-block;
-		width: 200px;
-    height: 20px;
+    min-width: 130px;
 		color: white;
 		cursor: pointer;
 		margin-bottom: 10px;
