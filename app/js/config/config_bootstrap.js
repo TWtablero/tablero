@@ -12,11 +12,11 @@ define([],
    $.getJSON('/config', function (data) {
     config = data || { repos : [] , labels : [] } ;
 
-      if(getParameterByName('private_repo') !== 'true'){
-        delete config.repos['project-issues'];
-        delete config.labels['project-issues'];
-      }
-    });
+    if(getParameterByName('access') !== 'repo'){
+      delete config.repos['project-issues'];
+      delete config.labels['project-issues'];
+    }
+  });
 
    return {
     getConfig: function () {

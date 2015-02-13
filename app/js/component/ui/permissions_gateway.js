@@ -13,45 +13,57 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-define(['flight/lib/component'],
+define([
+  'flight/lib/component'
+  ],
 	function (defineComponent) {
 		'use strict';
 		return defineComponent(permissionsGateway);
 
 		function permissionsGateway() {
-			
-
+      var that = this;
 			this.defaultAttrs({
 
 			});
 
-			this.showPublic = function() { 
-				console.log('perdindo permissao no repositorio no publico');
-    			window.location.replace('/request_code');
+      this.showRepository = function(repository) {
+        console.log('pedindo permissao nos repositorios "' + repository + '"');
+        window.location.replace('/request_code?access=' + (repository || ''));
+      };
+
+			this.showPublic = function() {
+        that.showRepository('public_repo');
 			};
 
-			this.showPublicAndPrivate = function() { 
-				console.log('pedindo permissao nos repositorios publico e privado');
-    			window.location.replace('/request_code?requestPrivateRepositories=true');
+			this.showPublicAndPrivate = function() {
+        that.showRepository('repo');
 			};
-
 
 			this.showModal = function() {
-				this.$node.modal({
-					backdrop: 'static',
-					keyboard: false
-				});
+        this.$node.modal({
+          backdrop: 'static',
+          keyboard: false
+        });
 			};
+
+      this.triggerPermissionModal = function() {
+        $(document).trigger('ui:show:permissionsModal');
+      };
+
+      this.changesSelectedAccess = function(selectedAccess) {
+        this.showRepository(selectedAccess);
+      }.bind(this);
 
 			this.setUp = function() {
 				$('#showPublicBtn').click(this.showPublic);
 				$('#showPublicAndPrivateBtn').click(this.showPublicAndPrivate);
+        $('#changeAccess').click(this.triggerPermissionModal);
 			};
 
 			this.after('initialize', function () {
 				this.setUp();
-				this.on(document,'ui:show:permissionsModal', this.showModal);
+				this.on(document, 'ui:show:permissionsModal', this.showModal.bind(this));
+        this.on(document, 'ui:show:permissionSelected', this.changesSelectedAccess);
 			});
-
 		}
 	});

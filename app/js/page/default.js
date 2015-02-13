@@ -24,10 +24,6 @@
     'component/ui/new_issue',
     'component/ui/permissions_gateway',
     'component/mixins/with_auth_token_from_hash',
-
-    // 'jquery',
-    // 'blockUI'
-
   ],
   function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway, authToken) {
     'use strict';
@@ -38,11 +34,11 @@
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
       permissionsGateway.attachTo('#permissionsGateway');
-		
-	  $.blockUI.defaults.message = '<h2 id="loading" class="loading">Please wait...</h2>';
-	  $.blockUI.defaults.ignoreIfBlocked = true;
-	  $(document).ajaxStop($.unblockUI);
-			
+
+      $.blockUI.defaults.message = '<h2 id="loading" class="loading">Please wait...</h2>';
+      $.blockUI.defaults.ignoreIfBlocked = true;
+      $(document).ajaxStop($.unblockUI);
+
       githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
@@ -73,28 +69,25 @@
         $('.backlog-sidebar').toggle('slide');
       });
 
-    var mountBoard = function(){
-      $(document).trigger('ui:needs:issues', {});
-      $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-      $(document).trigger('ui:draggable');
-    };
+      var mountBoard = function(){
+        $(document).trigger('ui:needs:issues', {});
+        $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
+        $(document).trigger('ui:draggable');
+      };
 
-    $(document).trigger('ui:needs:githubUser',{ callback : mountBoard } );
-
-
-    $(document).on('ui:show:messageFailConnection', function(event){
-      $.unblockUI();
-      $('#failConnectionModal').modal('toggle');
-    });
-
-    $('#redirectToPublicBtn').click(function(){
-      var token = window.location.hash.slice(1);
-
-      window.location = '/?private_repo=false#'+token;
-    }.bind(this));
+      $(document).trigger('ui:needs:githubUser', { callback : mountBoard });
 
 
-  }
+      $(document).on('ui:show:messageFailConnection', function(event){
+        $.unblockUI();
+        $('#failConnectionModal').modal('toggle');
+      });
 
-});
+      $('#redirectToPublicBtn').click(function(){
+        var token = window.location.hash.slice(1);
+
+        window.location = '/?access=repo#'+token;
+      }.bind(this));
+    }
+  });
 

@@ -23,22 +23,17 @@ public class GitHub {
         @FindBy(name = "commit")
         WebElement submit;
      
-
 		public AuthenticatePage(WebDriver driver) {
             this.driver = driver;
         }
 
         public AuthorizePage login(String usernameGithub, String passwordGithub) {
-//            username.sendKeys(getEnv("TABLERO_TEST_USER"));
-//            password.sendKeys(getEnv("TABLERO_TEST_PASS"));
             username.sendKeys(usernameGithub);
             password.sendKeys(passwordGithub);
             submit.click();
 
             return PageFactory.initElements(driver, AuthorizePage.class);
-        }
-
-      
+		}
     }
 
     public static class AuthorizePage {
@@ -51,14 +46,25 @@ public class GitHub {
         public void authorizeIfNeeded(){
             try {
                 authorize();
-            } catch (NoSuchElementException e) {
-                //No authorization required
+			} catch (NoSuchElementException notAuthorizationRequired) {
             }
         }
 
+		public boolean isAuthorizePage() {
+			try {
+				getAuthorizeButton();
+				return true;
+			} catch (NoSuchElementException e) {
+				return false;
+			}
+		}
+
         private void authorize() {
-            driver.findElement(By.name("authorize"))
-                    .click();
+			getAuthorizeButton().click();
         }
+
+		private WebElement getAuthorizeButton() {
+			return driver.findElement(By.name("authorize"));
+		}
     }
 }

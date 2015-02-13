@@ -6,14 +6,8 @@ define(['config/config_bootstrap'],
         var repos = config.getRepos();
 
         return _.object(_(repos).map(function (url, name) {
-          
-          var private_repo = window.location.search.slice(14) == "true";
-
-
-
+          var private_repo = window.location.search.slice(14) == "repo";
           var request = $.getJSON(this.repoIssuesURL(url, page));
-        
-
           var hasData = $.Deferred();
 
           var request2 = $.ajax( {dataType: "json",
@@ -33,10 +27,10 @@ define(['config/config_bootstrap'],
             }.bind(this));
 
             return [name, hasData.promise() ];
-          }.bind(this)));  
+          }.bind(this)));
 
       }
-      
+
 
       this.defaultOptions = function () {
         return "per_page=100&state=all&";
@@ -63,7 +57,7 @@ define(['config/config_bootstrap'],
         return repositoryURL.replace("api.github.com/repos", "github.com") + "/issues/new";
       };
 
-      this.getURLFromProject = function (projectName) { 
+      this.getURLFromProject = function (projectName) {
         return config.getConfig().repos[projectName] || "not found";
       };
 
@@ -79,7 +73,7 @@ define(['config/config_bootstrap'],
 
 
 
-      this.getAllProjectsIdentifiers = function(projectNames) { 
+      this.getAllProjectsIdentifiers = function(projectNames) {
         var projectUrls = _.map(projectNames, this.getURLFromProject);
 
         return _.map(projectUrls,this. getProjectIdentifier);
