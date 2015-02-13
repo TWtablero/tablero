@@ -50,7 +50,7 @@ define([
         $(document).trigger('ui:show:permissionsModal');
       };
 
-      this.changesSelectedAccess = function(selectedAccess) {
+      this.changesSelectedAccess = function(event, selectedAccess) {
         this.showRepository(selectedAccess);
       }.bind(this);
 
