@@ -1,57 +1,60 @@
 header {
-	background: url('/img/back.png');
-	height: 78px;
+  background: url('/img/back.png');
+  height: 70px;
 
-	.logo {
-		padding: 1.0em;
-		padding-left: 1.25em;
-	}
+  .logo {
+    padding: 1.0em;
+    padding-left: 1.25em;
+  }
 
-	button.btn-success, a.btn-success {
-		margin-right: 2em;
-		margin-top: 1.5em;
-	}
+  button.btn-success, a.btn-success {
+    margin-right: 1em;
+    margin-top: 1.5em;
+    display: inline-block;
+  }
 
-	.filter-container {
-		font-size: 0.9em;
-		margin-top: 0.9em;
-    width: 50%;
-	}
+  .filter-container {
+    font-size: 0.9em;
+    margin-top: 0.7em;
+    margin-right: 2em;
+    margin-left: 0.1em;
+    width: 391px;
+  }
 
-	.filter-repo {
-		display: inline-block;
-		width: 32%;
-		color: white;
-		cursor: pointer;
-		margin-bottom: 10px;
+  .filter-repo {
+    display: inline-block;
+    min-width: 130px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
 
-		label {
-			cursor: pointer;
-		}
+    label {
+      cursor: pointer;
+    }
 
-		i {
-			margin-right: 3px;
-			background: #6a6a6a;
-			padding: 5px;
-			border-radius: 3px;
-			font-size: 1em;
-			color: #777;
-		}
+    i {
+      margin-right: 3px;
+      background: #6a6a6a;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 1em;
+      color: #777;
+    }
 
-		input[type="checkbox"] {
-			display: none;
-		}
+    input[type="checkbox"] {
+      display: none;
+    }
 
-		input[type="checkbox"]:checked + label {
-			i {
-				color: white;
-				@each $color in $repo-colors {
-					$i: index($repo-colors, $color) - 1;
-					&.color#{$i} {
-						background-color: $color;
-					}
-				}
-			}
-		}
-	}
+    input[type="checkbox"]:checked + label {
+      i {
+        color: white;
+        @each $color in $repo-colors {
+          $i: index($repo-colors, $color) - 1;
+          &.color#{$i} {
+            background-color: $color;
+          }
+        }
+      }
+    }
+  }
 }

@@ -1,8 +1,7 @@
 define([],
   function () {
 
-
-    var config;
+    var config = { repos : [] , labels : [] } ;
 
 
     var getParameterByName = function(name) {
@@ -10,11 +9,8 @@ define([],
      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
    };
 
-
-
-
    $.getJSON('/config', function (data) {
-    config = data;
+    config = data || { repos : [] , labels : [] } ;
 
     if(getParameterByName('access') !== 'repo'){
       delete config.repos['project-issues'];

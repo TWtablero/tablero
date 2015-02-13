@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link href='http://fonts.googleapis.com/css?family=Teko:300,400,500,600,700|Anton' rel='stylesheet' type='text/css'>
   </head>
   <body role="document">
     <header>
-      <img class="logo" src="/img/TABLERO.png" />
-
+      <h1>TABLERO</h1>
       <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
               + CREATE ISSUE
       </button>
@@ -46,7 +46,6 @@
       </div>
     </div>
     <div class="container">
-
        <div class="column backlog-sidebar" style="display:none">
 
           <div class="panel-heading">
@@ -70,8 +69,9 @@
                 <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
             </span>
           </div>
-          <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
-
+          <div class="cards-place">
+            <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
+          </div>
 
         </div>
       </div>
@@ -81,19 +81,25 @@
       <div class="column">
         <div class="panel panel-default">
           <div class="panel-heading ready-header"><h3>Ready</h3><span class="issues-count"></div>
-          <div class="panel-body issue-track ready list-group" id="1-ready"> </div>
+          <div class="cards-place">
+            <div class="panel-body issue-track ready list-group" id="1-ready"> </div>
+          </div>
         </div>
       </div>
       <div class="column">
         <div class="panel panel-default">
           <div class="panel-heading development-header"><h3>Development</h3><span class="issues-count"></div>
-          <div class="panel-body issue-track development list-group" id="2-development"> </div>
+          <div class="cards-place">
+            <div class="panel-body issue-track development list-group" id="2-development"> </div>
+          </div>
         </div>
       </div>
       <div class="column">
         <div class="panel panel-default">
           <div class="panel-heading quality-assurance-header"><h3>QA</h3><span class="issues-count"></div>
-          <div class="panel-body issue-track quality-assurance list-group" id="3-quality-assurance"> </div>
+          <div class="cards-place">
+            <div class="panel-body issue-track quality-assurance list-group" id="3-quality-assurance"> </div>
+          </div>
         </div>
       </div>
       <div class="column">

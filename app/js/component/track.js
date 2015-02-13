@@ -27,8 +27,39 @@
       });
 
       this.isIssueOnThisTrack = function (issue) {
+        var allowedTags = [
+          '0 - Backlog',
+          '1 - Ready',
+          '2 - Development',
+          '3 - Quality Assurance',
+          '4 - Done'
+        ];
 
-        return issue.labels && issue.labels[0] != undefined && issue.labels[0].name === this.attr.trackType;
+
+        var customName;
+        if (issue.state === "open"){
+          if (issue.labels.length === 0){
+              customName = "0 - Backlog";
+          } else {
+              var allowed = _.find(issue.labels, function(value, key, list){
+                  return _.contains(allowedTags, value.name);
+              });
+              if(allowed){
+                customName = allowed.name;
+              } else {
+                customName = '0 - Backlog';
+              }
+          }
+        } else if ( issue.state === "closed"){
+          customName = "4 - Done";
+        }
+
+        if(issue.labels.length === 0){
+          issue.labels.push({ name : customName});
+        }
+
+        return customName === this.attr.trackType;
+
       };
 
       this.filterAndReorderIssues = function (issues) {
