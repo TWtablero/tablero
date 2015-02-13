@@ -28,7 +28,7 @@
         if(!token){
           var selectedAccess = $.cookie('access');
           if(selectedAccess) {
-            $(document).trigger('ui:show:permissionSelected', selectedAccess);
+            $(document).trigger('ui:show:permissionSelected', [selectedAccess]);
           } else {
             $(document).trigger('ui:show:permissionsModal');
           }
