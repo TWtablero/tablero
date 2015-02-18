@@ -37,7 +37,7 @@ var bootstrap = function() {
 
     var access = req.query.access || req.cookies.access || 'public_repo';
 
-    res.cookie('access', access, { maxAge: 900000 } );
+    res.cookie('access', access, { expires: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000)) } );
     res.redirect(authorizeUrl + '&scope=' + access);
   });
 
