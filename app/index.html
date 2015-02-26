@@ -17,6 +17,7 @@
       </button>
       <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
       <a id="changeAccess" class="btn btn-success btn-xs right" href="javascript:void(0)">CHANGE ACCESS</a>
+      <a id="changeColumns" class="btn btn-success btn-xs right" href="javascript:void(0)">COLUMNS</a>
       <div id="filters" class="filter-container right">
       </div>
     </header>
@@ -137,7 +138,24 @@
       </div>
     </div>
 
-
+    <!-- Modal with columns creation and ordernation -->
+    <div class="modal fade" id="columnsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Tablero Columns</h4>
+          </div>
+          <div class="modal-body">
+            <p> Create the columns for your board and order them </p>
+            <ul class="columns-container"></ul>
+            <a href="javascript:void(0);" id="addColumn"> + Column </a>
+            <br>
+            <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-xs" id="saveColumnsChanges">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Modal about error to get issues -->
 

@@ -24,8 +24,20 @@
     'component/ui/new_issue',
     'component/ui/permissions_gateway',
     'component/mixins/with_auth_token_from_hash',
+    'component/ui/columns_modal',
+    'component/data/columns_manager'
   ],
-  function (githubUser, githubIssues, track, issuesExporter, prioritizationManager, issuesFilter, newIssue, permissionsGateway, authToken) {
+  function (githubUser,
+            githubIssues,
+            track,
+            issuesExporter,
+            prioritizationManager,
+            issuesFilter,
+            newIssue,
+            permissionsGateway,
+            authToken,
+            columnsModal,
+            columnsManager) {
     'use strict';
 
     return initialize;
@@ -34,6 +46,7 @@
       issuesFilter.attachTo($('#filters'));
       newIssue.attachTo('#myModal');
       permissionsGateway.attachTo('#permissionsGateway');
+      columnsModal.attachTo('#columnsModal');
 
       $.blockUI.defaults.message = '<h2 id="loading" class="loading">Please wait...</h2>';
       $.blockUI.defaults.ignoreIfBlocked = true;
@@ -43,6 +56,7 @@
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
       prioritizationManager.attachTo(document);
+      columnsManager.attachTo(document);
 
       track.attachTo('.issue-track.backlog', {
         trackType: '0 - Backlog'
