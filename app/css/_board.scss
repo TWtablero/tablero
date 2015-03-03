@@ -7,6 +7,10 @@
 	padding-left: 10px;
 }
 
+.board-columns .column:last-child {
+	width: 20%;
+}
+
 .cards-place {
 	background: #f3f3f3;
 	padding: 10px;

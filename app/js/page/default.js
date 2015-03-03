@@ -25,7 +25,8 @@
     'component/ui/permissions_gateway',
     'component/mixins/with_auth_token_from_hash',
     'component/ui/columns_modal',
-    'component/data/columns_manager'
+    'component/data/columns_manager',
+    'component/ui/columns_render'
   ],
   function (githubUser,
             githubIssues,
@@ -37,7 +38,8 @@
             permissionsGateway,
             authToken,
             columnsModal,
-            columnsManager) {
+            columnsManager,
+            columnsRender) {
     'use strict';
 
     return initialize;
@@ -52,26 +54,14 @@
       $.blockUI.defaults.ignoreIfBlocked = true;
       $(document).ajaxStop($.unblockUI);
 
-      githubIssues.attachTo(document);
       githubUser.attachTo(document);
       issuesExporter.attachTo(document);
       prioritizationManager.attachTo(document);
       columnsManager.attachTo(document);
 
-      track.attachTo('.issue-track.backlog', {
-        trackType: '0 - Backlog'
-      });
-      track.attachTo('.issue-track.ready', {
-        trackType: '1 - Ready'
-      });
-      track.attachTo('.issue-track.development', {
-        trackType: '2 - Development'
-      });
-      track.attachTo('.issue-track.quality-assurance', {
-        trackType: '3 - Quality Assurance'
-      });
-      track.attachTo('.issue-track.done', {
-        trackType: '4 - Done'
+      columnsRender.attachTo(document, {
+        track: track,
+        githubIssues: githubIssues
       });
 
       $('.backlog-column .hide-icon').first().click(function() {
@@ -83,14 +73,7 @@
         $('.backlog-sidebar').toggle('slide');
       });
 
-      var mountBoard = function(){
-        $(document).trigger('ui:needs:issues', {});
-        $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-        $(document).trigger('ui:draggable');
-      };
-
-      $(document).trigger('ui:needs:githubUser', { callback : mountBoard });
-
+      $(document).trigger('ui:needs:columns');
 
       $(document).on('ui:show:messageFailConnection', function(event){
         $.unblockUI();

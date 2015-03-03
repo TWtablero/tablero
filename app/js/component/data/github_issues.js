@@ -26,6 +26,7 @@
 
       this.defaultAttrs({
         issues : [],
+        draggableClasses: ['ready', 'development', 'quality-assurance']
       });
 
 
@@ -88,7 +89,7 @@
               allIssues.push(issue);  
             }
           }.bind(this));
-          
+
         }.bind(this));
         return allIssues;
 
@@ -289,7 +290,9 @@
     };
 
     this.draggable = function (ev, data) {
-      $('.backlog, .ready, .development, .quality-assurance, .done').sortable({
+      // Remove hardcoded columns
+      classes = _.map(this.attr.draggableClasses, function(draggable){ return '.'+draggable; });
+      $('.backlog, .done, '+classes.join(', ')).sortable({
         items: '.issue',
         connectWith: '.list-group',
         cancel: '.popover',
@@ -309,9 +312,11 @@
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
           $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-          $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
-          $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
-          $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
+
+          _.each(this.attr.draggableClasses, function(draggable) {
+            $('.panel-heading.'+draggable+'-header .issues-count').text(' (' + $('.issue-track.'+draggable+' .issue').length + ')');
+
+          });
 
           if (label == "4 - Done") {
             this.triggerRocketAnimation();

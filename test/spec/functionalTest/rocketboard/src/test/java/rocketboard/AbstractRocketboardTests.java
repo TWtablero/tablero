@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
+import redis.clients.jedis.Jedis;
 import rocketboardPages.GithubCredentials;
 import rocketboardPages.RocketboardPage;
 import tablero.Repository;
@@ -51,6 +52,13 @@ public abstract class AbstractRocketboardTests {
         this.driver = managerDriver.getDriver();
         rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
         PageFactory.initElements(this.driver, (Object) rocketboardPage);
+        Jedis client = new Jedis("localhost");
+        client.connect();
+        client.del("columns");
+        client.hset("columns", "Ready", "0");
+        client.hset("columns", "Development", "1");
+        client.hset("columns", "Quality Assurance", "2");
+        client.disconnect();
     }
 
     @Before
