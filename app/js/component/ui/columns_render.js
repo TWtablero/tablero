@@ -31,7 +31,14 @@ define([
         $(document).trigger('data:retrieve:columns');
       };
 
+      this.cleanColumns = function () {
+        $(this.attr.columnsContainer).children().remove();
+        $('.issue-track.backlog .issue').remove();
+      };
+
       this.renderColumns = function(event, data) {
+        this.cleanColumns();
+
         var columns = _.sortBy(data.columns, function(column) {
           return Number(column['order']);
         });

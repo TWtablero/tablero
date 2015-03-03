@@ -26,7 +26,6 @@ define([
         columnsContainerSeletor: '.columns-container'
       })
       this.showModal = function() {
-        this.$node.find(this.attr.columnsContainerSeletor).html('');
         this.$node.modal({ backdrop: 'static', keyboard: false });
       };
 
@@ -35,6 +34,7 @@ define([
           return Number(column['order']);
         });
 
+        this.$node.find(this.attr.columnsContainerSeletor).html('');
         _.each(columns, function(column){
           var columnInput = '<li><input type="text" data-order="'+column.order+'" value="'+column.column+'"></li>';
           this.append(columnInput);
@@ -54,13 +54,14 @@ define([
                         map(function(input) { return { column: input.value, order: $(input).data('order') }; }).
                         value();
         $(document).trigger('data:store:columns', [columns]);
+        $(document).trigger('data:retrieve:columns');
         this.$node.modal('hide');
       };
 
       this.changeColumnsEvents = function() {
         $('#changeColumns').click(function(){
           $(document).trigger('ui:show:columnsModal');
-          $(document).trigger('data:retrieve:columns');
+          // $(document).trigger('data:retrieve:columns');
         });
       };
 
