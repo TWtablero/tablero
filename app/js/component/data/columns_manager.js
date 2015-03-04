@@ -22,12 +22,13 @@
     function columnsManager() {
       this.retrieve = function() {
         $(document).trigger('ui:blockUI');
+        var that = this;
 
-        this.get({
+        $.ajax({
+          method: 'GET',
           url: 'columns',
-          success: function (data) {
-            this.trigger(document,'data:got:columns', data);
-          }
+        }).done(function(data){
+          that.trigger(document,'data:got:columns', data);
         });
       };
 

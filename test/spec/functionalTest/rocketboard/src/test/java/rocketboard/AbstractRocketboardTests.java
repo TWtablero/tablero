@@ -52,7 +52,16 @@ public abstract class AbstractRocketboardTests {
         this.driver = managerDriver.getDriver();
         rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
         PageFactory.initElements(this.driver, (Object) rocketboardPage);
-        Jedis client = new Jedis("localhost");
+//        setUpDefaultColumnsOnBoard();
+    }
+
+    @Before
+    public void setUpDefaultColumnsOnBoard() {
+        String redisUrl = System.getenv("REDISCLOUD_URL");
+        if (redisUrl == null || redisUrl.isEmpty()) {
+            redisUrl = "localhost";
+        }
+        Jedis client = new Jedis(redisUrl);
         client.connect();
         client.del("columns");
         client.hset("columns", "Ready", "0");
