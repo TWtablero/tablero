@@ -14,14 +14,15 @@
 * limitations under the License.
 */
 define([
-  'flight/lib/component'
+  'flight/lib/component',
+  'component/templates/column_input_template'
   ],
-  function (defineComponent) {
+  function (defineComponent, columnInputTemplate) {
     'use strict';
 
-    return defineComponent(columnsGateway);
+    return defineComponent(columnsModal, columnInputTemplate);
 
-    function columnsGateway() {
+    function columnsModal() {
       this.defaultAttrs({
         columnsContainerSeletor: '.columns-container'
       })
@@ -34,9 +35,10 @@ define([
           return Number(column['order']);
         });
 
+        var that = this;
         this.$node.find(this.attr.columnsContainerSeletor).html('');
         _.each(columns, function(column){
-          var columnInput = '<li><input type="text" data-order="'+column.order+'" value="'+column.column+'"></li>';
+          var columnInput = that.renderColumnInput(column.column, column.order);
           this.append(columnInput);
         }, this.$node.find(this.attr.columnsContainerSeletor));
       };
@@ -44,7 +46,7 @@ define([
       this.addNewColumn = function() {
         var columnsContainer = this.$node.find(this.attr.columnsContainerSeletor);
         var order = columnsContainer.children().length;
-        columnsContainer.append('<li><input type="text" data-order="'+order+'" value=""></li>');
+        columnsContainer.append(this.renderColumnInput('', order));
       };
 
       this.saveColumns = function() {
@@ -61,7 +63,6 @@ define([
       this.changeColumnsEvents = function() {
         $('#changeColumns').click(function(){
           $(document).trigger('ui:show:columnsModal');
-          // $(document).trigger('data:retrieve:columns');
         });
       };
 
