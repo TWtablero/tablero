@@ -13,70 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- define([
-  'flight/lib/component',
-  'component/mixins/with_auth_token_from_hash',
-  'component/mixins/repositories_urls',
-  'component/templates/popover_template'
-  ],
-  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
-    return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
+define([
+    'flight/lib/component',
+    'component/mixins/with_auth_token_from_hash',
+    'component/mixins/repositories_urls',
+    'component/templates/popover_template'
+],
+function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+  return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
-    function githubIssues() {
+  function githubIssues() {
 
-      this.defaultAttrs({
-        issues : [],
-        draggableClasses: ['ready', 'development', 'quality-assurance']
+    this.defaultAttrs({
+      issues : [],
+      draggableClasses: ['ready', 'development', 'quality-assurance']
+    });
+
+
+    this.createIssue = function (ev, data) {
+      var url, repositoryURL;
+      repositoryURL = this.getURLFromProject(data.projectName);
+      url = this.repoIssuesURL(repositoryURL);
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: JSON.stringify({
+          'title': data.issueTitle,
+          'body': data.issueBody,
+          'labels': ["0 - Backlog"]
+        }),
+        success: function (response, status, xhr) {
+          response.projectName = data.projectName;
+          this.trigger("ui:add:issue", {
+            "issue": response
+          })
+        }.bind(this)
       });
 
 
-      this.createIssue = function (ev, data) {
-        var url, repositoryURL;
-        repositoryURL = this.getURLFromProject(data.projectName);
-        url = this.repoIssuesURL(repositoryURL);
+    };
 
-        $.ajax({
-          type: 'POST',
-          url: url,
-          data: JSON.stringify({
-            'title': data.issueTitle,
-            'body': data.issueBody,
-            'labels': ["0 - Backlog"]
-          }),
-          success: function (response, status, xhr) {
-            response.projectName = data.projectName;
-            this.trigger("ui:add:issue", {
-              "issue": response
-            })
-          }.bind(this)
-        });
+    this.addIssue = function (ev, data) {
+      this.trigger('data:issues:refreshed', {
+        issues: data
+      });
+    };
 
+    this.filterProjectsByName = function (projects, projectNames) {
+      if(! projectNames) {
+        return projects;
+      }
 
-      };
+      var filteredRepos = [];
 
-      this.addIssue = function (ev, data) {
-        this.trigger('data:issues:refreshed', {
-          issues: data
-        });
-      };
-
-      this.filterProjectsByName = function (projects, projectNames) {
-        if(! projectNames) {
-         return projects;
-       }
-
-       var filteredRepos = [];
-
-       _.each(projects, function (project) {
+      _.each(projects, function (project) {
         if ($.inArray(project.projectName, projectNames) > -1) {
           filteredRepos.push(project);
         }
       });
 
-       return filteredRepos;
-     };
+      return filteredRepos;
+    };
 
-     this.getIssuesFromProjects = function (projects) {
+    this.getIssuesFromProjects = function (projects) {
       var allIssues = [];
       _.filter(projects, function(project){return project.issues}).
         forEach(function(project,index) {
@@ -91,7 +91,7 @@
           }.bind(this));
 
         }.bind(this));
-        return allIssues;
+      return allIssues;
 
     };
 
@@ -106,48 +106,40 @@
     this.fetchIssues = function (ev, data) {
       $(document).trigger('ui:blockUI');
 
-
       data.page = ('page' in data) ? (data.page + 1) : 1;
-
-
-
 
       var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
       var queries = _(issuesPromises).map(function(v,k) {return v;});
       var names = _(issuesPromises).map(function(v,k) {return k;});
-      $.when.apply(this, queries).done(
-        function () {
-          //var issuesResults = names.length > 1 ? arguments : [arguments];
-          var issuesResults = arguments;
-          var projects = _(names).map(function(name, idx) {
-            return {
-              'projectName': name,
-              'issues': issuesResults[idx]
-            }
-          });
+      $.when.apply(this, queries).done(function () {
+        //var issuesResults = names.length > 1 ? arguments : [arguments];
+        var issuesResults = arguments;
+        var projects = _(names).map(function(name, idx) {
+          return {'projectName': name, 'issues': issuesResults[idx]};
+        });
 
-          var filteredProjects = this.filterProjectsByName(projects, data.projectName),
-          issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
+        var filteredProjects = this.filterProjectsByName(projects, data.projectName),
+        issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
 
-          this.trigger('data:issues:refreshed', {
-            issues: issuesFromProjects
-          });
+        this.trigger('data:issues:refreshed', {
+          issues: issuesFromProjects
+        });
 
-          this.attr.issues = this.attr.issues.concat(issuesFromProjects);
+        this.attr.issues = this.attr.issues.concat(issuesFromProjects);
 
-          if (data.page == 1) {
-            this.trigger('data:issues:clearExportCsvLink');
-          }
+        if (data.page == 1) {
+          this.trigger('data:issues:clearExportCsvLink');
+        }
 
-          if (issuesFromProjects.length > 0) {
-           this.trigger('ui:needs:issues', data);
-         } else {
+        if (issuesFromProjects.length > 0) {
+          this.trigger('ui:needs:issues', data);
+        } else {
           var projectIdentifiers =  { projects :  this.getAllProjectsIdentifiers( _.map(filteredProjects, function(proj) { return proj.projectName;  }))};
           this.trigger('ui:needs:priority', projectIdentifiers);
         }
-      }.bind(this)
-      );
-};
+      }.bind(this));
+
+    };
 
     this.assignMyselfToIssue = function (ev,assignData) {
 
@@ -179,12 +171,12 @@
           else {
             var that = this,
 
-            popover_confirm = $('<div class="popover-confirm"></div>'),
+              popover_confirm = $('<div class="popover-confirm"></div>'),
             popover_confirm_yes = $('<button type="button" class="btn btn-default">Unassign</button>'),
-            popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
-            pop = $(that.popover({
-              title: '', body: ''
-            })).appendTo(issue_header);
+                popover_confirm_no = $('<button type="button" class="btn btn-default">Cancel</button>'),
+              pop = $(that.popover({
+                title: '', body: ''
+              })).appendTo(issue_header);
 
             popover_confirm_yes.bind('click', function(){
               that.trigger(document, 'ui:unassign:user', assignData);
@@ -291,7 +283,8 @@
 
     this.draggable = function (ev, data) {
       // Remove hardcoded columns
-      classes = _.map(this.attr.draggableClasses, function(draggable){ return '.'+draggable; });
+      var classes = _.map(data.boardColumns, function(column){ return '.'+column; });
+      console.log(classes);
       $('.backlog, .done, '+classes.join(', ')).sortable({
         items: '.issue',
         connectWith: '.list-group',
@@ -311,148 +304,148 @@
           state = this.getState(event.target.className);
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-          $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+              $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
 
-          _.each(this.attr.draggableClasses, function(draggable) {
-            $('.panel-heading.'+draggable+'-header .issues-count').text(' (' + $('.issue-track.'+draggable+' .issue').length + ')');
+                _.each(this.attr.draggableClasses, function(draggable) {
+                  $('.panel-heading.'+draggable+'-header .issues-count').text(' (' + $('.issue-track.'+draggable+' .issue').length + ')');
 
-          });
+                      });
 
-          if (label == "4 - Done") {
-            this.triggerRocketAnimation();
-            $.ajax({
-              type: 'PATCH',
-              url: url + this.getAccessTokenParam(),
-              data: JSON.stringify({
-                state: "closed"
-              })
-            });
-          }else{
-            //label Done não é mais postado
-            $.ajax({
-              type: 'POST',
-              url: url + "/labels" + this.getAccessTokenParam(),
-              data: JSON.stringify([label])
-            });
-          }
+                  if (label == "4 - Done") {
+                    this.triggerRocketAnimation();
+                    $.ajax({
+                      type: 'PATCH',
+                      url: url + this.getAccessTokenParam(),
+                      data: JSON.stringify({
+                        state: "closed"
+                      })
+                    });
+                  }else{
+                    //label Done não é mais postado
+                    $.ajax({
+                      type: 'POST',
+                      url: url + "/labels" + this.getAccessTokenParam(),
+                      data: JSON.stringify([label])
+                    });
+                  }
 
-          $.ajax({
-            type: 'DELETE',
-            url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
-          });
+                  $.ajax({
+                    type: 'DELETE',
+                    url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+                  });
         }.bind(this)
       }).disableSelection();
-};
+    };
 
-this.triggerRocketAnimation = function () {
-  $(".panel-heading.done img.plain").hide();
-  $(".panel-heading.done h3").css('opacity', 0);
-  $(".panel-heading.done .issues-count").css('opacity', 0);
-  $(".panel-heading.done img.colored").show().animate({
-    top: '-650px'
-  }, 2000, 'easeInBack', function () {
-    $(".panel-heading.done img.colored").hide().css('top', 0);
-
-    $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
-    $(".panel-heading.done h3").css('color', '#5dc66c');
-    $(".panel-heading.done h3").animate({
-      opacity: 1
-    }, 2000);
-
-    $(".panel-heading.done .check-done").fadeIn(2000, function () {
-      $(".panel-heading.done .check-done").hide();
-
+    this.triggerRocketAnimation = function () {
+      $(".panel-heading.done img.plain").hide();
       $(".panel-heading.done h3").css('opacity', 0);
-      $(".panel-heading.done h3").text('Drop here to launch');
-      $(".panel-heading.done h3").css('color', '#aaa');
+      $(".panel-heading.done .issues-count").css('opacity', 0);
+      $(".panel-heading.done img.colored").show().animate({
+        top: '-650px'
+      }, 2000, 'easeInBack', function () {
+        $(".panel-heading.done img.colored").hide().css('top', 0);
 
-      $(".panel-heading.done img.plain").fadeIn(600);
-      $(".panel-heading.done h3").animate({
-        opacity: 1
-      }, 600);
-      $(".panel-heading.done .issues-count").animate({
-        opacity: 1
-      }, 600);
+        $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
+        $(".panel-heading.done h3").css('color', '#5dc66c');
+        $(".panel-heading.done h3").animate({
+          opacity: 1
+        }, 2000);
+
+        $(".panel-heading.done .check-done").fadeIn(2000, function () {
+          $(".panel-heading.done .check-done").hide();
+
+          $(".panel-heading.done h3").css('opacity', 0);
+          $(".panel-heading.done h3").text('Drop here to launch');
+          $(".panel-heading.done h3").css('color', '#aaa');
+
+          $(".panel-heading.done img.plain").fadeIn(600);
+          $(".panel-heading.done h3").animate({
+            opacity: 1
+          }, 600);
+          $(".panel-heading.done .issues-count").animate({
+            opacity: 1
+          }, 600);
+        });
+      });
+    };
+
+    this.DOMObjectToIssueMovedParam = function(element) {
+      var returnObject = { id : 0 , priority : 0 };
+      if(element && element.id){
+        returnObject.id = element.id;
+        returnObject.priority = element.dataset.priority;
+      }
+      var projectUrl =  $(element).find('.issue-header a')[1];
+      if(projectUrl){
+        returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
+      }
+      return returnObject;
+    };
+
+    this.parseLabel = function (label) {
+      var fullLabel = '';
+      label = label.split('-');
+
+      for (var i = 1; i < label.length; i++) {
+        var firstLetter = label[i][0];
+        fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
+      }
+
+      fullLabel = label[0] + ' - ' + fullLabel;
+      return fullLabel.trim();
+    };
+
+    this.getIssueUrlFromDraggable = function (ui) {
+      return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
+    };
+
+    this.getAccessTokenParam = function () {
+      return "?access_token=" + this.getCurrentAuthToken();
+    };
+
+    this.getState = function (className) {
+      return className.search('done') != -1 ? 'closed' : 'open';
+    };
+
+    this.changeNewIssueLink = function (event, projectName) {
+      $(".link").attr("href", this.newIssueURL(projectName));
+    };
+
+    this.blockUI = function () {
+      $.blockUI();
+    };
+
+    this.unblockUI = function (e, timeout) {
+      setTimeout($.unblockUI, (timeout || 0));
+    };
+
+    this.mountExportClick =  function(ev,data){
+      this.trigger('data:issues:mountExportCsvLink', {
+        issues: this.attr.issues
+      });
+    };
+
+    this.clearIssues = function(){
+      this.attr.issues = [];
+    };
+
+
+    this.after('initialize', function () {
+      this.on('ui:needs:issues', this.fetchIssues);
+      this.on('ui:add:issue', this.addIssue);
+      this.on('ui:create:issue', this.createIssue);
+      this.on('ui:assigns:user', this.assignMyselfToIssue);
+      this.on('data:githubUser:here', this.assignMyselfToIssue);
+      this.on('ui:draggable', this.draggable);
+      this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+      this.on('#export_csv', 'click' , this.mountExportClick);
+      this.on('ui:unassign:user', this.unassignMyselfToIssue);
+      this.on('ui:blockUI', this.blockUI);
+      this.on('ui:unblockUI', this.unblockUI);
+      this.on('ui:clear:issue', this.clearIssues);
+
     });
-  });
-};
-
-this.DOMObjectToIssueMovedParam = function(element) {
-     var returnObject = { id : 0 , priority : 0 };
-        if(element && element.id){
-          returnObject.id = element.id;
-          returnObject.priority = element.dataset.priority;
-        }
-        var projectUrl =  $(element).find('.issue-header a')[1];
-        if(projectUrl){
-          returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
-        }
-        return returnObject;
-};
-
-this.parseLabel = function (label) {
-  var fullLabel = '';
-  label = label.split('-');
-
-  for (var i = 1; i < label.length; i++) {
-    var firstLetter = label[i][0];
-    fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
   }
-
-  fullLabel = label[0] + ' - ' + fullLabel;
-  return fullLabel.trim();
-};
-
-this.getIssueUrlFromDraggable = function (ui) {
-  return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
-};
-
-this.getAccessTokenParam = function () {
-  return "?access_token=" + this.getCurrentAuthToken();
-};
-
-this.getState = function (className) {
-  return className.search('done') != -1 ? 'closed' : 'open';
-};
-
-this.changeNewIssueLink = function (event, projectName) {
-  $(".link").attr("href", this.newIssueURL(projectName));
-};
-
-this.blockUI = function () {
-  $.blockUI();
-};
-
-this.unblockUI = function (e, timeout) {
-  setTimeout($.unblockUI, (timeout || 0));
-};
-
-this.mountExportClick =  function(ev,data){
-  this.trigger('data:issues:mountExportCsvLink', {
-    issues: this.attr.issues
-  });
-};
-
-this.clearIssues = function(){
-  this.attr.issues = [];
-};
-
-
-this.after('initialize', function () {
-  this.on('ui:needs:issues', this.fetchIssues);
-  this.on('ui:add:issue', this.addIssue);
-  this.on('ui:create:issue', this.createIssue);
-  this.on('ui:assigns:user', this.assignMyselfToIssue);
-  this.on('data:githubUser:here', this.assignMyselfToIssue);
-  this.on('ui:draggable', this.draggable);
-  this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-  this.on('#export_csv', 'click' , this.mountExportClick);
-  this.on('ui:unassign:user', this.unassignMyselfToIssue);
-  this.on('ui:blockUI', this.blockUI);
-  this.on('ui:unblockUI', this.unblockUI);
-  this.on('ui:clear:issue', this.clearIssues);
-
-});
-}
 }
 );

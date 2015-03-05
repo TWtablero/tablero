@@ -1,9 +1,9 @@
 describeComponent('component/data/columns_manager', function () {
+
   'use strict';
 
   it('loads columns from server', function () {
     var deferred = $.Deferred();
-
 
     spyOn($, 'ajax').and.returnValue(deferred);
 

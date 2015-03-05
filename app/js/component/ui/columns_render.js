@@ -67,7 +67,7 @@ define([
         var mountBoard = function(){
           $(document).trigger('ui:needs:issues', {});
           $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-          $(document).trigger('ui:draggable');
+          $(document).trigger('ui:draggable', {boardColumns: extraClasses});
         };
         $(document).trigger('ui:needs:githubUser', { callback : mountBoard });
       };
