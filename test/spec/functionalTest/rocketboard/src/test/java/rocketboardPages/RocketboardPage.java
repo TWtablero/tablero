@@ -198,7 +198,7 @@ public class RocketboardPage {
 	}
 
 	public int[] createIssueGettingValue(String title, String desc, String repoName) throws Exception {
-		WebDriverWait wait = new WebDriverWait(this.driver, 50);
+		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
 		values[0] = getCount("backlog");
@@ -372,7 +372,7 @@ public class RocketboardPage {
 	}
 
 
-	public String getInfo(String nameIssue, String info) throws Exception {
+	public String getInfo(String nameIssue, String info) throws Exception {		
 		/** Create array with WebElement options*/
 		List<WebElement> l = driver.findElements(By.xpath("//div[contains(@class, 'issue list-group-item')]"));
 		List<WebElement> name = driver.findElements(By.xpath("//*[@class='title list-group-item-heading']"));
@@ -531,7 +531,7 @@ public class RocketboardPage {
 	}
 	
 	public void waitCreatedIssue(String label) throws Exception{
-		WebDriverWait wait = new WebDriverWait(this.driver, 50);
+		WebDriverWait wait = new WebDriverWait(this.driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(label)));
 	}
 	
