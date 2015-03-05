@@ -531,7 +531,7 @@ public class RocketboardPage {
 	}
 	
 	public void waitCreatedIssue(String label) throws Exception{
-		WebDriverWait wait = new WebDriverWait(this.driver, 30);
+		WebDriverWait wait = new WebDriverWait(this.driver, 45);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(label)));
 	}
 	
