@@ -49,5 +49,13 @@ describeComponent('component/track', function () {
 
       expect(true).toEqual(result);
     });
+
+    it('should succesfully render issues without body', function () {
+      var issue = { body: null }
+
+      var result = this.component.renderIssue(issue);
+
+      expect(result).not.toBe(null);
+    });
   });
 }); 

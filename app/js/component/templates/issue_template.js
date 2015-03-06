@@ -28,7 +28,9 @@ define(['config/config_bootstrap'],
           var clearedIssue, issueParts;
           clearedIssue = _.clone(issue);
 
-          clearedIssue.body = issue.body.slice(0, issue.body.indexOf("<!---")-2);
+          if(issue.body) {
+            clearedIssue.body = issue.body.slice(0, issue.body.indexOf("<!---")-2);
+          }
 
           return clearedIssue;
         }
