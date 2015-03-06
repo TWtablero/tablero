@@ -60,7 +60,6 @@ define([
             "\"" + issue.title + "\"",
             issue.state,
             issue.kanbanState,
-            "\"" + issue.body.replace(/(\r\n|\n|\r)/g, " ") + "\"",
             "\"" + _.map(issue.labels, function(label) {
               return label.name;
             }) + "\"",
@@ -90,7 +89,7 @@ define([
       };
 
       function csvHeader() {
-        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Description", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
+        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
       };
 
       this.getEventsFromProjects = function(projectsUrl) {
