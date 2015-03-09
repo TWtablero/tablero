@@ -31,6 +31,10 @@ a {
   }
 }
 
+header {
+  width: 100%;
+}
+
 #projects {
   width: 30%;
   height: 30px;
@@ -130,6 +134,13 @@ a {
   &:hover, &:visited {
     background: #fff;
   }
+}
+
+.container {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  white-space: nowrap;
 }
 
 input.missing {
