@@ -282,9 +282,7 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
     };
 
     this.draggable = function (ev, data) {
-      // Remove hardcoded columns
       var classes = _.map(data.boardColumns, function(column){ return '.'+column; });
-      console.log(classes);
       $('.backlog, .done, '+classes.join(', ')).sortable({
         items: '.issue',
         connectWith: '.list-group',
