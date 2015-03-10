@@ -23,12 +23,18 @@
       this.retrieve = function() {
         $(document).trigger('ui:blockUI');
         var that = this;
+        var defaultColumns = [{order: '1', column: 'Ready'},
+                              {order: '2', column: 'Development'},
+                              {order: '3', column: 'Quality Assurance'}];
 
         $.ajax({
           method: 'GET',
           url: 'columns',
         }).done(function(data){
-          that.trigger(document,'data:got:columns', data);
+          if (_.isEmpty(data)) {
+            data = { columns: defaultColumns };
+          }
+          that.trigger(document, 'data:got:columns', data);
         });
       };
 

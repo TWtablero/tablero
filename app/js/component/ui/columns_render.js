@@ -46,6 +46,8 @@ define([
         var extraColumns = _.map(columns, function(column) { return (Number(column.order) + 1) + ' - ' + column.column; });
         var extraClasses = _.map(columns, function(column) { return column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase(); });;
 
+        this.attr.track.teardownAll();
+
         this.attr.track.attachTo('.issue-track.backlog', {
           trackType: '0 - Backlog',
           extraAllowedTags: extraColumns,

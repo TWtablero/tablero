@@ -283,7 +283,8 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
 
     this.draggable = function (ev, data) {
       var classes = _.map(data.boardColumns, function(column){ return '.'+column; });
-      $('.backlog, .done, '+classes.join(', ')).sortable({
+      var draggables = ['.backlog', '.done'].concat(classes);
+      $(draggables.join(', ')).sortable({
         items: '.issue',
         connectWith: '.list-group',
         cancel: '.popover',
