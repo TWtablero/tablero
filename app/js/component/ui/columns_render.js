@@ -15,16 +15,16 @@
  */
 define([
   'flight/lib/component',
-  'component/templates/columns_template'
-  ], function (defineComponent, withColumnTemplate) {
+  'component/templates/columns_template',
+  'component/track',
+  'component/data/github_issues'
+  ], function (defineComponent, withColumnTemplate, track, githubIssues) {
     'use strict';
     return defineComponent(columnsRender, withColumnTemplate);
 
     function columnsRender() {
       this.defaultAttrs({
-        columnsContainer: '.board-columns',
-        track: null,
-        githubIssues: null
+        columnsContainer: '.board-columns'
       });
 
       this.askForColumns = function() {
@@ -46,15 +46,15 @@ define([
         var extraColumns = _.map(columns, function(column) { return (Number(column.order) + 1) + ' - ' + column.column; });
         var extraClasses = _.map(columns, function(column) { return column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase(); });;
 
-        this.attr.track.teardownAll();
+        track.teardownAll();
 
-        this.attr.track.attachTo('.issue-track.backlog', {
+        track.attachTo('.issue-track.backlog', {
           trackType: '0 - Backlog',
           extraAllowedTags: extraColumns,
           columns: extraClasses
         });
 
-        this.attr.track.attachTo('.issue-track.done', {
+        track.attachTo('.issue-track.done', {
           trackType: '4 - Done',
           extraAllowedTags: extraColumns,
           columns: extraClasses
@@ -62,7 +62,7 @@ define([
 
         _.each(columns, this.renderColumn(extraClasses, extraColumns), this);
 
-        this.attr.githubIssues.attachTo(document);
+        githubIssues.attachTo(document);
 
         var mountBoard = function(){
           $(document).trigger('ui:needs:issues', {});
@@ -80,7 +80,7 @@ define([
           var trackType = column.order + ' - ' + column.column;
           var trackClass = column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
 
-          this.attr.track.attachTo('.issue-track.'+ trackClass, {
+          track.attachTo('.issue-track.'+ trackClass, {
             trackType: trackType,
             columns: extraClasses,
             extraAllowedTags: extraColumns

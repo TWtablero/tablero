@@ -53,7 +53,8 @@ define([
         var columnsContainer = this.$node.find(this.attr.columnsContainerSeletor);
         var columns = _.chain(columnsContainer.find('input')).
                         filter(function(input) { return !_.isEmpty(input.value); }).
-                        map(function(input) { return { column: input.value, order: $(input).data('order') }; }).
+                        sortBy(function(input) { return $(input).data('order'); }).
+                        map(function(input, index) { return { column: input.value, order: index }; }).
                         value();
         $(document).trigger('data:store:columns', [columns]);
         $(document).trigger('data:retrieve:columns');

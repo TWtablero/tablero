@@ -16,8 +16,6 @@
  define(
   [
     'component/data/github_user',
-    'component/data/github_issues',
-    'component/track',
     'component/data/issues_exporter',
     'component/data/prioritization_manager',
     'component/ui/issues_filter',
@@ -29,8 +27,6 @@
     'component/ui/columns_render'
   ],
   function (githubUser,
-            githubIssues,
-            track,
             issuesExporter,
             prioritizationManager,
             issuesFilter,
@@ -59,10 +55,7 @@
       prioritizationManager.attachTo(document);
       columnsManager.attachTo(document);
 
-      columnsRender.attachTo(document, {
-        track: track,
-        githubIssues: githubIssues
-      });
+      columnsRender.attachTo(document);
 
       $('.backlog-column .hide-icon').first().click(function() {
         $('.backlog-column').toggle('slide');
