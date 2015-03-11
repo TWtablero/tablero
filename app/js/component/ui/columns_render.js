@@ -36,6 +36,13 @@ define([
         $('.issue-track.backlog .issue').remove();
       };
 
+      this.cleanLabel = function(label) {
+        return label.trim().
+                replace(/[^a-zA-Z0-9-\s]/g, '').
+                replace(/[^a-zA-Z0-9-]/g, '-').
+                toLowerCase();
+      };
+
       this.renderColumns = function(event, data) {
         this.cleanColumns();
 
@@ -44,7 +51,7 @@ define([
         });
 
         var extraColumns = _.map(columns, function(column) { return (Number(column.order) + 1) + ' - ' + column.column; });
-        var extraClasses = _.map(columns, function(column) { return column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase(); });;
+        var extraClasses = _.map(columns, function(column) { return this.cleanLabel(column.column); }, this);;
 
         track.teardownAll();
 
@@ -73,12 +80,13 @@ define([
       };
 
       this.renderColumn = function(extraClasses, extraColumns) {
+        var that = this;
         return function(column) {
           column.order = Number(column['order']) + 1;
           $(this.attr.columnsContainer).append(this.render(column));
 
           var trackType = column.order + ' - ' + column.column;
-          var trackClass = column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+          var trackClass = that.cleanLabel(column.column);
 
           track.attachTo('.issue-track.'+ trackClass, {
             trackType: trackType,
