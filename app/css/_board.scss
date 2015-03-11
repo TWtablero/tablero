@@ -1,10 +1,10 @@
 .column {
-	margin-right: 12px;
   display: inline-block;
   float: none;
-  width: 240px;
+ 	margin-right: 12px;
   padding-left: 10px;
-
+  width: 240px;
+  white-space: normal;
   &:last-child {
     float: none;
     display: inline-block;
