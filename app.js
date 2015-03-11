@@ -2,6 +2,7 @@ var express = require('express');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
+var path = require('path');
 var app = express();
 var cookieParser = require('cookie-parser');
 var configurable = require('./lib/configurable');
@@ -21,7 +22,7 @@ var bootstrap = function() {
     debug: false
   }));
 
-  app.use(express.static('app'));
+  app.use(express.static(path.join(__dirname, 'app')));
 
   var bodyParser = require('body-parser');
   app.use(bodyParser.json());
