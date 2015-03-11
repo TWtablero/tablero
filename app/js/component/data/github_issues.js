@@ -25,8 +25,7 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
   function githubIssues() {
 
     this.defaultAttrs({
-      issues : [],
-      draggableClasses: ['ready', 'development', 'quality-assurance']
+      issues : []
     });
 
 
@@ -282,8 +281,8 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
     };
 
     this.draggable = function (ev, data) {
-      var classes = _.map(data.boardColumns, function(column){ return '.'+column; });
-      var draggables = ['.backlog', '.done'].concat(classes);
+      var customColumns = _.map(data.boardColumns, function(column){ return '.'+column; });
+      var draggables = ['.backlog', '.done'].concat(customColumns);
       $(draggables.join(', ')).sortable({
         items: '.issue',
         connectWith: '.list-group',
@@ -303,35 +302,33 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
           state = this.getState(event.target.className);
 
           $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-              $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+          $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
 
-                _.each(this.attr.draggableClasses, function(draggable) {
-                  $('.panel-heading.'+draggable+'-header .issues-count').text(' (' + $('.issue-track.'+draggable+' .issue').length + ')');
+          _.each(customColumns, function(draggable) {
+            $('.panel-heading'+draggable+'-header .issues-count').text(' (' + $('.issue-track'+draggable+' .issue').length + ')');
+          });
 
-                      });
+          if (label == "4 - Done") {
+            this.triggerRocketAnimation();
+            $.ajax({
+              type: 'PATCH',
+              url: url + this.getAccessTokenParam(),
+              data: JSON.stringify({
+                state: "closed"
+              })
+            });
+          }else{
+            $.ajax({
+              type: 'POST',
+              url: url + "/labels" + this.getAccessTokenParam(),
+              data: JSON.stringify([label])
+            });
+          }
 
-                  if (label == "4 - Done") {
-                    this.triggerRocketAnimation();
-                    $.ajax({
-                      type: 'PATCH',
-                      url: url + this.getAccessTokenParam(),
-                      data: JSON.stringify({
-                        state: "closed"
-                      })
-                    });
-                  }else{
-                    //label Done não é mais postado
-                    $.ajax({
-                      type: 'POST',
-                      url: url + "/labels" + this.getAccessTokenParam(),
-                      data: JSON.stringify([label])
-                    });
-                  }
-
-                  $.ajax({
-                    type: 'DELETE',
-                    url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
-                  });
+          $.ajax({
+            type: 'DELETE',
+            url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+          });
         }.bind(this)
       }).disableSelection();
     };

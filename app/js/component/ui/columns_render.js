@@ -62,9 +62,7 @@ define([
 
         _.each(columns, this.renderColumn(extraClasses, extraColumns), this);
 
-        this.attr.githubIssues.attachTo(document, {
-          draggableClasses: extraClasses
-        });
+        this.attr.githubIssues.attachTo(document);
 
         var mountBoard = function(){
           $(document).trigger('ui:needs:issues', {});
