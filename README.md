@@ -66,7 +66,7 @@ Authorization callback URL: http://localhost:3000/request_auth_token
  
 * Use __REPOS__ environment variable to define which repositories you want to display. It is a semi-colon (;) separated list specifying each repository.
  
- For example, to set [tableroRepoTest1](https://api.github.com/repos/TWtablero/repoTest1) and [tablerRepoTest2](https://api.github.com/repos/TWtablero/repoTest2) repositories use:
+ For example, to set [tableroRepoTest1](https://api.github.com/repos/TWtablero/repoTest1) and [tableroRepoTest2](https://api.github.com/repos/TWtablero/repoTest2) repositories use:
  ```
  export REPOS="https://api.github.com/repos/TWtablero/repoTest1;https://api.github.com/repos/TWtablero/repoTest2"
  ```
