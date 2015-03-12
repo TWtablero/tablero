@@ -2,17 +2,6 @@
 - hosts: all
   sudo: yes
   remote_user: vagrant
-  vars:
-    PX_CLIENT_ID: "'2a8b8530b2e56e62ae3c'"
-    PX_CLIENT_SECRET: "'2fce1a3ca8be7f51cbaf7d959688031f74415ca7'"
-    REPOS: "'TWtablero/repoTest1;TWtablero/repoTest2'"
-    REDISCLOUD_URL: "'redis://rediscloud:sz73h7KrdTtomsz9@pub-redis-18873.us-east-1-4.4.ec2.garantiadata.com:18873'"
-    PX_OAUTH_URL: "'https://github.com/login/oauth'"
-    exportPX_CLIENT_ID: "export PX_CLIENT_ID={{ PX_CLIENT_ID}}"
-    exportPX_CLIENT_SECRET: "export PX_CLIENT_SECRET={{ PX_CLIENT_SECRET }}"
-    exportREPOS: "export REPOS={{ REPOS }}"
-    exportREDISCLOUD_URL: "export REDISCLOUD_URL={{ REDISCLOUD_URL }}"
-    exportPX_OAUTH_URL: "export PX_OAUTH_URL={{ PX_OAUTH_URL }}"
   tasks: 
     - name: Grabbing the node repository
       apt_repository: repo='ppa:chris-lea/node.js' state=present update_cache=yes
@@ -27,20 +16,3 @@
     - name: Install app
       npm: path=/vagrant
       sudo: no
-    - lineinfile: dest=/home/vagrant/.bashrc line="{{ exportPX_CLIENT_ID }}"
-    - lineinfile: dest=/home/vagrant/.bashrc line="{{ exportPX_CLIENT_SECRET }}"
-    - lineinfile: dest=/home/vagrant/.bashrc line="{{ exportREDISCLOUD_URL }}"
-    - lineinfile: dest=/home/vagrant/.bashrc line="{{ exportREPOS }}"
-    - lineinfile: dest=/home/vagrant/.bashrc line="{{ exportPX_OAUTH_URL }}"
-    # - command: "source /home/vagrant/.bashrc"
-    #   sudo: no
-    # - name: "Start  app."
-    #   command: "node /vagrant/app.js"
-    #   sudo: no
-    - name: source bashrc
-      sudo: no   
-      shell: . /home/vagrant/.bashrc && source /home/vagrant/.bashrc && nohup node /vagrant/app.js
-      args:
-          executable: /bin/bash
-  
-

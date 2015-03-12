@@ -1,0 +1,10 @@
+{
+  "PX_OAUTH_URL" : "https://github.com/login/oauth",
+  "REPOS" : "", // insert yours repositories in format username/repository 
+  "PX_CLIENT_SECRET" : "", // insert the github client secret
+  "PX_CLIENT_ID" : "", // insert the github client id 
+
+
+  "REDISCLOUD_URL" : "" // Insert a redis url to use issues priorization.  <optional> 
+
+}
