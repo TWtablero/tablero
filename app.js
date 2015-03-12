@@ -2,11 +2,15 @@ var express = require('express');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
+var path = require('path');
 var app = express();
 var cookieParser = require('cookie-parser');
 var configurable = require('./lib/configurable');
 var _ = require('underscore');
+var nconf = require('nconf');
 
+nconf.file('config.json')
+     .env();
 
 var bootstrap = function() {
   var configServer = require('./config/server.js');
@@ -21,7 +25,7 @@ var bootstrap = function() {
     debug: false
   }));
 
-  app.use(express.static('app'));
+  app.use(express.static(path.join(__dirname, 'app')));
 
   var bodyParser = require('body-parser');
   app.use(bodyParser.json());
@@ -47,9 +51,13 @@ var bootstrap = function() {
       '&client_secret=' + clientSecret +
       '&code=' + req.query.code;
 
-    xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
     xhr.open('POST', getAuthTokenUrl, false);
     xhr.send();
+
+    if(xhr.responseText.indexOf('incorrect_client_credentials') > 0){
+      console.log('ERROR -  Invalid clientID or clientSecret');
+    }
 
     var fakeUrl = 'http://fake.uri/?' + xhr.responseText;
     var repositoryAccess = url.parse(fakeUrl, true).query['scope'];

@@ -41,6 +41,7 @@
   "dependencies": {
     "body-parser": "^1.10.0",
     "bower": "^1.3.9",
+    "cookie-parser": "^1.3.3",
     "express": "^4.8.7",
     "gulp": "~3",
     "gulp-requirejs": "^0.1.3",
@@ -48,10 +49,10 @@
     "hiredis": "^0.1.17",
     "inquirer": "^0.8.0",
     "istanbul": "^0.3.2",
+    "nconf": "^0.7.1",
     "node-sass": "~0.9.3",
     "redis": "^0.12.1",
     "underscore": "^1.7.0",
-    "xmlhttprequest": "^1.6.0",
-    "cookie-parser": "^1.3.3"
+    "xmlhttprequest": "^1.6.0"
   }
 }

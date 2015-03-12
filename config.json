@@ -1,0 +1,9 @@
+{
+  "PX_OAUTH_URL" : "https://github.com/login/oauth",
+  "REPOS" : "", 
+  "PX_CLIENT_SECRET" : "", 
+  "PX_CLIENT_ID" : "", 
+
+
+  "REDISCLOUD_URL" : "" 
+}
