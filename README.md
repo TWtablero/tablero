@@ -66,19 +66,19 @@ Authorization callback URL: http://localhost:3000/request_auth_token
  
 * Use __REPOS__ environment variable to define which repositories you want to display. It is a semi-colon (;) separated list specifying each repository.
  
- For instance, to set [tablero](https://api.github.com/repos/TWtablero/tablero) and [Pages](https://api.github.com/repos/TWtablero/Pages) repositories use:
+ For example, to set [tableroRepoTest1](https://api.github.com/repos/TWtablero/repoTest1) and [tablerRepoTest2](https://api.github.com/repos/TWtablero/repoTest2) repositories use:
  ```
- export REPOS="https://api.github.com/repos/TWtablero/tablero;https://api.github.com/repos/TWtablero/Pages"
+ export REPOS="https://api.github.com/repos/TWtablero/repoTest1;https://api.github.com/repos/TWtablero/repoTest2"
  ```
  
  Optionally, you can just set the owner and name in __Owner/Name__ format. I.e:
  ```
- export REPOS="TWtablero/tablero;TWtablero/Pages"
+ export REPOS="TWtablero/repoTest1;TWtablero/repoTest2"
  ```
  
    - To make it persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
    ```
-   export REPOS="TWtablero/tablero;TWtablero/Pages"
+   export REPOS="TWtablero/repoTest1;TWtablero/repoTest2"
    ```
    - Reload `Terminal` settings to set the new variables:
      ```
