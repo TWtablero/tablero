@@ -1,4 +1,7 @@
+var nconf = require('nconf');
 
+nconf.file('config.json')
+     .env();
 
 var hardcodedVars = [ 'PX_PROJECT_ISSUES', 
   'PX_PLATFORM', 
@@ -90,10 +93,10 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
   }
 
   function deleteEnvVar(key) {
-    delete process.env[key];
+    nconf.remove(key);
   }
   function addEnvVar(key, val) {
-    process.env[key] = val;
+    nconf.set(key,val);
   }
   function config() {
     delete require.cache[require.resolve('../../config/client.js')]
