@@ -16,6 +16,7 @@ describeComponent('component/data/issues_exporter', function () {
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:28:41Z",
         "dev_at": "2014-11-18T14:00:41Z"
+        "qa_at": "2014-11-10T10:00:41Z"
       },
       {
         "projectName": "pixelated-user-agent",
@@ -28,12 +29,13 @@ describeComponent('component/data/issues_exporter', function () {
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:29:41Z",
         "dev_at": "2014-11-18T14:00:41Z"
+        "qa_at": "2014-11-19T11:00:41Z"
       }
     ];
 
     var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;1;0\n";
+        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;2014-11-10T10:00:41Z;0;0" +
+        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;2014-11-19T11:00:41Z;1;0\n";
 
     expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
