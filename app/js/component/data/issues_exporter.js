@@ -65,6 +65,7 @@ define([
             }) + "\"",
             issue.created_at,
             issue.dev_at,
+            issue.qa_at,
             issue.closed_at,
             daysBetween(issue.created_at, issue.closed_at),
             daysBetween(issue.dev_at, issue.closed_at)
@@ -89,7 +90,7 @@ define([
       };
 
       function csvHeader() {
-        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Dev at", "Closed at", "Lead Time", "Cycle Time"].join(';');
+        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Dev at", "QA at", "Closed at", "Lead Time", "Cycle Time"].join(';');
       };
 
       this.getEventsFromProjects = function(projectsUrl) {
@@ -115,7 +116,7 @@ define([
         }.bind(self));
 
         $(document).one('ajaxStop', function() {
-          self.createCsvUri(self.addDevDateForIssues(issuesToExport, events));
+          self.createCsvUri(self.addDevAndQaDateForIssues(issuesToExport, events));
         });
       };
 
@@ -149,10 +150,34 @@ define([
         }));
       };
 
-      this.mergeEventsWithIssues = function(issues, events) {
+      this.getOnlyQaIssueEvents = function(labeledEvents) {
+        return _.object(_.map(labeledEvents, function(issueEvents, key) {
+          return [key, _.filter(issueEvents, function(event) {
+            return event.label.name == '3 - QA';
+          })]
+        }));
+      };
+
+      this.getEarliestQaIssueEvents = function(qaEvents) {
+        return _.object(_.map(qaEvents, function(events, key) {
+          return [key, _.first(_.sortBy(events, function(e) {
+            return e.created_at;
+          }))]
+        }));
+      };
+
+      this.mergeDevEventsWithIssues = function(issues, events) {
         return _.each(issues, function(issue) {
           if (events[issue.id]) {
             issue.dev_at = events[issue.id].created_at;
+          }
+        });
+      };
+
+      this.mergeQaEventsWithIssues = function(issues, events) {
+        return _.each(issues, function(issue) {
+          if (events[issue.id]) {
+            issue.qa_at = events[issue.id].created_at;
           }
         });
       };
@@ -161,20 +186,26 @@ define([
         return _.uniq(_.pluck(issues, 'repoUrl'));
       };
 
-      this.addDevDateForIssues = function(issues, events) {
+      this.addDevAndQaDateForIssues = function(issues, events) {
         var groupedEventsByIssueId = {},
           labeledEvents = {},
           developmentEvents = {},
           earlierstDevelopemntIssuesEvent = {},
-          issuesWithDevDate = {};
+          qaEvents = {},
+          earlierstQaIssuesEvent = {},
+          issuesWithDevDate = {},
+          issuesWithDevAndQaDate = {};
 
         groupedEventsByIssueId = this.groupEventsByIssuesId(events);
         labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
         developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
         earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
-        issuesWithDevDate = this.mergeEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
+        qaEvents = this.getOnlyQaIssueEvents(labeledEvents);
+        earlierstQaIssuesEvent = this.getEarliestQaIssueEvents(developmentEvents);
+        issuesWithDevDate = this.mergeDevEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
+        issuesWithDevAndQaDate = this.mergeQaEventsWithIssues(issues, earlierstQaIssuesEvent);
 
-        return issuesWithDevDate;
+        return issuesWithDevAndQaDate;
       };
 
       this.createCsvUri = function(issuesWithDevDate) {
