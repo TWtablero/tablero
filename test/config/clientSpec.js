@@ -16,6 +16,7 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
     it("contains repos", function() {
       var cfg = config();
       expect(cfg.repos).not.toBe(null);
+      console.log(Object.keys(cfg.repos)[0]);
       expect(Object.keys(cfg.repos).length).toBe(0);
     });
     it("contains labels", function() {
@@ -87,10 +88,11 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
   });
 
   function cleanEnvVars() {
-    hardcodedVars.forEach(deleteEnvVar);
-    for(i = 0; i < 5; i++) {
-      deleteEnvVar('REPO_' + i + '_URL');
-    }
+    // hardcodedVars.forEach(deleteEnvVar);
+    // for(i = 0; i < 5; i++) {
+    //   deleteEnvVar('REPO_' + i + '_URL');
+    // }
+    nconf.reset();
   }
 
   function deleteEnvVar(key) {
