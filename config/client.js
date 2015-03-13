@@ -1,11 +1,10 @@
 var repos = {};
 var labels = {};
-var nconf = require('nconf');
 var configurable = require('../lib/configurable');
 
 function addRepo(name, key, label) {
-  nconf.get(key) && (repos[name] = nconf.get(key));
-  nconf.get(key) && (labels[name] = (label || repos[name]));
+  configurable.get(key) && (repos[name] = configurable.get(key));
+  configurable.get(key) && (labels[name] = (label || repos[name]));
 }
 addRepo('user-agent', 'PX_USER_AGENT', 'User Agent');
 addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
@@ -17,7 +16,7 @@ addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
 
 var maxDynaReposQuantity = 5;
 for(i = 0; i < maxDynaReposQuantity; i++) {
-  addRepo(nconf.get('REPO_' + i + '_NAME') || i + 'th', 'REPO_' + i + '_URL');
+  addRepo(configurable.get('REPO_' + i + '_NAME') || i + 'th', 'REPO_' + i + '_URL');
 }
 
 configurable.get('REPOS', function(value) {

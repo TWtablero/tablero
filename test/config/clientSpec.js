@@ -1,7 +1,8 @@
 var nconf = require('nconf');
 
-nconf.file('config.json')
-     .env();
+var configurable = require('../../lib/configurable');
+
+configurable.setSilentMode(true);
 
 var hardcodedVars = [ 'PX_PROJECT_ISSUES', 
   'PX_PLATFORM', 
@@ -93,10 +94,10 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
   }
 
   function deleteEnvVar(key) {
-    nconf.remove(key);
+    configurable.remove(key);
   }
-  function addEnvVar(key, val) {
-    nconf.set(key,val);
+  function addEnvVar(key, val) {   
+    configurable.set(key,val);
   }
   function config() {
     delete require.cache[require.resolve('../../config/client.js')]
