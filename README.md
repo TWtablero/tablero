@@ -1,4 +1,4 @@
-# TABLERO [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master)
+# TABLERO [![Build Status](https://snap-ci.com/TWtablero/tablero/branch/master/build_image)](https://snap-ci.com/TWtablero/tablero/branch/master) [![Code Climate](https://codeclimate.com/github/TWtablero/tablero/badges/gpa.svg)](https://codeclimate.com/github/TWtablero/tablero)
 
 A kanban board for developers that connects with GitHub projects and synchronizes the issues of multiple repositories and the contributors that are working on them.
 
