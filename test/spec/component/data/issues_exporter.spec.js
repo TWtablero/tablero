@@ -34,8 +34,8 @@ describeComponent('component/data/issues_exporter', function () {
     ];
 
     var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;QA at;Closed at;Lead Time;Cycle Time" +
-        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;2014-11-10T10:00:41Z;0;0" +
-        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;2014-11-19T11:00:41Z;1;0\n";
+        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-10T10:00:41Z;2014-11-19T13:28:41Z;0;0" +
+        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T11:00:41Z;2014-11-19T13:29:41Z;1;0\n";
 
     expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
@@ -49,7 +49,7 @@ describeComponent('component/data/issues_exporter', function () {
         "body":     "just testing an issue"
     }];
 
-    var newIssuesToEncode = "\"test-issues-ramon\";66;\"handle errors on sending mails\";open;1 - Backlog;\"\";;;;;\n";
+    var newIssuesToEncode = "\"test-issues-ramon\";66;\"handle errors on sending mails\";open;1 - Backlog;\"\";;;;;;\n";
 
     expect(this.component.linkToCsv(newIssues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
   });
