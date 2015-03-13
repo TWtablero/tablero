@@ -201,9 +201,9 @@ define([
         developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
         earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
         qaEvents = this.getOnlyQaIssueEvents(labeledEvents);
-        earlierstQaIssuesEvent = this.getEarliestQaIssueEvents(developmentEvents);
+        earlierstQaIssuesEvent = this.getEarliestQaIssueEvents(qaEvents);
         issuesWithDevDate = this.mergeDevEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
-        issuesWithDevAndQaDate = this.mergeQaEventsWithIssues(issues, earlierstQaIssuesEvent);
+        issuesWithDevAndQaDate = this.mergeQaEventsWithIssues(issuesWithDevDate, earlierstQaIssuesEvent);
 
         return issuesWithDevAndQaDate;
       };
