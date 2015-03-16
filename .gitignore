@@ -11,3 +11,4 @@ coverage
 config.json
 *.iml
 **/.idea
+config.json
