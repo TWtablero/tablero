@@ -153,7 +153,7 @@ define([
       this.getOnlyQaIssueEvents = function(labeledEvents) {
         return _.object(_.map(labeledEvents, function(issueEvents, key) {
           return [key, _.filter(issueEvents, function(event) {
-            return event.label.name == '3 - QA';
+            return event.label.name == '3 - Quality Assurance';
           })]
         }));
       };

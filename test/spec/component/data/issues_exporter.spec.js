@@ -23,7 +23,7 @@ describeComponent('component/data/issues_exporter', function () {
         "number":   "92",
         "title":    "handle errors on sending mails",
         "state":   "open",
-        "labels": [{name: "3- QA"}, {name: "2- Dev"}],
+        "labels": [{name: "3- Quality Assurance"}, {name: "2- Dev"}],
         "kanbanState":   "0 - Backlog",
         "body":     "If mails can't be sent by the twisted process",
         "created_at": "2014-11-18T13:29:41Z",
@@ -35,7 +35,7 @@ describeComponent('component/data/issues_exporter', function () {
 
     var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;QA at;Closed at;Lead Time;Cycle Time" +
         "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-10T10:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T11:00:41Z;2014-11-19T13:29:41Z;1;0\n";
+        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- Quality Assurance,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T11:00:41Z;2014-11-19T13:29:41Z;1;0\n";
 
     expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
@@ -252,50 +252,50 @@ describeComponent('component/data/issues_exporter', function () {
     ]);
   });
 
-  it('should get only the events that corresponds when the issue was moved to the QA column', function() {
+  it('should get only the events that corresponds when the issue was moved to the Quality Assurance column', function() {
     var labeledEvents = {
       49941278: [
-        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
         {label: {name: "0 - Backlog"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
       ],
       49941279: [
         {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
-        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
       ]
     };
 
     expect(this.component.getOnlyQaIssueEvents(labeledEvents)).toEqual({
           49941278: [
-            {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
-            {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
           ],
           49941279: [
-            {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
-            {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
           ]
         }
     );
   });
 
-  it('should get the earlier event for each issue that corresponds when the issue was moved to the QA column', function() {
+  it('should get the earlier event for each issue that corresponds when the issue was moved to the Quality Assurance column', function() {
     var labeledEvents = {
       49941278: [
-        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
       ],
       49941279: [
-        {label: {name: "3 - QA"}, created_at: "2014-11-26T20:54:52Z"},
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-26T20:54:52Z"},
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
       ]
     };
 
     expect(this.component.getEarliestQaIssueEvents(labeledEvents)).toEqual({
-          49941278: {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
-          49941279: {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+          49941278: {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
+          49941279: {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
         }
     );
   });
@@ -333,7 +333,7 @@ describeComponent('component/data/issues_exporter', function () {
         issue: {
           id: 1
         },
-        label: {name: "3 - QA"},
+        label: {name: "3 - Quality Assurance"},
         created_at: "2014-11-24T20:54:52Z"
       },
       {
@@ -342,7 +342,7 @@ describeComponent('component/data/issues_exporter', function () {
         issue: {
           id: 1
         },
-        label: {name: "3 - QA"},
+        label: {name: "3 - Quality Assurance"},
         created_at: "2014-11-20T20:54:52Z"
       },
       {
@@ -351,7 +351,7 @@ describeComponent('component/data/issues_exporter', function () {
         issue: {
           id: 3
         },
-        label: {name: "3 - QA"},
+        label: {name: "3 - Quality Assurance"},
         created_at: "2014-11-24T20:54:52Z"
       },
       {
@@ -360,7 +360,7 @@ describeComponent('component/data/issues_exporter', function () {
         issue: {
           id: 2
         },
-        label: {name: "3 - QA"},
+        label: {name: "3 - Quality Assurance"},
         created_at: "2014-11-24T20:54:52Z"
       },
       {
