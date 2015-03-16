@@ -6,8 +6,8 @@ IMPORTANT: For the correct operation of the project, make sure your GitHub repos
 
 * Installation
   * [Quick Installation](https://github.com/TWtablero/tablero#quick-installation)
-  * [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
   * [Quick Install in a VM](https://github.com/TWtablero/tablero#quick-install-in-a-vm)
+  * [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
 * [Configuration](https://github.com/TWtablero/tablero#configuration)
 * [Starting the Application](https://github.com/TWtablero/tablero#starting-the-application)
 * [Static File Server](https://github.com/TWtablero/tablero#static-file-server)
@@ -30,35 +30,35 @@ After the installation, you'll need to proceed with the Tablero [configuration](
 
 ## Quick Install in a VM
 
-### Install [ANSIBLE](http://www.ansible.com "ansible")
+1. Install [ANSIBLE](http://www.ansible.com "ansible")
 
-If you want you can install a software for Mac called [brew]("http://brew.sh/") and run in y ur terminal:
+  If you want you can install a software for Mac called [brew]("http://brew.sh/") and run in your terminal:
 
-```bash
-$ brew install ansible
-```
+  ```bash
+  $ brew install ansible
+  ```
 
-### Install [VAGRANT](http://www.vagrantup.com/ "vagrant") and [VirtualBox]("https://www.virtualbox.org/wiki/Downloads")
+2. Install [VAGRANT](http://www.vagrantup.com/ "vagrant") and [VirtualBox]("https://www.virtualbox.org/wiki/Downloads")
 
-Notes: Don't forget to install the VirtualBox Extension Pack too which can be found in the website above!!!
+  __Note__: Don't forget to install the __VirtualBox Extension Pack__ too which can be found in the website above!
 
-### Go to manual instalation step and generate the PX_CLIENT variables and run
+3. Go to [configuration](https://github.com/TWtablero/tablero#configuration) first step to generate the PX_CLIENT variables.
 
-From tablero repository run:
+4. From tablero directory in your terminal, use the variables from the last step to run:
 
-```bash
-$ PX_CLIENT_ID=<your px client id> PX_CLIENT_SECRET=<your px secret> vagrant up
-```
+  ```bash
+  $ PX_CLIENT_ID=<your px client id> PX_CLIENT_SECRET=<your px secret> vagrant up
+  ```
 
-### Some tips
+#### Some tips
 
-Turn on/Create the machine with: vagrant up
+Turn on/Create the machine with: ``vagrant up``
 
-Shutdown: vagrant halt
+Shutdown: ``vagrant halt``
 
-Get in: vagrant ssh
+Get in: ``vagrant ssh``
 
-Destroy the machine: vagrant destroy
+Destroy the machine: ``vagrant destroy``
 
 ## Manual Installation
 
