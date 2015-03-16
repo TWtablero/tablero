@@ -15,7 +15,8 @@ describeComponent('component/data/issues_exporter', function () {
         "body":     "should send email",
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:28:41Z",
-        "dev_at": "2014-11-18T14:00:41Z"
+        "dev_at": "2014-11-18T14:00:41Z",
+        "qa_at": "2014-11-10T10:00:41Z"
       },
       {
         "projectName": "pixelated-user-agent",
@@ -27,13 +28,14 @@ describeComponent('component/data/issues_exporter', function () {
         "body":     "If mails can't be sent by the twisted process",
         "created_at": "2014-11-18T13:29:41Z",
         "closed_at": "2014-11-19T13:29:41Z",
-        "dev_at": "2014-11-18T14:00:41Z"
+        "dev_at": "2014-11-18T14:00:41Z",
+        "qa_at": "2014-11-19T11:00:41Z"
       }
     ];
 
-    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;Closed at;Lead Time;Cycle Time" +
-        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T13:29:41Z;1;0\n";
+    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;QA at;Closed at;Lead Time;Cycle Time" +
+        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-10T10:00:41Z;2014-11-19T13:28:41Z;0;0" +
+        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- QA,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T11:00:41Z;2014-11-19T13:29:41Z;1;0\n";
 
     expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
@@ -47,7 +49,7 @@ describeComponent('component/data/issues_exporter', function () {
         "body":     "just testing an issue"
     }];
 
-    var newIssuesToEncode = "\"test-issues-ramon\";66;\"handle errors on sending mails\";open;1 - Backlog;\"\";;;;;\n";
+    var newIssuesToEncode = "\"test-issues-ramon\";66;\"handle errors on sending mails\";open;1 - Backlog;\"\";;;;;;\n";
 
     expect(this.component.linkToCsv(newIssues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode + newIssuesToEncode));
   });
@@ -182,7 +184,7 @@ describeComponent('component/data/issues_exporter', function () {
       2: {created_at: "2014-11-23T20:54:52Z"}
     };
 
-    expect(this.component.mergeEventsWithIssues(issues, events)).toEqual([
+    expect(this.component.mergeDevEventsWithIssues(issues, events)).toEqual([
       {id: 1, dev_at: "2014-11-24T20:54:52Z"},
       {id: 2, dev_at: "2014-11-23T20:54:52Z"},
       {id: 3}
@@ -243,10 +245,138 @@ describeComponent('component/data/issues_exporter', function () {
         created_at: "2014-11-24T20:54:52Z"
       }
     ];
-    expect(this.component.addDevDateForIssues(issues, events)).toEqual([
+    expect(this.component.addDevAndQaDateForIssues(issues, events)).toEqual([
       {id: 1, dev_at: "2014-11-20T20:54:52Z"},
       {id: 2},
       {id: 3, dev_at: "2014-11-24T20:54:52Z"}
+    ]);
+  });
+
+  it('should get only the events that corresponds when the issue was moved to the QA column', function() {
+    var labeledEvents = {
+      49941278: [
+        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "0 - Backlog"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+      ],
+      49941279: [
+        {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
+        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+      ]
+    };
+
+    expect(this.component.getOnlyQaIssueEvents(labeledEvents)).toEqual({
+          49941278: [
+            {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+            {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+          ],
+          49941279: [
+            {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+            {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+          ]
+        }
+    );
+  });
+
+  it('should get the earlier event for each issue that corresponds when the issue was moved to the QA column', function() {
+    var labeledEvents = {
+      49941278: [
+        {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - QA"}, created_at: "2014-11-25T20:54:52Z"}
+      ],
+      49941279: [
+        {label: {name: "3 - QA"}, created_at: "2014-11-26T20:54:52Z"},
+        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
+        {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+      ]
+    };
+
+    expect(this.component.getEarliestQaIssueEvents(labeledEvents)).toEqual({
+          49941278: {label: {name: "3 - QA"}, created_at: "2014-11-24T20:54:52Z"},
+          49941279: {label: {name: "3 - QA"}, created_at: "2014-11-23T20:54:52Z"}
+        }
+    );
+  });
+
+  it('should create the qa_at date for each issue according to its event creation date', function() {
+    var issues = [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ];
+
+    var events = {
+      1: {created_at: "2014-11-24T20:54:52Z"},
+      2: {created_at: "2014-11-23T20:54:52Z"}
+    };
+
+    expect(this.component.mergeQaEventsWithIssues(issues, events)).toEqual([
+      {id: 1, qa_at: "2014-11-24T20:54:52Z"},
+      {id: 2, qa_at: "2014-11-23T20:54:52Z"},
+      {id: 3}
+    ]);
+  });
+
+  it('should return the issues with the qa date using its events', function() {
+    var issues = [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ];
+
+    var events = [
+      {
+        id: 197865882,
+        event: "labeled",
+        issue: {
+          id: 1
+        },
+        label: {name: "3 - QA"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865883,
+        event: "labeled",
+        issue: {
+          id: 1
+        },
+        label: {name: "3 - QA"},
+        created_at: "2014-11-20T20:54:52Z"
+      },
+      {
+        id: 197865887,
+        event: "labeled",
+        issue: {
+          id: 3
+        },
+        label: {name: "3 - QA"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865884,
+        event: "assigned",
+        issue: {
+          id: 2
+        },
+        label: {name: "3 - QA"},
+        created_at: "2014-11-24T20:54:52Z"
+      },
+      {
+        id: 197865885,
+        event: "labeled",
+        issue: {
+          id: 2
+        },
+        label: {name: "0 - Backlog"},
+        created_at: "2014-11-24T20:54:52Z"
+      }
+    ];
+    expect(this.component.addDevAndQaDateForIssues(issues, events)).toEqual([
+      {id: 1, qa_at: "2014-11-20T20:54:52Z"},
+      {id: 2},
+      {id: 3, qa_at: "2014-11-24T20:54:52Z"}
     ]);
   });
 
