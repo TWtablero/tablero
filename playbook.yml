@@ -2,17 +2,23 @@
 - hosts: all
   sudo: yes
   remote_user: vagrant
+
   tasks: 
     - name: Grabbing the node repository
       apt_repository: repo='ppa:chris-lea/node.js' state=present update_cache=yes
+
     - name: Install node!
-      apt: pkg=nodejs state=latest
+      apt: pkg=nodejs state=present
+
     - name: Install git!
-      apt: pkg=nodejs state=latest
+      apt: pkg=git state=present
+
     - name: Install G++
-      apt: pkg=g++
+      apt: pkg=g++ state=present
+
     - name: Install bower
-      npm: name=bower global=yes state=absent
+      npm: name=bower global=yes state=present
+
     - name: Install app
       npm: path=/vagrant
-      sudo: no
+      sudo_user: vagrant
