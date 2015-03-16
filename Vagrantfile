@@ -70,6 +70,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "ansible" do |ansible| 
     ansible.playbook = "playbook.yml"
     ansible.verbose = '<vv></vv>'
+    ansible.extra_vars = {PX_CLIENT_ID: ENV['PX_CLIENT_ID'], PX_CLIENT_SECRET: ENV['PX_CLIENT_SECRET']}
   end
   #
   # You can also configure and bootstrap a client to an existing
