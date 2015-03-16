@@ -4,11 +4,16 @@ A kanban board for developers that connects with GitHub projects and synchronize
 
 IMPORTANT: For the correct operation of the project, make sure your GitHub repositories have issues' use permission
 
-* [Quick Installation](https://github.com/TWtablero/tablero#quick-installation)
-* [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
-* [Static file server](https://github.com/TWtablero/tablero#static-file-server)
-* [Unit tests](https://github.com/TWtablero/tablero#unit-tests)
-* [Contributing to this project](https://github.com/TWtablero/tablero#contributing-to-this-project)
+* Installation
+  * [Quick Installation](https://github.com/TWtablero/tablero#quick-installation)
+  * [Manual Installation](https://github.com/TWtablero/tablero#manual-installation)
+* [Configuration](https://github.com/TWtablero/tablero#configuration)
+* [Starting the Application](https://github.com/TWtablero/tablero#starting-the-application)
+* [Static File Server](https://github.com/TWtablero/tablero#static-file-server)
+* [Optional Features](https://github.com/TWtablero/tablero#optional-features)
+  * [Saving the Order of Issues](https://github.com/TWtablero/tablero#saving-the-order-of-issues)
+* [Unit Tests](https://github.com/TWtablero/tablero#unit-tests)
+* [Contributing to this Project](https://github.com/TWtablero/tablero#contributing-to-this-project)
 
 
 ## Quick Installation
@@ -18,7 +23,9 @@ Open a terminal and execute this:
 wget -qO- https://raw.githubusercontent.com/TWtablero/tablero/master/install.sh | sh
 ```
 
-This script will check if your system satisfies the pre requisites, download tablero and its dependencies and finally start the application
+This script will check if your system satisfies the pre requisites, download tablero and its dependencies.
+
+After the installation, you'll need to proceed with the Tablero [configuration](https://github.com/TWtablero/tablero#configuration).
 
 ## Manual Installation
 
@@ -38,67 +45,56 @@ git clone https://github.com/TWtablero/tablero.git
 ```
 npm install
 ```
- 
-* Configure development environment: 
 
-  - Register **Tablero** as a [new OAuth application](https://github.com/settings/applications/new) with the following configuration:
-```
-Application Name: tablero
-Homepage URL: http://localhost
-Authorization callback URL: http://localhost:3000/request_auth_token
-```
-  - Set __PX_CLIENT_ID__ and __PX_CLIENT_SECRET__ environment variables with application's client id and client secret values generated in the last step:
-   ![image of applications variable]
-   (http://www.sumoware.com/images/temp/xzqgemqimmkkdcrr.png )
-  
-   
-    - To make them persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
-    ```
-    export PX_CLIENT_ID="your_client_id"
-    ```
-     ```
-    export PX_CLIENT_SECRET="your_client_secret"
-    ```
-    - Reload `Terminal` settings to set the new variables:
-      ```
-      source ~/.profile
-      ``` 
- 
-* Use __REPOS__ environment variable to define which repositories you want to display. It is a semi-colon (;) separated list specifying each repository.
- 
- For example, to set [tableroRepoTest1](https://api.github.com/repos/TWtablero/repoTest1) and [tableroRepoTest2](https://api.github.com/repos/TWtablero/repoTest2) repositories use:
- ```
- export REPOS="https://api.github.com/repos/TWtablero/repoTest1;https://api.github.com/repos/TWtablero/repoTest2"
- ```
- 
- Optionally, you can just set the owner and name in __Owner/Name__ format. I.e:
- ```
- export REPOS="TWtablero/repoTest1;TWtablero/repoTest2"
- ```
- 
-   - To make it persistent you can add them to `~/.bash_profile` or `~/.profile` on OS X. E.g:
-   ```
-   export REPOS="TWtablero/repoTest1;TWtablero/repoTest2"
-   ```
-   - Reload `Terminal` settings to set the new variables:
-     ```
-     source ~/.profile
-     ``` 
- 
+After the installation, you'll need to proceed with the Tablero [configuration](https://github.com/TWtablero/tablero#configuration).
 
-*  Start the application:
+## Configuration
+
+1. Register **Tablero** as a [new OAuth application](https://github.com/settings/applications/new) with the following configuration:
+
+  ```
+  Application Name: tablero
+  Homepage URL: http://localhost
+  Authorization callback URL: http://localhost:3000/request_auth_token
+  ```
+
+2. Create a __config.json__ file with application's values generated in the last step:
+  ![image of applications variable]
+  (http://www.sumoware.com/images/temp/xzqgemqimmkkdcrr.png )
+
+  You can just rename the example.config.json and change the values:
+  ```
+  {
+    "PX_OAUTH_URL" : "https://github.com/login/oauth",
+    "REPOS" : "",
+    "PX_CLIENT_SECRET" : "your_client_secret",
+    "PX_CLIENT_ID" : "your_client_id",
+
+    "REDISCLOUD_URL" : ""
+  }
+  ```
+
+  Remember to put the __repositories you want to display__ on the __REPOS__ key. It is a semi-colon (;) separated list specifying each repository.
+  I.e:
+  ```
+  "REPOS" : "https://api.github.com/repos/OWNER/REPO_NAME;https://api.github.com/repos/OWNER/REPO2_NAME"
+  ```
+  Optionally, you can just set the owner and repository name in __Owner/Name__ format. I.e:
+  ```
+  "REPOS" : "owner/repo_name;owner/repo2_name"
+  ```
+
+## Start the Application
+
 ```
 npm start
 ```
 
-* Access the project through the browser
-http://localhost:3000
- 
-***Before create issues, please check if it is actually pointing to the fake repository!*** 
+Then access the project through the browser
 
+[http://localhost:3000](http://localhost:3000)
 
-
-## Static file server
+## Static File Server
 
 A local installation of [Gulp](http://gulpjs.com) provides a Node-based
 foundation for running development and build tasks.
@@ -124,6 +120,30 @@ Additional tasks can be included in the `gulpfile.js`. For further information
 about using Gulp, please refer to the [Gulp website](http://gulpjs.com/).
 
 
+## Optional Features
+
+### Saving the order of issues
+
+If you want to prioritize your issues and persist them for future sessions, then you will also need to have [Redis](http://redis.io/) installed.
+
+If you want to use it locally, just start the server from your terminal:
+```
+redis-server
+```
+
+If you would like to use a __remote Redis__, define the __REDISCLOUD_URL__ variable on the __config.json__ file.
+I.e:
+```
+{
+  "PX_OAUTH_URL" : "https://github.com/login/oauth",
+  "REPOS" : "",
+  "PX_CLIENT_SECRET" : "",
+  "PX_CLIENT_ID" : "",
+
+  "REDISCLOUD_URL" : "your_redis_url"
+}
+```
+
 ## Unit Tests
 
 A local installation of Karma is used to run the JavaScript unit tests.
@@ -137,7 +157,7 @@ This is the recommended approach because the moment your unit tests start
 failing, you'll be notified in the terminal.
 
 To run the unit tests just once in PhantomJS (for CI), you must install
-PhantomJS and then run:
+[PhantomJS](http://phantomjs.org/) and then run:
 
 ```
 npm test
@@ -150,15 +170,17 @@ website](http://karma-runner.github.io/).
 
 Functional tests are written in Java using [Selenium](http://www.seleniumhq.org/) (Firefox web driver by default).
 
+__Note: To avoid making changes to your repository, you need to pass two test repositories as an environment variable REPOS when running the functional tests.__
+
 Before executing the test you need to have the application running and __TABLERO_TEST_USER__ and __TABLERO_TEST_PASS__ environment variables set (Test user GitHub credentials).
 
 After that, you can execute them all running:
 ```
-npm run functional-test
+REPOS="TWtablero/repoTest1;TWtablero/repoTest2" npm run functional-test
 ```
-or, specifying environment variables on the fly:
+or specifying environment variables on the fly:
 ```
-TABLERO_TEST_USER=user TABLERO_TEST_PASS=pass npm run functional-test
+REPOS="TWtablero/repoTest1;TWtablero/repoTest2" TABLERO_TEST_USER=user TABLERO_TEST_PASS=pass npm run functional-test
 ```
 or, if you want to run specific tests, you will need to directly invoke maven (from root directory):
 ```
@@ -167,6 +189,12 @@ mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.TEST_CLAS
 or, you can run them from as JUnit tests from any IDE. 
 
 It is worth noting, that in this case you __will need to specify the environment variables for its run configuration__. 
+
+__Note:__
+To make the environment variables persistent you can add them to ```~/.bash_profile``` or ```~/.profile``` on OS X. E.g:
+```
+export REPOS="TWtablero/repoTest1;TWtablero/repoTest2"
+```
 
 ## Contributing to this project
 
