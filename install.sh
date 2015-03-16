@@ -83,18 +83,13 @@ install() {
   has_and_notify "gcc"
   cd $TARGET &&
     (sudo npm install -g bower &&
-      npm install) ||
+      npm install &&
+      info "Successfully installed Tablero!") ||
     (error 'Something went wrong while installing tablero dependencies :(';
       false)
-}
-
-start() {
-  info "Starting the application..."
-  npm start
 }
 
 welcome
 check &&
   download &&
-  install &&
-  start
+  install
