@@ -30,7 +30,7 @@ define([
         return label.trim().
                replace(/^[^a-zA-Z]+/g, '').
                replace(/[^a-zA-Z[0-9]\s]/g, '').
-               replace(/\s]/g, '_').
+               replace(/\s/g, '_').
                toLowerCase();
       };
 
