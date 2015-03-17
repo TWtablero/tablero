@@ -434,3 +434,11 @@ hr {
   color: blue !important;
   margin-right: 30px;
 }
+.columns-container {
+  list-style: none;
+  padding-left: 0px;
+}
+.columns-container li input {
+  width: 80% !important;
+  margin-right: 10px;
+}
