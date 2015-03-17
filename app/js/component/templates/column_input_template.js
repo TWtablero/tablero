@@ -23,7 +23,10 @@ define([], function(template, compiler) {
 
     this.before('initialize', function(){
       this.template = Hogan.compile(
-        '<li><input type="text" data-order="{{order}}" value="{{value}}"></li>'
+        '<li>' +
+          '<input type="text" data-order="{{order}}" value="{{value}}">' +
+          '<a href="#" class="remove-column">Remove</a>' +
+        '</li>'
       );
     });
   }

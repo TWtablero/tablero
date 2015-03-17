@@ -61,6 +61,10 @@ define([
         this.$node.modal('hide');
       };
 
+      this.removeColumn = function(event, column) {
+        $(column).remove();
+      };
+
       this.changeColumnsEvents = function() {
         $('#changeColumns').click(function(){
           $(document).trigger('ui:show:columnsModal');
@@ -79,6 +83,12 @@ define([
         });
       };
 
+      this.bindRemoveColumnEvents = function() {
+        $('a.remove-column').click(function() {
+          $(document).trigger('ui:show:removeColumn', $(this).parent());
+        });
+      };
+
       this.setUp = function() {
         this.changeColumnsEvents();
         this.addColumnEvent();
@@ -88,9 +98,11 @@ define([
       this.after('initialize', function () {
         this.setUp();
         this.on(document, 'ui:show:columnsModal', this.showModal.bind(this));
+        this.on(document, 'ui:show:columnsModal', this.bindRemoveColumnEvents)
         this.on(document, 'data:got:columns', this.displayColumns.bind(this));
         this.on(document, 'ui:show:addColumn', this.addNewColumn.bind(this));
         this.on(document, 'ui:show:saveColumns', this.saveColumns.bind(this));
+        this.on(document, 'ui:show:removeColumn', this.removeColumn.bind(this));
       });
     }
   });
