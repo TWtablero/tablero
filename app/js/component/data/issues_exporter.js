@@ -26,6 +26,14 @@ define([
 
       var csvLink = '';
 
+      this.cleanLabel = function(label) {
+        return label.trim().
+               replace(/^[^a-zA-Z]+/g, '').
+               replace(/[^a-zA-Z[0-9]\s]/g, '').
+               replace(/\s]/g, '_').
+               toLowerCase();
+      };
+
       this.mountExportCsvLink = function(ev, data) {
         var repositoriesUrls = this.getRepositoriesUrlsFromIssues(data.issues);
         issuesToExport = data.issues;
@@ -49,7 +57,7 @@ define([
       this.linkToCsv = function(data) {
         var issuesCsv = this.issuesToCsv(data);
         if (csvLink === '') {
-          issuesCsv.splice(0, 0, csvHeader());
+          issuesCsv.splice(0, 0, this.csvHeader());
         }
 
         csvLink += encodeURIComponent(issuesCsv.join('\n') + '\n');
@@ -64,7 +72,8 @@ define([
 
       this.issuesToCsv = function(issues) {
         var issuesCsv = _.map(this.validIssuesToExport(issues), function(issue) {
-          return ['\"' + issue.projectName + "\"",
+          var custom_columns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
+          var data = ['\"' + issue.projectName + "\"",
             issue.number,
             "\"" + issue.title + "\"",
             issue.state,
@@ -73,13 +82,14 @@ define([
               return label.name;
             }) + "\"",
             issue.created_at,
-            issue.dev_at,
-            issue.qa_at,
             issue.closed_at,
             daysBetween(issue.created_at, issue.closed_at),
-            daysBetween(issue.dev_at, issue.closed_at)
-          ].join(';');
-        });
+          ];
+          _.each(custom_columns, function(column) {
+            data.push(issue[this.cleanLabel(column)+"_at"]);
+          }, this);
+          return data.join(';');
+        }, this);
 
         return issuesCsv;
       };
@@ -98,8 +108,13 @@ define([
         }
       };
 
-      function csvHeader() {
-        return ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Dev at", "QA at", "Closed at", "Lead Time", "Cycle Time"].join(';');
+      this.csvHeader = function() {
+        var labels = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
+        var header = ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Closed at", "Lead Time"]
+        _.each(labels, function(label) {
+          header.push(this.cleanLabel(label) + " at");
+        }, this);
+        return header.join(';');
       };
 
       this.getEventsFromProjects = function(projectsUrl) {
@@ -125,7 +140,7 @@ define([
         }.bind(self));
 
         $(document).one('ajaxStop', function() {
-          self.createCsvUri(self.addDevAndQaDateForIssues(issuesToExport, events));
+          self.createCsvUri(self.addEventDateForIssues(issuesToExport, events));
         });
       };
 
@@ -143,50 +158,26 @@ define([
         }));
       };
 
-      this.getOnlyDevelopmentIssueEvents = function(labeledEvents) {
+      this.getIssueEventsByLabel = function(labeledEvents, label) {
         return _.object(_.map(labeledEvents, function(issueEvents, key) {
           return [key, _.filter(issueEvents, function(event) {
-            return event.label.name == '2 - Development';
+            return event.label.name == label;
           })]
         }));
       };
 
-      this.getEarliestDevelopmentIssueEvents = function(developmentEvents) {
-        return _.object(_.map(developmentEvents, function(events, key) {
+      this.getEarliestIssueEvents = function(labeledEvents) {
+        return _.object(_.map(labeledEvents, function(events, key) {
           return [key, _.first(_.sortBy(events, function(e) {
             return e.created_at;
           }))]
         }));
       };
 
-      this.getOnlyQaIssueEvents = function(labeledEvents) {
-        return _.object(_.map(labeledEvents, function(issueEvents, key) {
-          return [key, _.filter(issueEvents, function(event) {
-            return event.label.name == '3 - Quality Assurance';
-          })]
-        }));
-      };
-
-      this.getEarliestQaIssueEvents = function(qaEvents) {
-        return _.object(_.map(qaEvents, function(events, key) {
-          return [key, _.first(_.sortBy(events, function(e) {
-            return e.created_at;
-          }))]
-        }));
-      };
-
-      this.mergeDevEventsWithIssues = function(issues, events) {
+      this.mergeEventsWithIssues = function(issues, events, key) {
         return _.each(issues, function(issue) {
           if (events[issue.id]) {
-            issue.dev_at = events[issue.id].created_at;
-          }
-        });
-      };
-
-      this.mergeQaEventsWithIssues = function(issues, events) {
-        return _.each(issues, function(issue) {
-          if (events[issue.id]) {
-            issue.qa_at = events[issue.id].created_at;
+            issue[key] = events[issue.id].created_at;
           }
         });
       };
@@ -195,30 +186,27 @@ define([
         return _.uniq(_.pluck(issues, 'repoUrl'));
       };
 
-      this.addDevAndQaDateForIssues = function(issues, events) {
+      this.addEventDateForIssues = function(issues, events) {
         var groupedEventsByIssueId = {},
           labeledEvents = {},
-          developmentEvents = {},
-          earlierstDevelopemntIssuesEvent = {},
-          qaEvents = {},
-          earlierstQaIssuesEvent = {},
-          issuesWithDevDate = {},
-          issuesWithDevAndQaDate = {};
+          labelEvents = {},
+          earlierstIssuesEvent = {},
+          issuesWithEventDate = issues,
+          labels = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
 
         groupedEventsByIssueId = this.groupEventsByIssuesId(events);
         labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
-        developmentEvents = this.getOnlyDevelopmentIssueEvents(labeledEvents);
-        earlierstDevelopemntIssuesEvent = this.getEarliestDevelopmentIssueEvents(developmentEvents);
-        qaEvents = this.getOnlyQaIssueEvents(labeledEvents);
-        earlierstQaIssuesEvent = this.getEarliestQaIssueEvents(qaEvents);
-        issuesWithDevDate = this.mergeDevEventsWithIssues(issues, earlierstDevelopemntIssuesEvent);
-        issuesWithDevAndQaDate = this.mergeQaEventsWithIssues(issuesWithDevDate, earlierstQaIssuesEvent);
+        _.each(labels, function(label) {
+          labelEvents = this.getIssueEventsByLabel(labeledEvents, label);
+          earlierstIssuesEvent = this.getEarliestIssueEvents(labelEvents);
+          issuesWithEventDate = this.mergeEventsWithIssues(issuesWithEventDate, earlierstIssuesEvent, this.cleanLabel(label)+"_at")
+        }, this);
 
-        return issuesWithDevAndQaDate;
+        return issuesWithEventDate;
       };
 
-      this.createCsvUri = function(issuesWithDevDate) {
-        var uri = this.linkToCsv(issuesWithDevDate);
+      this.createCsvUri = function(issuesWithEventDate) {
+        var uri = this.linkToCsv(issuesWithEventDate);
 
         var downloadLink = document.createElement("a");
         downloadLink.href = uri;
