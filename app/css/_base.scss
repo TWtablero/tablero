@@ -121,4 +121,12 @@ a {
   color: white;
 }
 
+.not-active {
+  pointer-events: none;
+  text-decoration:none;
+  cursor: default;
 
+  &:hover, &:visited {
+    background: #fff;
+  }
+}
