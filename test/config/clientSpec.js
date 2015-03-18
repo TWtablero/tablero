@@ -1,4 +1,8 @@
+var nconf = require('nconf');
 
+var configurable = require('../../lib/configurable');
+
+configurable.setSilentMode(true);
 
 var hardcodedVars = [ 'PX_PROJECT_ISSUES', 
   'PX_PLATFORM', 
@@ -12,6 +16,7 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
     it("contains repos", function() {
       var cfg = config();
       expect(cfg.repos).not.toBe(null);
+      console.log(Object.keys(cfg.repos)[0]);
       expect(Object.keys(cfg.repos).length).toBe(0);
     });
     it("contains labels", function() {
@@ -83,17 +88,18 @@ var hardcodedVars = [ 'PX_PROJECT_ISSUES',
   });
 
   function cleanEnvVars() {
-    hardcodedVars.forEach(deleteEnvVar);
-    for(i = 0; i < 5; i++) {
-      deleteEnvVar('REPO_' + i + '_URL');
-    }
+    // hardcodedVars.forEach(deleteEnvVar);
+    // for(i = 0; i < 5; i++) {
+    //   deleteEnvVar('REPO_' + i + '_URL');
+    // }
+    nconf.reset();
   }
 
   function deleteEnvVar(key) {
-    delete process.env[key];
+    configurable.remove(key);
   }
-  function addEnvVar(key, val) {
-    process.env[key] = val;
+  function addEnvVar(key, val) {   
+    configurable.set(key,val);
   }
   function config() {
     delete require.cache[require.resolve('../../config/client.js')]

@@ -1,0 +1,44 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: vagrant
+
+  vars:
+    deploy_user: vagrant
+
+  tasks: 
+    - name: Grabbing the node repository
+      apt_repository: repo='ppa:chris-lea/node.js' state=present update_cache=yes
+
+    - name: Install node!
+      apt: pkg=nodejs state=present
+
+    - name: Install redis server
+      apt: pkg=redis-server state=present
+
+    - name: Install git!
+      apt: pkg=git state=present
+
+    - name: Install G++
+      apt: pkg=g++ state=present
+
+    - name: Install bower
+      npm: name=bower global=yes state=present
+
+    - name: Install app
+      npm: path=/vagrant state=present
+      sudo_user: "{{deploy_user}}"
+
+    - name: Adding px client id in your bash_profile
+      lineinfile: dest=~/.bash_profile state=present create=yes line="export PX_CLIENT_ID={{PX_CLIENT_ID}}"
+      sudo_user: "{{deploy_user}}"
+
+    - name: Adding px client secret in your bash_profile
+      lineinfile: dest=~/.bash_profile state=present line="export PX_CLIENT_SECRET={{PX_CLIENT_SECRET}}"
+      sudo_user: "{{deploy_user}}"
+
+    - name: Adding repos in your bash_profile
+      lineinfile: dest=~/.bash_profile state=present line="export REPOS='TWtablero/repoTest1;TWtablero/repoTest2'"
+      sudo_user: "{{deploy_user}}"
+
+    
