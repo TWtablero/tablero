@@ -50,7 +50,7 @@ define(['config/config_bootstrap'],
       };
 
       this.accessToken = function () {
-        return (this.getCurrentAuthToken()) ? ("access_token=" + this.getCurrentAuthToken()) : '';
+        return "access_token=" + this.getCurrentAuthToken();
       };
 
       this.newIssueURL = function (projectName) {

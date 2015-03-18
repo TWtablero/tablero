@@ -1,9 +1,10 @@
 define([],
-  function () {
+  function() {
 
     var config = {
       repos: [],
-      labels: []
+      labels: [],
+      access_token: null
     };
 
 
@@ -12,10 +13,11 @@ define([],
       return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
     };
 
-    $.getJSON('/config', function (data) {
+    $.getJSON('/config', function(data) {
       config = data || {
         repos: [],
-        labels: []
+        labels: [],
+        access_token: null  
       };
 
       if (getParameterByName('access') !== 'repo') {
@@ -25,19 +27,22 @@ define([],
     });
 
     return {
-      getConfig: function () {
+      getConfig: function() {
         return config;
       },
-      getRepos: function () {
+      getRepos: function() {
         return config.repos
       },
-      getReposNames: function () {
+      getReposNames: function() {
         return Object.keys(config.repos);
       },
-      getLabels: function () {
+      getLabels: function() {
         return config.labels;
+      },
+      getReadOnlyAccessToken: function() {
+        return config.access_token;
       }
-    }
+    };
 
-  }
+}
 );

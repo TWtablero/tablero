@@ -38,5 +38,6 @@ configurable.get('REPOS', function (value) {
 
 module.exports = {
   repos: repos,
-  labels: labels
+  labels: labels,
+  access_token: configurable.get('DEFAULT_ACCESS_TOKEN')         
 };

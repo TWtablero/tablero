@@ -16,9 +16,11 @@
   define(
   ['flight/lib/component',
     'component/templates/issue_template',
-    'component/ui/copyable'],
-    function (defineComponent, withIssueTemplate, copyable) {
-      return defineComponent(track, withIssueTemplate, copyable);
+    'component/ui/copyable',
+    'component/mixins/with_auth_token_from_hash'
+    ],
+  function (defineComponent, withIssueTemplate, copyable, withAuthTokeFromHash) {
+    return defineComponent(track, withIssueTemplate, copyable, withAuthTokeFromHash);
 
       function track() {
         this.defaultAttrs({
@@ -118,20 +120,19 @@
           $("#" + elementChanged.id).attr('data-priority', elementChanged.priority);
         };
 
-        this.renderIssue = function (issue) {
-          var renderedIssue = $(this.render(issue));
-          if (renderedIssue.find('.assignee-avatar').attr('src') != "") {
-            renderedIssue.find('.assigns-myself').addClass('assigned');
-            renderedIssue.find('.empty-avatar').hide();
-            renderedIssue.find('.empty-avatar-label').hide();
-          }
-          renderedIssue.find('a.assigns-myself').click(function () {
-            this.trigger('ui:assigns:user', {
-              issue: issue
-            });
-          }.bind(this));
-          return renderedIssue;
-        };
+      this.renderIssue = function (issue) {
+        issue.hideClass = !this.usingUserAuthToken() ? 'hide' : ''; 
+        var renderedIssue = $(this.render(issue));
+        if (renderedIssue.find('.assignee-avatar').attr('src') != "" ) {
+          renderedIssue.find('.assigns-myself').addClass('assigned');
+          renderedIssue.find('.empty-avatar').hide();
+          renderedIssue.find('.empty-avatar-label').hide();
+        }
+        renderedIssue.find('a.assigns-myself').click(function () {
+          this.trigger('ui:assigns:user', {issue: issue});
+        }.bind(this));
+        return renderedIssue;
+      };
 
         this.getIssues = function (event, eventCallback) {
           var issues = $(".issue", this.$node);
