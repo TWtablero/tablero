@@ -4,6 +4,7 @@ var nconf = require('nconf');
 
 describe("Configurable", function() {
   var configurable = require('../../lib/configurable');
+
   var value = 'VALUE',
     key = 'KEY',
     callback;
@@ -19,6 +20,7 @@ describe("Configurable", function() {
 
     describe('when value does not exist', function() {
       it("returns undefined", function() {
+        configurable.setSilentMode(true);
         var actual = configurable.get(key, callback);
 
         expect(callback).not.toHaveBeenCalledWith(value);

@@ -20,7 +20,6 @@ var maxDynaReposQuantity = 5;
 for(i = 0; i < maxDynaReposQuantity; i++) {
   addRepo(configurable.get('REPO_' + i + '_NAME') || i + 'th', 'REPO_' + i + '_URL');
 }
-configurable.setSilentMode(false);
 
 
 configurable.get('REPOS', function(value) {
@@ -29,9 +28,9 @@ configurable.get('REPOS', function(value) {
     var val = chunk,
     nameRegex = /(https:\/\/api\.github\.com\/repos\/)?(.*)/;
     name = nameRegex.exec(val)[2],
-    key = name.toLowerCase().replace('/', '_'); 
+    key = name.toLowerCase().replace('/', '_');
 
-    var gitHubApiPrefix = 'https://api.github.com/repos/'; 
+    var gitHubApiPrefix = 'https://api.github.com/repos/';
     repos[key] = gitHubApiPrefix + name;
     labels[key] = name;
   });
