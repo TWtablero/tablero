@@ -92,7 +92,7 @@ After the installation, you'll need to proceed with the Tablero [configuration](
   Authorization callback URL: http://localhost:3000/request_auth_token
   ```
 
-2. Generate a [personal access token](https://github.com/settings/tokens/new) with the access rights you'd like to grant users that don't have a Github account. If you'd like users to only be able to view your Tablero and not make changes, unselect all the checkboxes. Use the generated token in the next step.
+2. Generate a [personal access token](https://github.com/settings/tokens/new) for users without a Github account to be able to view your board. We encourage you to uncheck all scope options to make your board readonly to external viewers.
 
 3. Create a __config.json__ file with application's values generated in the last step:
   ![image of applications variable]
