@@ -26,6 +26,8 @@ define([
 
       var csvLink = '';
 
+      var customColumns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
+
       this.cleanLabel = function(label) {
         return label.trim().
                replace(/^[^a-zA-Z]+/g, '').
@@ -72,7 +74,6 @@ define([
 
       this.issuesToCsv = function(issues) {
         var issuesCsv = _.map(this.validIssuesToExport(issues), function(issue) {
-          var custom_columns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
           var data = ['\"' + issue.projectName + "\"",
             issue.number,
             "\"" + issue.title + "\"",
@@ -85,7 +86,7 @@ define([
             issue.closed_at,
             daysBetween(issue.created_at, issue.closed_at),
           ];
-          _.each(custom_columns, function(column) {
+          _.each(customColumns, function(column) {
             data.push(issue[this.cleanLabel(column)+"_at"]);
           }, this);
           return data.join(';');
@@ -109,9 +110,8 @@ define([
       };
 
       this.csvHeader = function() {
-        var labels = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
         var header = ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Closed at", "Lead Time"]
-        _.each(labels, function(label) {
+        _.each(customColumns, function(label) {
           header.push(this.cleanLabel(label) + " at");
         }, this);
         return header.join(';');
@@ -192,11 +192,10 @@ define([
           labelEvents = {},
           earlierstIssuesEvent = {},
           issuesWithEventDate = issues,
-          labels = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
 
         groupedEventsByIssueId = this.groupEventsByIssuesId(events);
         labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
-        _.each(labels, function(label) {
+        _.each(customColumns, function(label) {
           labelEvents = this.getIssueEventsByLabel(labeledEvents, label);
           earlierstIssuesEvent = this.getEarliestIssueEvents(labelEvents);
           issuesWithEventDate = this.mergeEventsWithIssues(issuesWithEventDate, earlierstIssuesEvent, this.cleanLabel(label)+"_at")
