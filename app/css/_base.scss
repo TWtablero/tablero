@@ -130,3 +130,18 @@ a {
     background: #fff;
   }
 }
+
+input.missing {
+  border: 1px red solid !important;
+}
+
+div.required{
+  &:after {
+    color: red;
+    content: '*';
+  }
+
+  .field {
+    width: 95%;
+  }
+}

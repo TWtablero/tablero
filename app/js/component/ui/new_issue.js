@@ -20,14 +20,18 @@ define([
   function (defineComponent, config) {
     var labels = config.getLabels();
 
-  
-
     return defineComponent(component);
     function component() {
 
-
       this.setUp = function (){
+        var context = this;
         $("#create_issue").click(function () {
+
+          if (!context.validIssueData()) {
+            context.warnMissingData();
+            return;
+          }
+
           $(document).trigger('ui:create:issue', {
             'issueTitle': $("#issueTitle").val(),
             'issueBody': $("#issueBody").val(),
@@ -41,10 +45,18 @@ define([
         $("#projects").change(function () {
           $(document).trigger("ui:issue:createIssuesURL", $(this).val());
         });
-      }
+      };
+
+      this.validIssueData = function() {
+        return !_.isEmpty($("#issueTitle").val());
+      };
+
+      this.warnMissingData = function() {
+        $("#issueTitle").addClass('missing');
+      };
 
       this.addProjects = function() {
-        
+
         var template = Hogan.compile('<option value="{{name}}">{{label}}</option>');
         $('#projects').empty();
         _(labels).each(function (label, name) {
@@ -57,6 +69,7 @@ define([
         this.addProjects();
         this.setUp();
       });
+
     }
   }
 );

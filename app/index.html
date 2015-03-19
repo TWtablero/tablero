@@ -13,7 +13,7 @@
     <header>
       <a href="/" title="Tablero" class="logo"><h1>TABLERO</h1></a>
       <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
-              + CREATE ISSUE
+        + CREATE ISSUE
       </button>
       <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
       <a id="changeAccess" class="btn btn-success btn-xs right" href="javascript:void(0)">CHANGE ACCESS</a>
@@ -29,13 +29,15 @@
             <h4 class="modal-title" id="myModalLabel">Create Issue</h4>
           </div>
           <div class="modal-body">
-           <input placeholder="Enter title here..." type="text" id="issueTitle" class="form-control field">
-           <br/>
-           <textarea placeholder="Enter text here..." id="issueBody" class="form-control field" rows="3"></textarea>
-           <br/>
-           <label for="projects">Project</label>
-           <select id="projects" class="form-control">
-           </select>
+            <div class="required">
+              <input placeholder="Enter title here..." type="text" id="issueTitle" required="true" class="form-control field"/>
+            </div>
+            <br/>
+            <textarea placeholder="Enter text here..." id="issueBody" class="form-control field" rows="3"></textarea>
+            <br/>
+            <label for="projects">Project</label>
+            <select id="projects" class="form-control">
+            </select>
           </div>
           <div class="modal-footer">
             <button id="create_issue" type="button" class="btn btn-primary">Create</button>
@@ -46,19 +48,19 @@
       </div>
     </div>
     <div class="container">
-       <div class="column backlog-sidebar" style="display:none">
+      <div class="column backlog-sidebar" style="display:none">
 
-          <div class="panel-heading">
-            <div style="height: 8px"></div>
-            <span class="hide-icon-sidebar">
-                <span class="small-text">SHOW&nbsp;</span><i class="icon-double-angle-right icon-large"></i>
-            </span>
+        <div class="panel-heading">
+          <div style="height: 8px"></div>
+          <span class="hide-icon-sidebar">
+            <span class="small-text">SHOW&nbsp;</span><i class="icon-double-angle-right icon-large"></i>
+          </span>
+        </div>
+        <div class="panel-body ">
+          <div class="backlog-vertical-title">
+            <h3>Backlog<span class="issues-count"></span></h3>
           </div>
-           <div class="panel-body ">
-             <div class="backlog-vertical-title">
-                <h3>Backlog<span class="issues-count"></span></h3>
-             </div>
-           </div>
+        </div>
       </div>
 
       <div class="column backlog-column">
@@ -66,7 +68,7 @@
           <div class="panel-heading backlog-header">
             <h3>Backlog</h3><span class="issues-count"></span>
             <span class="hide-icon">
-                <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
+              <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
             </span>
           </div>
           <div class="cards-place">
@@ -126,9 +128,9 @@
             <h4 class="modal-title" id="myModalLabel">Tablero Access</h4>
           </div>
           <div class="modal-body">
-              <p> Please select below what type of repository access you allow the Tablero to have </p>
-              <button type="button" class="btn  btn-xs" id="showPublicBtn"> PUBLIC ONLY</button>
-              <button type="button" class="btn  btn-xs" id="showPublicAndPrivateBtn" > PUBLIC AND PRIVATE </button>
+            <p> Please select below what type of repository access you allow the Tablero to have </p>
+            <button type="button" class="btn  btn-xs" id="showPublicBtn"> PUBLIC ONLY</button>
+            <button type="button" class="btn  btn-xs" id="showPublicAndPrivateBtn" > PUBLIC AND PRIVATE </button>
           </div>
         </div>
       </div>
@@ -138,15 +140,15 @@
 
     <!-- Modal about error to get issues -->
 
-     <div class="modal fade" id="failConnectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style= "display : none">
+    <div class="modal fade" id="failConnectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style= "display : none">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title" >Oops...</h4>
           </div>
           <div class="modal-body">
-              <p> It seems you have no read permission on private repositories, so we will display only the issues of public repositories.</p>
-              <button type="button" class="btn  btn-xs" id="redirectToPublicBtn"> OK </button>
+            <p> It seems you have no read permission on private repositories, so we will display only the issues of public repositories.</p>
+            <button type="button" class="btn  btn-xs" id="redirectToPublicBtn"> OK </button>
           </div>
         </div>
       </div>
@@ -155,25 +157,25 @@
 
 
     <!--[if lt IE 9]>
-    <script src="/bower_components/es5-shim/es5-shim.js"></script>
-    <script src="/bower_components/es5-shim/es5-sham.js"></script>
-    <![endif]-->
-    <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
+      <script src="/bower_components/es5-shim/es5-shim.js"></script>
+      <script src="/bower_components/es5-shim/es5-sham.js"></script>
+      <![endif]-->
+      <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
 
-    <!-- Google Analytics -->
-    <!--
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','');ga('send','pageview');
-    </script>
-    -->
+      <!-- Google Analytics -->
+      <!--
+        <script>
+(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+                                                        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+e.src='//www.google-analytics.com/analytics.js';
+r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+ga('create','');ga('send','pageview');
+        </script>
+        -->
 
-    <div id="clipboard-container" style='position fixed; left: 0px;top: 0px;width: 0px;height: 0px; opacity: 0;'>
-      <textarea id="clipboard" style="width: 1px; height: 1px;"></textarea>
-    </div>
+        <div id="clipboard-container" style='position fixed; left: 0px;top: 0px;width: 0px;height: 0px; opacity: 0;'>
+          <textarea id="clipboard" style="width: 1px; height: 1px;"></textarea>
+        </div>
   </body>
 </html>
