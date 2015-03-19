@@ -393,4 +393,30 @@ describeComponent('component/data/issues_exporter', function () {
     ]);
   });
 
+  it('should remove exporting button', function() {
+    this.setupComponent('<a id="exporting_csv" class="btn btn-success btn-xs right not-active">EXPORTING<img src="/img/loading-dots.gif" /></a>');
+    this.component.showExportCsvLink();
+    expect('#exporting_csv').not.toExist();
+  });
+
+  it('should add exporting button', function() {
+    this.setupComponent('<a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>');
+    this.component.showExportingFeedbackLink();
+    expect('#exporting_csv').toExist();
+  });
+
+  it('should hide export button', function() {
+    this.setupComponent('<a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>');
+    this.component.showExportingFeedbackLink();
+    var export_button = document.getElementById("export_csv");
+    expect(export_button.getAttribute("style")).toBe("display: none;");
+  });
+
+  it('should show export button', function() {
+    this.setupComponent('<a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)" style="display: none;">EXPORT TO CSV </a>');
+    this.component.showExportCsvLink();
+    var export_button = document.getElementById("export_csv");
+    expect(export_button.getAttribute("style")).toBe("");
+  });
+
 });

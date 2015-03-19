@@ -27,7 +27,6 @@ define([
       var csvLink = '';
 
       this.mountExportCsvLink = function(ev, data) {
-        $('#export_csv').attr('disabled', true);
         var repositoriesUrls = this.getRepositoriesUrlsFromIssues(data.issues);
         issuesToExport = data.issues;
         this.getEventsFromProjects(repositoriesUrls);
@@ -35,6 +34,16 @@ define([
 
       this.clearLink = function() {
         csvLink = '';
+      };
+
+      this.showExportingFeedbackLink = function(){
+        $('#export_csv').hide();
+        $('#export_csv').after('<a id="exporting_csv" class="btn btn-success btn-xs right not-active">EXPORTING<img src="/img/loading-dots.gif" /></a>');
+      };
+
+      this.showExportCsvLink = function(){
+        $('#exporting_csv').remove();
+        $('#export_csv').show();
       };
 
       this.linkToCsv = function(data) {
@@ -218,7 +227,6 @@ define([
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-        $("#export_csv").attr("disabled", false);
         issuesToExport = [];
         this.trigger('data:issues:clearExportCsvLink');
 
@@ -226,7 +234,10 @@ define([
 
       this.after('initialize', function() {
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
+        this.on('data:issues:mountExportCsvLink', this.showExportingFeedbackLink);
         this.on('data:issues:clearExportCsvLink', this.clearLink);
+        this.on('data:issues:clearExportCsvLink', this.showExportCsvLink);
+
       });
     }
   }
