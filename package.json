@@ -32,7 +32,7 @@
     "test": "npm run client-test; npm run server-test",
     "client-test": "karma start --single-run",
     "server-test": "jasmine-node test/config test/lib",
-    "functional-test": "mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.* test",
+    "functional-test": "REPOS=\"TWtablero/repoTest1;TWtablero/repoTest2\" mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.* test",
     "watch": "npm run start > server.log & npm run livereload",
     "watch-test": "karma start",
     "watch-server-test": "jasmine-node --autotest test/config test/lib --watch lib",
