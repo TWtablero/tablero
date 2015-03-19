@@ -3,6 +3,7 @@ $repo-colors: #ef689e #69b4df #cba50b #808af6 #3cb878;
 body {
   font-family: "OpenSans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   font-size: 16px !important;
+  min-width: 1010px;
 }
 
 ::-webkit-scrollbar {
