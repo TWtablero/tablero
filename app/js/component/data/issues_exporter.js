@@ -26,7 +26,13 @@ define([
 
       var csvLink = '';
 
-      var customColumns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
+      var redisColumns = [{order: 0, column: 'Ready'},
+                          {order: 1, column: 'Development'},
+                          {order: 2, column: 'Quality Assurance'}];
+
+      var customColumns = _.map(redisColumns, function(column) {
+        return (column['order'] + 1) + ' - ' + column['column'];
+      });
 
       this.cleanLabel = function(label) {
         return label.trim().
