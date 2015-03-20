@@ -657,6 +657,10 @@ public class RocketboardPage {
           return value;
     }
 
+    public String[] getTags() {
+        return new String[0];
+    }
+
     public void openColumnsModal() throws Exception {
         waitingObject(changeColumnsButton);
         changeColumnsButton.click();

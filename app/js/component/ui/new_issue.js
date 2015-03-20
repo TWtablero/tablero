@@ -15,13 +15,16 @@
 */
 define([
   'flight/lib/component',
-  'config/config_bootstrap'
+  'config/config_bootstrap',
+  'component/mixins/repositories_urls',
+  'component/mixins/with_auth_token_from_hash'
   ],
-  function (defineComponent, config) {
+  function (defineComponent, config, repositoriesURLs, withAuthTokeFromHash) {
     var labels = config.getLabels();
 
-    return defineComponent(component);
+    return defineComponent(component, repositoriesURLs, withAuthTokeFromHash);
     function component() {
+
 
       this.setUp = function (){
         var context = this;
@@ -65,18 +68,14 @@ define([
         }.bind(this));
       };
 
-      this.addColumnTags = function() {
-        var columnTags = [
-          '0 - Backlog',
-          '1 - Ready',
-          '2 - Development',
-          '3 - Quality Assurance',
-          '4 - Done'
-        ];
+      this.fetchTags = function() {
+        this.getAllTagsFromProjects();
+      }
 
+      this.addTags = function(availableTags) {
         var template = Hogan.compile('<option>{{label}}</option>');
         $('#labels').empty();
-        _(columnTags).each(function (label) {
+        _(availableTags).each(function (label) {
             $("#labels").append(template.render({label: label}));
         }.bind(this));
 
@@ -85,7 +84,7 @@ define([
 
       this.after('initialize', function () {
         this.addProjects();
-        this.addColumnTags();
+        this.fetchTags();
         this.setUp();
       });
 

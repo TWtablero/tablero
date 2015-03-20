@@ -27,8 +27,25 @@ define(['config/config_bootstrap'],
             }.bind(this));
 
             return [name, hasData.promise() ];
-          }.bind(this)));
+        }.bind(this)));
 
+      }
+
+      this.getAllTagsFromProjects = function() {
+        var repos = config.getRepos();
+        var labels = [];
+
+        _.map(repos, function (url, name) {
+          var issueURL = url + "/labels?" + this.accessToken();
+          var request = $.getJSON(issueURL, function (data) {
+            _(data).each(function (label) {
+              labels.push(label.name);
+            });
+            this.addTags(labels);
+          }.bind(this));
+
+          return labels;
+        }.bind(this));
       }
 
 
@@ -70,8 +87,6 @@ define(['config/config_bootstrap'],
           return projectUrl.slice(19).match(/.*?\/.*?(?=\/)/)[0];
         }
       };
-
-
 
       this.getAllProjectsIdentifiers = function(projectNames) {
         var projectUrls = _.map(projectNames, this.getURLFromProject);

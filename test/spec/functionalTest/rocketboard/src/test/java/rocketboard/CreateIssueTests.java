@@ -19,7 +19,7 @@ public class CreateIssueTests extends AbstractRocketboardTests {
 		Integer valueAfter = rocketboardPage.getCount("backlog");
 		assertThat(valueAfter, equalTo(valueBefore+1));
 		assertThat(rocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
-		}
+	}
 		
 	@Test
 	public void CreateIssueNoDescription() throws Exception {
@@ -27,7 +27,7 @@ public class CreateIssueTests extends AbstractRocketboardTests {
 		rocketboardPage.createIssue(title,"", getRandomProject().getName(), tag);
 		rocketboardPage.waitCreatedIssue(title);
 		assertThat(rocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
-		}
+	}
 
 	@Test
 	public void issueAdvancedOption() throws Exception{
