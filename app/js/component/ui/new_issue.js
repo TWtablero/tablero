@@ -65,9 +65,27 @@ define([
         }.bind(this));
       };
 
+      this.addColumnTags = function() {
+        var columnTags = [
+          '0 - Backlog',
+          '1 - Ready',
+          '2 - Development',
+          '3 - Quality Assurance',
+          '4 - Done'
+        ];
+
+        var template = Hogan.compile('<option>{{label}}</option>');
+        $('#labels').empty();
+        _(columnTags).each(function (label) {
+            $("#labels").append(template.render({label: label}));
+        }.bind(this));
+
+      }
+
 
       this.after('initialize', function () {
         this.addProjects();
+        this.addColumnTags();
         this.setUp();
       });
 

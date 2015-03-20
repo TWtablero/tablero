@@ -51,6 +51,9 @@ public class RocketboardPage {
 	@FindBy(how = How.ID, using = "projects")
 	WebElement comboBoxProject;
 
+    @FindBy(how = How.ID, using = "labels")
+    WebElement comboBoxLabel;
+
 	@FindBy(css="button.btn.btn-default")
 	WebElement closeBtn;
 
@@ -60,7 +63,7 @@ public class RocketboardPage {
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
 
-	@FindBy(css = "header > div > span > label > i")
+	@FindBy(css = "header > div > span > tag > i")
 	List<WebElement> repoFilters;
 
 	@FindBy(linkText="Advanced options")
@@ -150,12 +153,18 @@ public class RocketboardPage {
 		selectProjects.selectByVisibleText(repoName);
 	}
 
-	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
+    public void selectLabel(String label) throws Exception {
+        Select selectLabels = new Select(comboBoxLabel);
+        selectLabels.selectByVisibleText(label);
+    }
+
+	public void createIssue(String titleTxt, String descTxt, String repoName, String label) throws Exception {
 		waitingLoading();
 		openModelCreateIssue();
 		setIssueTitle(titleTxt);
 		setIssueDesc(descTxt);
 		selectProjects(repoName);
+        selectLabel(label);
 		clickbtnCreateIssue();
 		waitCreatedIssue(titleTxt);
 	}
@@ -211,7 +220,7 @@ public class RocketboardPage {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
 		values[0] = getCount("backlog");
-		createIssue(title, desc, repoName);
+		createIssue(title, desc, repoName, "1 - Ready");
 		waitCreatedIssue(title);
 		values[1] = getCount("backlog");
 		return values;

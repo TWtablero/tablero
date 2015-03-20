@@ -28,6 +28,7 @@ public abstract class AbstractRocketboardTests {
     public String title;
     public String desc;
     public String project;
+    public static String tag = "1 - Ready";
     boolean privateRepo = true;
 
 
