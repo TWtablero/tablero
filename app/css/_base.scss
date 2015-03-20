@@ -136,6 +136,13 @@ input.missing {
 }
 
 div.required{
+  &:before {
+    color: gray;
+    content: 'This field is required.';
+    font-size: 10px;
+    font-style: italic;
+  }
+
   &:after {
     color: red;
     content: '*';
