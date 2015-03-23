@@ -10,7 +10,6 @@ public class EndToEndTests extends AbstractRocketboardTests{
 
 	@Test
 	public void E2E() throws Exception {
-		rocketboardPage.waitingLoading();
 		checkValue = rocketboardPage.createIssueGettingValue(title, desc, getRandomProject().getName());
 		rocketboardPage.waitCreatedIssue(title);
 		assertEquals(Integer.valueOf(checkValue[0]+1),Integer.valueOf(checkValue[1]));

@@ -171,7 +171,7 @@ public class RocketboardPage {
 
 	public void clickRepo(String repoKey) throws Exception {
 		waitingLoading();
-		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + label > i"));
+		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + tag > i"));
 		if (element != null)
 			checkRepositoryPosition(element);
 		else
