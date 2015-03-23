@@ -40,7 +40,7 @@
           data: JSON.stringify({
             'title': data.issueTitle,
             'body': data.issueBody,
-            'labels': ["0 - Backlog"]
+            'labels': [data.issueLabel]
           }),
           success: function (response, status, xhr) {
             response.projectName = data.projectName;

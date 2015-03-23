@@ -38,6 +38,7 @@ define([
           $(document).trigger('ui:create:issue', {
             'issueTitle': $("#issueTitle").val(),
             'issueBody': $("#issueBody").val(),
+            'issueLabel': $("#labels").val(),
             'projectName': $("#projects").val()
           });
 

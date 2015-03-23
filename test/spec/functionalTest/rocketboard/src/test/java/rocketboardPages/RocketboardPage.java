@@ -220,7 +220,7 @@ public class RocketboardPage {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
 		values[0] = getCount("backlog");
-		createIssue(title, desc, repoName, "1 - Ready");
+		createIssue(title, desc, repoName, "0 - Backlog");
 		waitCreatedIssue(title);
 		values[1] = getCount("backlog");
 		return values;
