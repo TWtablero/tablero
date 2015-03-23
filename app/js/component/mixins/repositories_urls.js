@@ -35,16 +35,10 @@ define(['config/config_bootstrap'],
         var repos = config.getRepos();
         var labels = [];
 
-        _.map(repos, function (url, name) {
+        return _.map(repos, function (url, name) {
           var issueURL = url + "/labels?" + this.accessToken();
-          var request = $.getJSON(issueURL, function (data) {
-            _(data).each(function (label) {
-              labels.push(label.name);
-            });
-            this.addTags(labels);
-          }.bind(this));
+          return $.getJSON(issueURL);
 
-          return labels;
         }.bind(this));
       }
 

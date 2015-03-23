@@ -60,7 +60,7 @@ define([
       };
 
       this.addProjects = function() {
-
+        
         var template = Hogan.compile('<option value="{{name}}">{{label}}</option>');
         $('#projects').empty();
         _(labels).each(function (label, name) {
@@ -68,23 +68,8 @@ define([
         }.bind(this));
       };
 
-      this.fetchTags = function() {
-        this.getAllTagsFromProjects();
-      }
-
-      this.addTags = function(availableTags) {
-        var template = Hogan.compile('<option>{{label}}</option>');
-        $('#labels').empty();
-        _(availableTags).each(function (label) {
-            $("#labels").append(template.render({label: label}));
-        }.bind(this));
-
-      }
-
-
       this.after('initialize', function () {
         this.addProjects();
-        this.fetchTags();
         this.setUp();
       });
 

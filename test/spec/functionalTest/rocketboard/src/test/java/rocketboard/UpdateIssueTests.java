@@ -36,7 +36,6 @@ public class UpdateIssueTests extends AbstractRocketboardTests {
 		rocketboardPage.visible(id);
 		String label = driver.findElement(By.xpath("//*[@id='"+id+"']/div[3]/span")).getText();
 		assertEquals(label.equals("bug"), Boolean.TRUE);
-        assertThat(ArrayUtils.contains(rocketboardPage.getTags(), "bug"), is(true));
 	}
 	
 }

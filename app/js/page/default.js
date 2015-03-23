@@ -16,6 +16,9 @@
  define(
   [
     'component/data/github_user',
+    'component/data/github_issues',
+    'component/data/github_tags',
+    'component/track',
     'component/data/issues_exporter',
     'component/data/prioritization_manager',
     'component/ui/issues_filter',
@@ -51,6 +54,7 @@
       $(document).ajaxStop($.unblockUI);
 
       githubUser.attachTo(document);
+      githubTags.attachTo(document);
       issuesExporter.attachTo(document);
       prioritizationManager.attachTo(document);
       columnsManager.attachTo(document);
