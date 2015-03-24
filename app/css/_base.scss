@@ -133,16 +133,12 @@ a {
 
 input.missing {
   border: 1px red solid !important;
+  &:after {
+    content: 'Lero';
+  }
 }
 
 div.required{
-  &:before {
-    color: gray;
-    content: 'This field is required.';
-    font-size: 10px;
-    font-style: italic;
-  }
-
   &:after {
     color: red;
     content: '*';
@@ -151,4 +147,11 @@ div.required{
   .field {
     width: 95%;
   }
+}
+
+div.required-message {
+  color: gray;
+  display: none;
+  font-size: 14px;
+  font-style: italic;
 }

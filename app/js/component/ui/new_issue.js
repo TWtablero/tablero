@@ -53,6 +53,7 @@ define([
 
       this.warnMissingData = function() {
         $("#issueTitle").addClass('missing');
+        $(".required-message").css('display', 'block');
       };
 
       this.addProjects = function() {
