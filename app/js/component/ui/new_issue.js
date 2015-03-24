@@ -35,15 +35,21 @@ define([
             return;
           }
 
+          var selectedLabels = $("#labels").val();
+          selectedLabels = ((selectedLabels != "") ? selectedLabels.split(",") : ["0 - Backlog"]);
+
           $(document).trigger('ui:create:issue', {
             'issueTitle': $("#issueTitle").val(),
             'issueBody': $("#issueBody").val(),
-            'issueLabel': $("#labels").val(),
+            'issueLabels': selectedLabels,
             'projectName': $("#projects").val()
           });
 
-          $("#myModal").modal('hide')
-          $("#myModal input, textarea").val('')
+          $("#myModal").modal('hide');
+          $("#myModal input, textarea").val('');
+          _(selectedLabels).each(function(label) { 
+            $('#labels').tagEditor('removeTag', label); 
+          });
         });
 
         $("#projects").change(function () {

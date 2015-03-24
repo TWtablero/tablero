@@ -15,7 +15,9 @@
     "flight-request": "*",
     "pace": "~1.0.2",
     "blockui": "*",
-    "tipsy": "3545aa6ae2"
+    "tipsy": "3545aa6ae2",
+    "jquery-tag-editor": "1.0.13",
+    "caret": "*"
   },
   "devDependencies": {
     "jasmine-flight": "~3.0.0",

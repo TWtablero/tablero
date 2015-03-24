@@ -33,7 +33,6 @@ define(['config/config_bootstrap'],
 
       this.getAllTagsFromProjects = function() {
         var repos = config.getRepos();
-        var labels = [];
 
         return _.map(repos, function (url, name) {
           var issueURL = url + "/labels?" + this.accessToken();

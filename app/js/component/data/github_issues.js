@@ -30,7 +30,7 @@
 
 
       this.createIssue = function (ev, data) {
-        var url, repositoryURL;
+        var url, repositoryURL, labels;
         repositoryURL = this.getURLFromProject(data.projectName);
         url = this.repoIssuesURL(repositoryURL);
 
@@ -40,7 +40,7 @@
           data: JSON.stringify({
             'title': data.issueTitle,
             'body': data.issueBody,
-            'labels': [data.issueLabel]
+            'labels': data.issueLabels
           }),
           success: function (response, status, xhr) {
             response.projectName = data.projectName;

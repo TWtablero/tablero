@@ -10,10 +10,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -51,8 +48,8 @@ public class RocketboardPage {
 	@FindBy(how = How.ID, using = "projects")
 	WebElement comboBoxProject;
 
-    @FindBy(how = How.ID, using = "labels")
-    WebElement comboBoxLabel;
+    @FindBy(how = How.CLASS_NAME, using = "tag-editor")
+    WebElement editIssueLabel;
 
 	@FindBy(css="button.btn.btn-default")
 	WebElement closeBtn;
@@ -154,8 +151,8 @@ public class RocketboardPage {
 	}
 
     public void selectLabel(String label) throws Exception {
-        Select selectLabels = new Select(comboBoxLabel);
-        selectLabels.selectByVisibleText(label);
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("$('#labels').tagEditor('addTag', '" + label + "');");
     }
 
 	public void createIssue(String titleTxt, String descTxt, String repoName, String label) throws Exception {

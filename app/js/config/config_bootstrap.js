@@ -23,7 +23,7 @@ define([],
       return config;
     },
     getRepos: function() {
-      return config.repos
+      return config.repos;
     },
     getReposNames: function() {
       return Object.keys(config.repos);

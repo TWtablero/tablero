@@ -15,7 +15,9 @@ requirejs.config({
     page: '../js/page',
     clipboard: '../js/page/clipboard',
     flight: 'flight',
-    'with-request': 'flight-request/lib/with_request'
+    'jquery-tag-editor': '../bower_components/jquery-tag-editor/jquery.tag-editor',
+    'with-request': 'flight-request/lib/with_request',
+    'caret': '../bower_components/caret/jquery.caret'
   }
 });
 
@@ -33,7 +35,9 @@ require(
 	'underscore', 
 	'jqueryUI', 
   'tipsy',
-	'bootstrap'
+	'bootstrap',
+  'caret',
+  'jquery-tag-editor'
   ],
 
   function(compose, registry, advice, withLogging, debug, $, blockUI) {

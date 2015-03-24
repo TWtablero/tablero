@@ -36,9 +36,12 @@
         var availableTags = this.getAllTagsFromProjects();
         $.when.apply(this, availableTags).then(
           function () {
+            if(_.isString(arguments[1])) {
+              arguments = [arguments];
+            }
             _(arguments).each(function (repos) {
               _(repos[0]).each(function(label) {
-                if (!_.contains(this.attr.tags, label.name)){
+                if (label.name != undefined && !_.contains(this.attr.tags, label.name)){
                   this.attr.tags.push(label.name);
                 }
               }.bind(this));
@@ -49,11 +52,8 @@
       }
 
       this.addTags = function() {
-        var template = Hogan.compile('<option>{{label}}</option>');
-        $('#labels').empty();
-        _(this.attr.tags.sort()).each(function (label) {
-            $("#labels").append(template.render({label: label}));
-        }.bind(this));
+        var tags = this.attr.tags;
+        $('#labels').tagEditor({autocomplete: {source: tags}, forceLowercase: false});
       }
 
       this.after('initialize', function () {
