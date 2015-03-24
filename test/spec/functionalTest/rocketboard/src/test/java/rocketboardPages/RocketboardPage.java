@@ -63,7 +63,7 @@ public class RocketboardPage {
 	@FindBy(css="div#myModal > div")
 	WebElement outsideModal;
 
-	@FindBy(css = "header > div > span > tag > i")
+	@FindBy(css = "header > div > span > label > i")
 	List<WebElement> repoFilters;
 
 	@FindBy(linkText="Advanced options")
@@ -171,7 +171,7 @@ public class RocketboardPage {
 
 	public void clickRepo(String repoKey) throws Exception {
 		waitingLoading();
-		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + tag > i"));
+		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + label > i"));
 		if (element != null)
 			checkRepositoryPosition(element);
 		else
