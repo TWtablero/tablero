@@ -12,3 +12,4 @@ config.json
 *.iml
 **/.idea
 config.json
+dump.rdb
