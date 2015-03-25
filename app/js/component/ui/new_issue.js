@@ -50,6 +50,7 @@ define([
           _(selectedLabels).each(function(label) { 
             $('#labels').tagEditor('removeTag', label); 
           });
+          $("#issueTitle").removeClass('missing');
         });
 
         $("#projects").change(function () {

@@ -34,21 +34,20 @@
 
       this.getProjectTags = function() {
         var availableTags = this.getAllTagsFromProjects();
-        $.when.apply(this, availableTags).then(
-          function () {
-            if(_.isString(arguments[1])) {
-              arguments = [arguments];
-            }
-            _(arguments).each(function (repos) {
-              _(repos[0]).each(function(label) {
-                if (label.name != undefined && !_.contains(this.attr.tags, label.name)){
-                  this.attr.tags.push(label.name);
-                }
-              }.bind(this));
-            }.bind(this));
-            this.addTags();
-          }
-        .bind(this));
+        var that = this;
+
+        $.when.apply(this, availableTags).then( function () {
+          arguments = (availableTags.length > 1) ? arguments : [arguments];
+
+          _.each(arguments, function (repos) {
+            _.each(repos[0], function(label) {
+              if (!_.contains(that.attr.tags, label.name)){
+                that.attr.tags.push(label.name);
+              }
+            });
+          });
+          that.addTags();
+        });
       }
 
       this.addTags = function() {
