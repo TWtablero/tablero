@@ -75,17 +75,21 @@ define([
 
       githubIssues.attachTo(document);
 
-      var mountBoard = function () {
         $(document).trigger('ui:needs:issues', {});
-        $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-        $(document).trigger('ui:draggable', {
-          boardColumns: extraClasses
-        });
+
+        var mountBoard = function(){
+          $(document).trigger('ui:needs:issues', {});
+          $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
+          $(document).trigger('ui:draggable', {boardColumns: extraClasses});
+        };
+
+        if (!window.location.hash.slice(1)) {
+          $('#open_modal_issue').remove();
+          $('#changeColumns').remove();
+        } else {
+          $(document).trigger('ui:needs:githubUser', { callback : mountBoard });
+        }
       };
-      $(document).trigger('ui:needs:githubUser', {
-        callback: mountBoard
-      });
-    };
 
     this.renderColumn = function (extraClasses, extraColumns) {
       var that = this;
