@@ -17,9 +17,7 @@ header {
   .filter-container {
     position: relative;
     font-size: 0.9em;
-    margin-top: -3.8em;
-    margin-right: 30em;
-    margin-left: 300em;
+    margin: 1.5em auto;
     width: 260px;
   }
 
@@ -28,7 +26,6 @@ header {
     min-width: 130px;
     color: white;
     cursor: pointer;
-    margin-bottom: 10px;
 
     label {
       cursor: pointer;
