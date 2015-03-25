@@ -210,31 +210,29 @@ define([
 
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
-      $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
-      $('#' + issue.id + ' .empty-avatar-label').hide();
-      var that = this;
+        $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
+        $('#' + issue.id + ' .empty-avatar-label').hide();
 
-      $.ajax({
-        type: 'PATCH',
-        url: url,
-        data: JSON.stringify({
-          assignee: user.login
-        }),
-        success: function (response, status, xhr) {
-          $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-          $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
-          $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
-          $('#' + issue.id + ' .assignee-avatar').show();
-          $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-          $('#' + issue.id + ' .empty-label').hide();
-        },
-        error: function() {
-          $('#' + issue.id + ' .empty-avatar').toggleClass('loading').show();
-          $('#' + issue.id + ' .empty-avatar-label').show();
-          that.trigger('ui:show:permissionErrorModal');
-        }
-      });
-    };
+        $.ajax({
+          type: 'PATCH',
+          url: url,
+          data: JSON.stringify({
+            assignee: user.login
+          }),
+          success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
+            $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
+            $('#' + issue.id + ' .assignee-avatar').show();
+            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
+            $('#' + issue.id + ' .empty-label').hide();
+          },
+          error: function () {
+            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
+            $('#' + issue.id + ' .empty-avatar-label').show();
+          }
+        });
+      };
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
@@ -263,31 +261,29 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
-      $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
-      $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
-      var that = this;
+        $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
+        $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
 
-      $.ajax({
-        type: 'PATCH',
-        url: url,
-        data: JSON.stringify({
-          assignee: ''
-        }),
-        success: function (response, status, xhr) {
-          $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-          $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
-          $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
-          $('#' + issue.id + ' .empty-avatar').show();
-          $('#' + issue.id + ' .empty-avatar-label').show();
-          $('#' + issue.id + ' .empty-label').show();
-        },
-        error: function() {
-          $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
-          $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
-          that.trigger('ui:show:permissionErrorModal');
-        }
-      });
-    };
+        $.ajax({
+          type: 'PATCH',
+          url: url,
+          data: JSON.stringify({
+            assignee: ''
+          }),
+          success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
+            $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
+            $('#' + issue.id + ' .empty-avatar').show();
+            $('#' + issue.id + ' .empty-avatar-label').show();
+            $('#' + issue.id + ' .empty-label').show();
+          },
+          error: function () {
+            $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
+            $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
+          }
+        });
+      };
 
 
       this.updateDraggable = function (event, ui) {
@@ -351,20 +347,13 @@ define([
               });
             }
 
-          var that = this;
-          $.ajax({
-            type: 'DELETE',
-            url: url + "/labels/" + oldLabel + this.getAccessTokenParam(),
-            error: function() {
-              $('#closeModalBtn').click(function(){
-                location.reload(true);
-              });
-              that.trigger('ui:show:permissionErrorModal');
-            }
-          });
-        }.bind(this)
-      }).disableSelection();
-    };
+            $.ajax({
+              type: 'DELETE',
+              url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+            });
+          }.bind(this)
+        }).disableSelection();
+      };
 
       this.triggerRocketAnimation = function () {
         $(".panel-heading.done img.plain").hide();
@@ -462,33 +451,20 @@ define([
         this.attr.issues = [];
       };
 
-    this.showMessage = function(message){
-      $('#messageModal').modal('toggle');
-      $('#messageModal .modal-title').text(message.title);
-      $('#messageModal .modal-body p').text(message.body);
-    };
 
-    this.showPermissonErrorMessage = function(){
-      this.showMessage({
-        title: 'Error',
-        body: 'There was an error in your request. Maybe you don\'t have permission to change this issue. Please contact the repository owner.'
-      });
-    };
-
-    this.after('initialize', function () {
-      this.on('ui:needs:issues', this.fetchIssues);
-      this.on('ui:add:issue', this.addIssue);
-      this.on('ui:create:issue', this.createIssue);
-      this.on('ui:assigns:user', this.assignMyselfToIssue);
-      this.on('data:githubUser:here', this.assignMyselfToIssue);
-      this.on('ui:draggable', this.draggable);
-      this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-      this.on('#export_csv', 'click' , this.mountExportClick);
-      this.on('ui:unassign:user', this.unassignMyselfToIssue);
-      this.on('ui:blockUI', this.blockUI);
-      this.on('ui:unblockUI', this.unblockUI);
-      this.on('ui:clear:issue', this.clearIssues);
-      this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
+      this.after('initialize', function () {
+        this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:add:issue', this.addIssue);
+        this.on('ui:create:issue', this.createIssue);
+        this.on('ui:assigns:user', this.assignMyselfToIssue);
+        this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:draggable', this.draggable);
+        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+        this.on('#export_csv', 'click', this.mountExportClick);
+        this.on('ui:unassign:user', this.unassignMyselfToIssue);
+        this.on('ui:blockUI', this.blockUI);
+        this.on('ui:unblockUI', this.unblockUI);
+        this.on('ui:clear:issue', this.clearIssues);
 
       });
     }

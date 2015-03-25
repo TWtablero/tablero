@@ -207,8 +207,12 @@ define([
           }
           return;
         }
+<<<<<<< HEAD
+=======
+        return;
+      }
 
-        url = issue.url + "?access_token=" + this.getCurrentAuthToken();
+      url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
       $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
       $('#' + issue.id + ' .empty-avatar-label').hide();
@@ -235,6 +239,33 @@ define([
         }
       });
     };
+>>>>>>> fix bug when try to move or assign/unassign issues without permission
+
+        url = issue.url + "?access_token=" + this.getCurrentAuthToken();
+
+        $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
+        $('#' + issue.id + ' .empty-avatar-label').hide();
+
+        $.ajax({
+          type: 'PATCH',
+          url: url,
+          data: JSON.stringify({
+            assignee: user.login
+          }),
+          success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
+            $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
+            $('#' + issue.id + ' .assignee-avatar').show();
+            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
+            $('#' + issue.id + ' .empty-label').hide();
+          },
+          error: function () {
+            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
+            $('#' + issue.id + ' .empty-avatar-label').show();
+          }
+        });
+      };
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
@@ -263,6 +294,32 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
+        $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
+        $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
+
+        $.ajax({
+          type: 'PATCH',
+          url: url,
+          data: JSON.stringify({
+            assignee: ''
+          }),
+          success: function (response, status, xhr) {
+            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
+            $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
+            $('#' + issue.id + ' .empty-avatar').show();
+            $('#' + issue.id + ' .empty-avatar-label').show();
+            $('#' + issue.id + ' .empty-label').show();
+          },
+          error: function () {
+            $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
+            $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
+          }
+        });
+      };
+
+<<<<<<< HEAD
+=======
       $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
       $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
       var that = this;
@@ -288,7 +345,7 @@ define([
         }
       });
     };
-
+>>>>>>> fix bug when try to move or assign/unassign issues without permission
 
       this.updateDraggable = function (event, ui) {
 
@@ -351,6 +408,27 @@ define([
               });
             }
 
+            $.ajax({
+              type: 'DELETE',
+              url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+            });
+          }.bind(this)
+        }).disableSelection();
+      };
+
+<<<<<<< HEAD
+      this.triggerRocketAnimation = function () {
+        $(".panel-heading.done img.plain").hide();
+        $(".panel-heading.done h3").css('opacity', 0);
+        $(".panel-heading.done .issues-count").css('opacity', 0);
+        $(".panel-heading.done img.colored").show().animate({
+          top: '-650px'
+        }, 2000, 'easeInBack', function () {
+          $(".panel-heading.done img.colored").hide().css('top', 0);
+
+          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
+          $(".panel-heading.done h3").css('color', '#5dc66c');
+=======
           var that = this;
           $.ajax({
             type: 'DELETE',
@@ -366,17 +444,30 @@ define([
       }).disableSelection();
     };
 
-      this.triggerRocketAnimation = function () {
-        $(".panel-heading.done img.plain").hide();
-        $(".panel-heading.done h3").css('opacity', 0);
-        $(".panel-heading.done .issues-count").css('opacity', 0);
-        $(".panel-heading.done img.colored").show().animate({
-          top: '-650px'
-        }, 2000, 'easeInBack', function () {
-          $(".panel-heading.done img.colored").hide().css('top', 0);
+    this.triggerRocketAnimation = function () {
+      $(".panel-heading.done img.plain").hide();
+      $(".panel-heading.done h3").css('opacity', 0);
+      $(".panel-heading.done .issues-count").css('opacity', 0);
+      $(".panel-heading.done img.colored").show().animate({
+        top: '-650px'
+      }, 2000, 'easeInBack', function () {
+        $(".panel-heading.done img.colored").hide().css('top', 0);
 
-          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
-          $(".panel-heading.done h3").css('color', '#5dc66c');
+        $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
+        $(".panel-heading.done h3").css('color', '#5dc66c');
+        $(".panel-heading.done h3").animate({
+          opacity: 1
+        }, 2000);
+
+        $(".panel-heading.done .check-done").fadeIn(2000, function () {
+          $(".panel-heading.done .check-done").hide();
+
+          $(".panel-heading.done h3").css('opacity', 0);
+          $(".panel-heading.done h3").text('Drop here to launch');
+          $(".panel-heading.done h3").css('color', '#aaa');
+
+          $(".panel-heading.done img.plain").fadeIn(600);
+>>>>>>> fix bug when try to move or assign/unassign issues without permission
           $(".panel-heading.done h3").animate({
             opacity: 1
           }, 2000);
@@ -462,6 +553,87 @@ define([
         this.attr.issues = [];
       };
 
+
+      this.after('initialize', function () {
+        this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:add:issue', this.addIssue);
+        this.on('ui:create:issue', this.createIssue);
+        this.on('ui:assigns:user', this.assignMyselfToIssue);
+        this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:draggable', this.draggable);
+        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+        this.on('#export_csv', 'click', this.mountExportClick);
+        this.on('ui:unassign:user', this.unassignMyselfToIssue);
+        this.on('ui:blockUI', this.blockUI);
+        this.on('ui:unblockUI', this.unblockUI);
+        this.on('ui:clear:issue', this.clearIssues);
+
+      });
+<<<<<<< HEAD
+    }
+=======
+    };
+
+    this.DOMObjectToIssueMovedParam = function(element) {
+      var returnObject = { id : 0 , priority : 0 };
+      if(element && element.id){
+        returnObject.id = element.id;
+        returnObject.priority = element.dataset.priority;
+      }
+      var projectUrl =  $(element).find('.issue-header a')[1];
+      if(projectUrl){
+        returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
+      }
+      return returnObject;
+    };
+
+    this.parseLabel = function (label) {
+      var fullLabel = '';
+      label = label.split('-');
+
+      for (var i = 1; i < label.length; i++) {
+        var firstLetter = label[i][0];
+        fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
+      }
+
+      fullLabel = label[0] + ' - ' + fullLabel;
+      return fullLabel.trim();
+    };
+
+    this.getIssueUrlFromDraggable = function (ui) {
+      return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
+    };
+
+    this.getAccessTokenParam = function () {
+      return "?access_token=" + this.getCurrentAuthToken();
+    };
+
+    this.getState = function (className) {
+      return className.search('done') != -1 ? 'closed' : 'open';
+    };
+
+    this.changeNewIssueLink = function (event, projectName) {
+      $(".link").attr("href", this.newIssueURL(projectName));
+    };
+
+    this.blockUI = function () {
+      $.blockUI();
+    };
+
+    this.unblockUI = function (e, timeout) {
+      setTimeout($.unblockUI, (timeout || 0));
+    };
+
+    this.mountExportClick =  function(ev,data){
+      this.trigger('data:issues:mountExportCsvLink', {
+        issues: this.attr.issues
+      });
+    };
+
+    this.clearIssues = function(){
+      this.attr.issues = [];
+    };
+
     this.showMessage = function(message){
       $('#messageModal').modal('toggle');
       $('#messageModal .modal-title').text(message.title);
@@ -490,7 +662,7 @@ define([
       this.on('ui:clear:issue', this.clearIssues);
       this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
 
-      });
-    }
+    });
+>>>>>>> fix bug when try to move or assign/unassign issues without permission
   }
 );
