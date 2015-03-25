@@ -23,18 +23,14 @@
     function track() {
       this.defaultAttrs({
         issueItemSelector: '.issue',
-        issuesCount: 0
+        issuesCount: 0,
+        extraAllowedTags: ['1 - Ready', '2 - Development', '3 - Quality Assurance'],
+        columns: ['ready', 'development', 'quality-assurance']
       });
 
-      this.isIssueOnThisTrack = function (issue) {
-        var allowedTags = [
-          '0 - Backlog',
-          '1 - Ready',
-          '2 - Development',
-          '3 - Quality Assurance',
-          '4 - Done'
-        ];
 
+      this.isIssueOnThisTrack = function (issue) {
+        var allowedTags = this.attr.extraAllowedTags.concat(['0 - Backlog', '4 - Done']);
 
         var customName;
         if (issue.state === "open"){
@@ -70,14 +66,12 @@
         return filteredIssues;
       };
 
-
       this.sortIssues = function(){
         var divList = $(".issue", this.node);
         divList.sort(function(a, b){ return $(a).attr('data-priority') -  $(b).attr('data-priority') });
 
         //$(".issue-track", this.node).html(divList);
         divList.appendTo(this.node);
-
       };
 
       this.displayIssues = function (ev, data) {
@@ -92,9 +86,10 @@
 
         $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
         $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-        $('.panel-heading.ready-header .issues-count').text(' (' + $('.issue-track.ready .issue').length + ')');
-        $('.panel-heading.development-header .issues-count').text(' (' + $('.issue-track.development .issue').length + ')');
-        $('.panel-heading.quality-assurance-header .issues-count').text(' (' + $('.issue-track.quality-assurance .issue').length + ')');
+
+        _.each(this.attr.columns, function(column){
+          $('.panel-heading.'+column+'-header .issues-count').text(' (' + $('.issue-track.'+column+' .issue').length + ')');
+        });
 
         if(this.attr.trackType === "4 - Done") {
           $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');

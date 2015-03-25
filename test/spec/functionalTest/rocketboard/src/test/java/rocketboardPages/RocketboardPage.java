@@ -78,6 +78,15 @@ public class RocketboardPage {
 	@FindBy(id = "changeAccess")
 	WebElement btChangeAccess;
 
+    @FindBy(id = "changeColumns")
+    WebElement changeColumnsButton;
+
+    @FindBy(id = "addColumn")
+    WebElement addNewColumnLink;
+
+    @FindBy(id = "saveColumnsChanges")
+    WebElement saveColumnsButton;
+
 	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
 		this.driver = driver;
@@ -637,7 +646,22 @@ public class RocketboardPage {
           }
 
           return value;
-      }
+    }
+
+    public void openColumnsModal() throws Exception {
+        waitingObject(changeColumnsButton);
+        changeColumnsButton.click();
+    }
+
+    public void clickAddNewColumnLink() throws Exception {
+        waitingObject(addNewColumnLink);
+        addNewColumnLink.click();
+    }
+
+    public void saveColumnsChanges() throws Exception {
+        waitingObject(saveColumnsButton);
+        saveColumnsButton.click();
+    }
 	
 }
 

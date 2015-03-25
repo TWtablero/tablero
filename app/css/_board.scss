@@ -1,10 +1,22 @@
 .column {
-	margin-right: 12px;
-	margin-bottom: 2px;
-	display: block;
-	float: left;
-	width: 20%;
-	padding-left: 10px;
+  display: inline-block;
+  float: none;
+ 	margin-right: 12px;
+  padding-left: 10px;
+  width: 240px;
+  white-space: normal;
+  &:last-child {
+    float: none;
+    display: inline-block;
+  }
+}
+
+.board-columns {
+  display: inline-block;
+}
+
+.board-columns .column:last-child {
+	width: 240px;
 }
 
 .cards-place {
@@ -113,16 +125,15 @@
 .panel-heading {
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-    display: inline-block;
-    width: 100%;
+  display: inline-block;
+  width: 100%;
+  white-space: normal;
 }
 
 .panel-body {
-	height: 78vh;
+	height: 77vh;
 	overflow-x: hidden;
 	min-height: 400px;
-	border-top: 1px solid #E3E3E3;
-	border-bottom: 1px solid #E3E3E3;
 }
 
 .panel-body.done {
