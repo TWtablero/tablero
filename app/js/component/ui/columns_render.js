@@ -75,6 +75,7 @@ define([
           $(document).trigger('ui:needs:issues', {});
           $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
           $(document).trigger('ui:draggable', {boardColumns: extraClasses});
+          $(document).trigger('ui:needs:tags');
         };
         $(document).trigger('ui:needs:githubUser', { callback : mountBoard });
       };
