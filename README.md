@@ -14,6 +14,7 @@ IMPORTANT: For the correct operation of the project, make sure your GitHub repos
 * [Optional Features](https://github.com/TWtablero/tablero#optional-features)
   * [Saving the Order of Issues](https://github.com/TWtablero/tablero#saving-the-order-of-issues)
 * [Unit Tests](https://github.com/TWtablero/tablero#unit-tests)
+* [Functional Tests](https://github.com/TWtablero/tablero#functional-tests)
 * [Contributing to this Project](https://github.com/TWtablero/tablero#contributing-to-this-project)
 
 
@@ -117,7 +118,7 @@ After the installation, you'll need to proceed with the Tablero [configuration](
   "REPOS" : "owner/repo_name;owner/repo2_name"
   ```
 
-## Start the Application
+## Starting the Application
 
 ```
 npm start
