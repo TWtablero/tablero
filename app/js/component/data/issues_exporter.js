@@ -26,13 +26,17 @@ define([
 
       var csvLink = '';
 
-      var redisColumns = [{order: 0, column: 'Ready'},
-                          {order: 1, column: 'Development'},
-                          {order: 2, column: 'Quality Assurance'}];
+      this.customColumns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
 
-      var customColumns = _.map(redisColumns, function(column) {
-        return (column['order'] + 1) + ' - ' + column['column'];
-      });
+      this.storeColumns = function(ev, columns) {
+        var redisColumns = columns.columns;
+
+        this.customColumns = _.map(redisColumns, function(column) {
+          return (parseInt(column['order']) + 1) + ' - ' + column['column'];
+        });
+
+      };
+
 
       this.cleanLabel = function(label) {
         return label.trim().
@@ -92,7 +96,7 @@ define([
             issue.closed_at,
             daysBetween(issue.created_at, issue.closed_at),
           ];
-          _.each(customColumns, function(column) {
+          _.each(this.customColumns, function(column) {
             data.push(issue[this.cleanLabel(column)+"_at"]);
           }, this);
           return data.join(';');
@@ -117,7 +121,7 @@ define([
 
       this.csvHeader = function() {
         var header = ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Closed at", "Lead Time"]
-        _.each(customColumns, function(label) {
+        _.each(this.customColumns, function(label) {
           header.push(this.cleanLabel(label) + " at");
         }, this);
         return header.join(';');
@@ -201,7 +205,7 @@ define([
 
         groupedEventsByIssueId = this.groupEventsByIssuesId(events);
         labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
-        _.each(customColumns, function(label) {
+        _.each(this.customColumns, function(label) {
           labelEvents = this.getIssueEventsByLabel(labeledEvents, label);
           earlierstIssuesEvent = this.getEarliestIssueEvents(labelEvents);
           issuesWithEventDate = this.mergeEventsWithIssues(issuesWithEventDate, earlierstIssuesEvent, this.cleanLabel(label)+"_at")
@@ -226,6 +230,7 @@ define([
       };
 
       this.after('initialize', function() {
+        this.on('data:got:columns',               this.storeColumns);
         this.on('data:issues:mountExportCsvLink', this.mountExportCsvLink);
         this.on('data:issues:mountExportCsvLink', this.showExportingFeedbackLink);
         this.on('data:issues:clearExportCsvLink', this.clearLink);
