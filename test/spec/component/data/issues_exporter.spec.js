@@ -13,10 +13,11 @@ describeComponent('component/data/issues_exporter', function () {
         "labels": [{name: "1- Backlog"}, {name: "2- Dev"}],
         "kanbanState":   "1 - Ready",
         "body":     "should send email",
-        "created_at": "2014-11-18T13:29:41Z",
+        "created_at": "2014-11-10T13:29:41Z",
         "closed_at": "2014-11-19T13:28:41Z",
-        "dev_at": "2014-11-18T14:00:41Z",
-        "qa_at": "2014-11-10T10:00:41Z"
+        "ready_at": "2014-11-12T14:00:41Z",
+        "development_at": "2014-11-13T14:00:41Z",
+        "quality_assurance_at": "2014-11-17T10:00:41Z"
       },
       {
         "projectName": "pixelated-user-agent",
@@ -26,16 +27,17 @@ describeComponent('component/data/issues_exporter', function () {
         "labels": [{name: "3- Quality Assurance"}, {name: "2- Dev"}],
         "kanbanState":   "0 - Backlog",
         "body":     "If mails can't be sent by the twisted process",
-        "created_at": "2014-11-18T13:29:41Z",
+        "created_at": "2014-11-11T13:29:41Z",
         "closed_at": "2014-11-19T13:29:41Z",
-        "dev_at": "2014-11-18T14:00:41Z",
-        "qa_at": "2014-11-19T11:00:41Z"
+        "ready_at": "2014-11-12T14:00:41Z",
+        "development_at": "2014-11-14T14:00:41Z",
+        "quality_assurance_at": "2014-11-16T11:00:41Z"
       }
     ];
 
-    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Dev at;QA at;Closed at;Lead Time;Cycle Time" +
-        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-10T10:00:41Z;2014-11-19T13:28:41Z;0;0" +
-        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- Quality Assurance,2- Dev\";2014-11-18T13:29:41Z;2014-11-18T14:00:41Z;2014-11-19T11:00:41Z;2014-11-19T13:29:41Z;1;0\n";
+    var contentToEncode = "Source;Github ID;Title;Status;Kanban State;Tags;Create at;Closed at;Lead Time;ready at;development at;quality_assurance at" +
+        "\n\"pixelated-platform\";90;\"sending mails\";open;1 - Ready;\"1- Backlog,2- Dev\";2014-11-10T13:29:41Z;2014-11-19T13:28:41Z;8;2014-11-12T14:00:41Z;2014-11-13T14:00:41Z;2014-11-17T10:00:41Z" +
+        "\n\"pixelated-user-agent\";92;\"handle errors on sending mails\";open;0 - Backlog;\"3- Quality Assurance,2- Dev\";2014-11-11T13:29:41Z;2014-11-19T13:29:41Z;8;2014-11-12T14:00:41Z;2014-11-14T14:00:41Z;2014-11-16T11:00:41Z\n";
 
     expect(this.component.linkToCsv(issues)).toEqual("data:text/csv;charset=utf8," + encodeURIComponent(contentToEncode));
 
@@ -124,7 +126,7 @@ describeComponent('component/data/issues_exporter', function () {
 
   });
 
-  it('should get only the events that corresponds when the issue was moved to the Development column', function() {
+  it('should get only the events that corresponds when the issue was moved to the label column', function() {
     var labeledEvents = {
       49941278: [
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
@@ -138,7 +140,7 @@ describeComponent('component/data/issues_exporter', function () {
       ]
     };
 
-    expect(this.component.getOnlyDevelopmentIssueEvents(labeledEvents)).toEqual({
+    expect(this.component.getIssueEventsByLabel(labeledEvents, '2 - Development')).toEqual({
           49941278: [
             {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
             {label: {name: "2 - Development"}, created_at: "2014-11-25T20:54:52Z"}
@@ -151,7 +153,7 @@ describeComponent('component/data/issues_exporter', function () {
     );
   });
 
-  it('should get the earlier event for each issue that corresponds when the issue was moved to the Development column', function() {
+  it('should get the earlier event for each issue that corresponds when the issue was moved to the label column', function() {
     var labeledEvents = {
       49941278: [
         {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
@@ -165,14 +167,14 @@ describeComponent('component/data/issues_exporter', function () {
       ]
     };
 
-    expect(this.component.getEarliestDevelopmentIssueEvents(labeledEvents)).toEqual({
+    expect(this.component.getEarliestIssueEvents(labeledEvents, '2 - Development')).toEqual({
           49941278: {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
           49941279: {label: {name: "2 - Development"}, created_at: "2014-11-23T20:54:52Z"}
         }
     );
   });
 
-  it('should create the dev_at date for each issue according to its event creation date', function() {
+  it('should create the labeled_at date for each issue according to its event creation date', function() {
     var issues = [
       {id: 1},
       {id: 2},
@@ -184,14 +186,14 @@ describeComponent('component/data/issues_exporter', function () {
       2: {created_at: "2014-11-23T20:54:52Z"}
     };
 
-    expect(this.component.mergeDevEventsWithIssues(issues, events)).toEqual([
-      {id: 1, dev_at: "2014-11-24T20:54:52Z"},
-      {id: 2, dev_at: "2014-11-23T20:54:52Z"},
+    expect(this.component.mergeEventsWithIssues(issues, events, 'development_at')).toEqual([
+      {id: 1, development_at: "2014-11-24T20:54:52Z"},
+      {id: 2, development_at: "2014-11-23T20:54:52Z"},
       {id: 3}
     ]);
   });
 
-  it('should return the issues with the development date using its events', function() {
+  it('should return the issues with the labeled date using its events', function() {
     var issues = [
       {id: 1},
       {id: 2},
@@ -245,138 +247,10 @@ describeComponent('component/data/issues_exporter', function () {
         created_at: "2014-11-24T20:54:52Z"
       }
     ];
-    expect(this.component.addDevAndQaDateForIssues(issues, events)).toEqual([
-      {id: 1, dev_at: "2014-11-20T20:54:52Z"},
+    expect(this.component.addEventDateForIssues(issues, events)).toEqual([
+      {id: 1, development_at: "2014-11-20T20:54:52Z"},
       {id: 2},
-      {id: 3, dev_at: "2014-11-24T20:54:52Z"}
-    ]);
-  });
-
-  it('should get only the events that corresponds when the issue was moved to the Quality Assurance column', function() {
-    var labeledEvents = {
-      49941278: [
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "0 - Backlog"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
-      ],
-      49941279: [
-        {label: {name: "2 - Development"}, created_at: "2014-11-26T20:54:52Z"},
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
-      ]
-    };
-
-    expect(this.component.getOnlyQaIssueEvents(labeledEvents)).toEqual({
-          49941278: [
-            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
-          ],
-          49941279: [
-            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-            {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
-          ]
-        }
-    );
-  });
-
-  it('should get the earlier event for each issue that corresponds when the issue was moved to the Quality Assurance column', function() {
-    var labeledEvents = {
-      49941278: [
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-25T20:54:52Z"}
-      ],
-      49941279: [
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-26T20:54:52Z"},
-        {label: {name: "2 - Development"}, created_at: "2014-11-24T20:54:52Z"},
-        {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
-      ]
-    };
-
-    expect(this.component.getEarliestQaIssueEvents(labeledEvents)).toEqual({
-          49941278: {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-24T20:54:52Z"},
-          49941279: {label: {name: "3 - Quality Assurance"}, created_at: "2014-11-23T20:54:52Z"}
-        }
-    );
-  });
-
-  it('should create the qa_at date for each issue according to its event creation date', function() {
-    var issues = [
-      {id: 1},
-      {id: 2},
-      {id: 3}
-    ];
-
-    var events = {
-      1: {created_at: "2014-11-24T20:54:52Z"},
-      2: {created_at: "2014-11-23T20:54:52Z"}
-    };
-
-    expect(this.component.mergeQaEventsWithIssues(issues, events)).toEqual([
-      {id: 1, qa_at: "2014-11-24T20:54:52Z"},
-      {id: 2, qa_at: "2014-11-23T20:54:52Z"},
-      {id: 3}
-    ]);
-  });
-
-  it('should return the issues with the qa date using its events', function() {
-    var issues = [
-      {id: 1},
-      {id: 2},
-      {id: 3}
-    ];
-
-    var events = [
-      {
-        id: 197865882,
-        event: "labeled",
-        issue: {
-          id: 1
-        },
-        label: {name: "3 - Quality Assurance"},
-        created_at: "2014-11-24T20:54:52Z"
-      },
-      {
-        id: 197865883,
-        event: "labeled",
-        issue: {
-          id: 1
-        },
-        label: {name: "3 - Quality Assurance"},
-        created_at: "2014-11-20T20:54:52Z"
-      },
-      {
-        id: 197865887,
-        event: "labeled",
-        issue: {
-          id: 3
-        },
-        label: {name: "3 - Quality Assurance"},
-        created_at: "2014-11-24T20:54:52Z"
-      },
-      {
-        id: 197865884,
-        event: "assigned",
-        issue: {
-          id: 2
-        },
-        label: {name: "3 - Quality Assurance"},
-        created_at: "2014-11-24T20:54:52Z"
-      },
-      {
-        id: 197865885,
-        event: "labeled",
-        issue: {
-          id: 2
-        },
-        label: {name: "0 - Backlog"},
-        created_at: "2014-11-24T20:54:52Z"
-      }
-    ];
-    expect(this.component.addDevAndQaDateForIssues(issues, events)).toEqual([
-      {id: 1, qa_at: "2014-11-20T20:54:52Z"},
-      {id: 2},
-      {id: 3, qa_at: "2014-11-24T20:54:52Z"}
+      {id: 3, development_at: "2014-11-24T20:54:52Z"}
     ]);
   });
 

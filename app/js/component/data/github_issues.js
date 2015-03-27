@@ -85,7 +85,7 @@ function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTe
             if (!issue.pull_request) {
               issue.projectName = project.projectName;
               issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-              allIssues.push(issue);  
+              allIssues.push(issue);
             }
           }.bind(this));
 

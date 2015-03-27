@@ -23,9 +23,9 @@
       this.retrieve = function() {
         $(document).trigger('ui:blockUI');
         var that = this;
-        var defaultColumns = [{order: '1', column: 'Ready'},
-                              {order: '2', column: 'Development'},
-                              {order: '3', column: 'Quality Assurance'}];
+        var defaultColumns = [{order: '0', column: 'Ready'},
+                              {order: '1', column: 'Development'},
+                              {order: '2', column: 'Quality Assurance'}];
 
         $.ajax({
           method: 'GET',
