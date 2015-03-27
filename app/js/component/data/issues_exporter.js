@@ -22,16 +22,18 @@ define([
     return defineComponent(issuesExporter, withAuthTokemFromHash);
 
     function issuesExporter() {
+      this.defaultAttrs({
+        customColumns: ['1 - Ready', '2 - Development', '3 - Quality Assurance']
+      });
+
       var issuesToExport = [];
 
       var csvLink = '';
 
-      this.customColumns = ['1 - Ready', '2 - Development', '3 - Quality Assurance'];
-
       this.storeColumns = function(ev, columns) {
-        var redisColumns = columns.columns;
+        var columns = columns.columns;
 
-        this.customColumns = _.map(redisColumns, function(column) {
+        this.attr.customColumns = _.map(columns, function(column) {
           return (parseInt(column['order']) + 1) + ' - ' + column['column'];
         });
 
@@ -96,7 +98,7 @@ define([
             issue.closed_at,
             daysBetween(issue.created_at, issue.closed_at),
           ];
-          _.each(this.customColumns, function(column) {
+          _.each(this.attr.customColumns, function(column) {
             data.push(issue[this.cleanLabel(column)+"_at"]);
           }, this);
           return data.join(';');
@@ -121,7 +123,7 @@ define([
 
       this.csvHeader = function() {
         var header = ["Source", "Github ID", "Title", "Status", "Kanban State", "Tags", "Create at", "Closed at", "Lead Time"]
-        _.each(this.customColumns, function(label) {
+        _.each(this.attr.customColumns, function(label) {
           header.push(this.cleanLabel(label) + " at");
         }, this);
         return header.join(';');
@@ -205,7 +207,7 @@ define([
 
         groupedEventsByIssueId = this.groupEventsByIssuesId(events);
         labeledEvents = this.excludeNonLabeledEvents(groupedEventsByIssueId);
-        _.each(this.customColumns, function(label) {
+        _.each(this.attr.customColumns, function(label) {
           labelEvents = this.getIssueEventsByLabel(labeledEvents, label);
           earlierstIssuesEvent = this.getEarliestIssueEvents(labelEvents);
           issuesWithEventDate = this.mergeEventsWithIssues(issuesWithEventDate, earlierstIssuesEvent, this.cleanLabel(label)+"_at")
