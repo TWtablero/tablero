@@ -10,24 +10,25 @@ define(['config/config_bootstrap'],
           var request = $.getJSON(this.repoIssuesURL(url, page));
           var hasData = $.Deferred();
 
-          var request2 = $.ajax( {dataType: "json",
-              url: this.repoIssuesURL(url,page),
-              timeout: 2000
-            }).
-            done(function(data) {
-              hasData.resolve(data);
-            }).
-            fail( function( xhr, status ) {
-              if(xhr.status === 404 && private_repo){
-               this.trigger(document, 'ui:show:messageFailConnection');
-               hasData.fail();
-              } else {
-               hasData.resolve();
-              };
-            }.bind(this));
+          var request2 = $.ajax({
+            dataType: "json",
+            url: this.repoIssuesURL(url, page),
+            timeout: 2000
+          }).
+          done(function (data) {
+            hasData.resolve(data);
+          }).
+          fail(function (xhr, status) {
+            if (xhr.status === 404 && private_repo) {
+              this.trigger(document, 'ui:show:messageFailConnection');
+              hasData.fail();
+            } else {
+              hasData.resolve();
+            };
+          }.bind(this));
 
-            return [name, hasData.promise() ];
-          }.bind(this)));
+          return [name, hasData.promise()];
+        }.bind(this)));
 
       }
 
@@ -36,7 +37,7 @@ define(['config/config_bootstrap'],
         return "per_page=100&state=all&";
       };
 
-      this.getPageParam = function(page){
+      this.getPageParam = function (page) {
         return (isFinite(page)) ? "page=" + (page <= 0 ? 1 : page) + "&" : '';
       };
 
@@ -52,7 +53,7 @@ define(['config/config_bootstrap'],
         return "access_token=" + this.getCurrentAuthToken();
       };
 
-      this.newIssueURL = function(projectName){
+      this.newIssueURL = function (projectName) {
         var repositoryURL = this.getURLFromProject(projectName);
         return repositoryURL.replace("api.github.com/repos", "github.com") + "/issues/new";
       };
@@ -61,23 +62,23 @@ define(['config/config_bootstrap'],
         return config.getConfig().repos[projectName] || "not found";
       };
 
-      this.getProjectIdentifier = function(projectUrl) {
+      this.getProjectIdentifier = function (projectUrl) {
 
-        if(projectUrl.lastIndexOf('https://api.github.com/repos/',0) === 0) {
+        if (projectUrl.lastIndexOf('https://api.github.com/repos/', 0) === 0) {
           return projectUrl.slice(29);
         }
-        if(projectUrl.lastIndexOf('https://github.com/',0) === 0){
+        if (projectUrl.lastIndexOf('https://github.com/', 0) === 0) {
           return projectUrl.slice(19).match(/.*?\/.*?(?=\/)/)[0];
         }
       };
 
 
 
-      this.getAllProjectsIdentifiers = function(projectNames) {
+      this.getAllProjectsIdentifiers = function (projectNames) {
         var projectUrls = _.map(projectNames, this.getURLFromProject);
 
-        return _.map(projectUrls,this. getProjectIdentifier);
+        return _.map(projectUrls, this.getProjectIdentifier);
       };
     };
   }
-  );
+);

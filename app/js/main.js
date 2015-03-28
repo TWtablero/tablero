@@ -21,27 +21,27 @@ requirejs.config({
 
 require(
   [
-  'flight/lib/compose', 
-	'flight/lib/registry', 
-	'flight/lib/advice', 
-	'flight/lib/logger', 
-	'flight/lib/debug', 
-	'hogan/lib/template', 
-	'hogan/lib/compiler',
-	'jquery', 
-	'blockUI', 
-	'underscore', 
-	'jqueryUI', 
+  'flight/lib/compose',
+ 'flight/lib/registry',
+ 'flight/lib/advice',
+ 'flight/lib/logger',
+ 'flight/lib/debug',
+ 'hogan/lib/template',
+ 'hogan/lib/compiler',
+ 'jquery',
+ 'blockUI',
+ 'underscore',
+ 'jqueryUI',
   'tipsy',
-	'bootstrap'
+ 'bootstrap'
   ],
 
-  function(compose, registry, advice, withLogging, debug, $, blockUI) {
-  // debug.enable(true);
-  // debug.events.logAll();
+  function (compose, registry, advice, withLogging, debug, $, blockUI) {
+    // debug.enable(true);
+    // debug.events.logAll();
     compose.mixin(registry, [advice.withAdvice]);
 
-    require(['page/default', 'config/config_bootstrap'], function(initializeDefault, config) {
+    require(['page/default', 'config/config_bootstrap'], function (initializeDefault, config) {
       initializeDefault();
     });
   }

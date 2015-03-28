@@ -17,18 +17,18 @@ addRepo('website', 'PX_PAGES', 'Website');
 
 
 var maxDynaReposQuantity = 5;
-for(i = 0; i < maxDynaReposQuantity; i++) {
+for (i = 0; i < maxDynaReposQuantity; i++) {
   addRepo(configurable.get('REPO_' + i + '_NAME') || i + 'th', 'REPO_' + i + '_URL');
 }
 
 
-configurable.get('REPOS', function(value) {
+configurable.get('REPOS', function (value) {
   var chunks = value.split(';');
-  chunks.forEach(function(chunk) {
+  chunks.forEach(function (chunk) {
     var val = chunk,
-    nameRegex = /(https:\/\/api\.github\.com\/repos\/)?(.*)/;
+      nameRegex = /(https:\/\/api\.github\.com\/repos\/)?(.*)/;
     name = nameRegex.exec(val)[2],
-    key = name.toLowerCase().replace('/', '_');
+      key = name.toLowerCase().replace('/', '_');
 
     var gitHubApiPrefix = 'https://api.github.com/repos/';
     repos[key] = gitHubApiPrefix + name;

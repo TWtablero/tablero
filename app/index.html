@@ -1,163 +1,165 @@
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Tablero</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
-    <link rel="stylesheet" href="/css/main.css">
-    <link href='//fonts.googleapis.com/css?family=Teko:300,400,500,600,700|Anton' rel='stylesheet' type='text/css'>
-  </head>
-  <body role="document">
-    <header>
-      <a href="/" title="Tablero" class="logo"><h1>TABLERO</h1></a>
-      <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
-        + CREATE ISSUE
-      </button>
-      <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
-      <a id="changeAccess" class="btn btn-success btn-xs right" href="javascript:void(0)">CHANGE ACCESS</a>
-      <a id="changeColumns" class="btn btn-success btn-xs right" href="javascript:void(0)">COLUMNS</a>
-      <div id="filters" class="filter-container right">
-      </div>
-    </header>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Issue</h4>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tablero</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link href='//fonts.googleapis.com/css?family=Teko:300,400,500,600,700|Anton' rel='stylesheet' type='text/css'>
+</head>
+
+<body role="document">
+  <header>
+    <a href="/" title="Tablero" class="logo"><h1>TABLERO</h1></a>
+    <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
+      + CREATE ISSUE
+    </button>
+    <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
+    <a id="changeAccess" class="btn btn-success btn-xs right" href="javascript:void(0)">CHANGE ACCESS</a>
+    <a id="changeColumns" class="btn btn-success btn-xs right" href="javascript:void(0)">COLUMNS</a>
+    <div id="filters" class="filter-container right">
+    </div>
+  </header>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Create Issue</h4>
+        </div>
+        <div class="modal-body">
+          <div class="required">
+            <input placeholder="Enter title here..." type="text" id="issueTitle" required="true" class="form-control field" />
           </div>
-          <div class="modal-body">
-            <div class="required">
-              <input placeholder="Enter title here..." type="text" id="issueTitle" required="true" class="form-control field"/>
-            </div>
-            <div class="required-message"> This field is required.</div>
-            <br/>
-            <textarea placeholder="Enter text here..." id="issueBody" class="form-control field" rows="3"></textarea>
-            <br/>
-            <label for="projects">Project</label>
-            <select id="projects" class="form-control">
-            </select>
-          </div>
-          <div class="modal-footer">
-            <button id="create_issue" type="button" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <a target="_blank" class="link" href="">Advanced options</a>
-          </div>
+          <div class="required-message"> This field is required.</div>
+          <br/>
+          <textarea placeholder="Enter text here..." id="issueBody" class="form-control field" rows="3"></textarea>
+          <br/>
+          <label for="projects">Project</label>
+          <select id="projects" class="form-control">
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button id="create_issue" type="button" class="btn btn-primary">Create</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <a target="_blank" class="link" href="">Advanced options</a>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="column backlog-sidebar" style="display:none">
-       <div class="panel-heading">
-          <div style="height: 8px"></div>
-          <span class="hide-icon-sidebar">
+  </div>
+  <div class="container">
+    <div class="column backlog-sidebar" style="display:none">
+      <div class="panel-heading">
+        <div style="height: 8px"></div>
+        <span class="hide-icon-sidebar">
             <span class="small-text">SHOW&nbsp;</span><i class="icon-double-angle-right icon-large"></i>
+        </span>
+      </div>
+      <div class="panel-body">
+        <div class="backlog-vertical-title">
+          <h3>Backlog<span class="issues-count"></span></h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="column backlog-column">
+      <div class="panel panel-default">
+        <div class="panel-heading backlog-header">
+          <h3>Backlog</h3><span class="issues-count"></span>
+          <span class="hide-icon">
+              <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
           </span>
         </div>
-         <div class="panel-body">
-           <div class="backlog-vertical-title">
-              <h3>Backlog<span class="issues-count"></span></h3>
-           </div>
-         </div>
-      </div>
-
-      <div class="column backlog-column">
-        <div class="panel panel-default">
-          <div class="panel-heading backlog-header">
-            <h3>Backlog</h3><span class="issues-count"></span>
-            <span class="hide-icon">
-              <i class="icon-double-angle-left icon-large"></i><span class="small-text">&nbsp;HIDE</span>
-            </span>
-          </div>
-          <div class="cards-place">
-            <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
-          </div>
-
+        <div class="cards-place">
+          <div class="panel-body issue-track backlog list-group" id="0-backlog"></div>
         </div>
-      </div>
 
-      <div class="board-columns"></div>
-
-      <div class="column">
-        <div class="panel panel-default">
-          <div class="panel-heading done">
-            <img class="plain" src="/img/rocket.svg" />
-            <img class="colored" src="/img/rocketblue.svg" />
-            <img class="check-done" src="/img/done.svg" />
-            <h3>Drop here to launch</h3>
-            <span class="issues-count"></span>
-          </div>
-          <div class="panel-body issue-track done list-group" id="4-done"></div>
-        </div>
       </div>
     </div>
 
+    <div class="board-columns"></div>
 
-    <!-- Permissions gateway modal -->
-    <div class="modal fade" id="permissionsGateway" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Tablero Access</h4>
-          </div>
-          <div class="modal-body">
-            <p> Please select below what type of repository access you allow the Tablero to have </p>
-            <button type="button" class="btn  btn-xs" id="showPublicBtn"> PUBLIC ONLY</button>
-            <button type="button" class="btn  btn-xs" id="showPublicAndPrivateBtn" > PUBLIC AND PRIVATE </button>
-          </div>
+    <div class="column">
+      <div class="panel panel-default">
+        <div class="panel-heading done">
+          <img class="plain" src="/img/rocket.svg" />
+          <img class="colored" src="/img/rocketblue.svg" />
+          <img class="check-done" src="/img/done.svg" />
+          <h3>Drop here to launch</h3>
+          <span class="issues-count"></span>
+        </div>
+        <div class="panel-body issue-track done list-group" id="4-done"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Permissions gateway modal -->
+  <div class="modal fade" id="permissionsGateway" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Tablero Access</h4>
+        </div>
+        <div class="modal-body">
+          <p> Please select below what type of repository access you allow the Tablero to have </p>
+          <button type="button" class="btn  btn-xs" id="showPublicBtn"> PUBLIC ONLY</button>
+          <button type="button" class="btn  btn-xs" id="showPublicAndPrivateBtn"> PUBLIC AND PRIVATE </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal with columns creation and ordernation -->
-    <div class="modal fade" id="columnsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Tablero Columns</h4>
-          </div>
-          <div class="modal-body">
-            <p> Create the columns for your board and order them </p>
-            <ul class="columns-container"></ul>
-            <p>
-              <a href="javascript:void(0);" id="addColumn"> + Column </a>
-            </p>
-            <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-xs" id="saveColumnsChanges">Save</button>
-          </div>
+  <!-- Modal with columns creation and ordernation -->
+  <div class="modal fade" id="columnsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Tablero Columns</h4>
+        </div>
+        <div class="modal-body">
+          <p> Create the columns for your board and order them </p>
+          <ul class="columns-container"></ul>
+          <p>
+            <a href="javascript:void(0);" id="addColumn"> + Column </a>
+          </p>
+          <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-xs" id="saveColumnsChanges">Save</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal about error to get issues -->
+  <!-- Modal about error to get issues -->
 
-    <div class="modal fade" id="failConnectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style= "display : none">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" >Oops...</h4>
-          </div>
-          <div class="modal-body">
-            <p> It seems you have no read permission on private repositories, so we will display only the issues of public repositories.</p>
-            <button type="button" class="btn  btn-xs" id="redirectToPublicBtn"> OK </button>
-          </div>
+  <div class="modal fade" id="failConnectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display : none">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Oops...</h4>
+        </div>
+        <div class="modal-body">
+          <p> It seems you have no read permission on private repositories, so we will display only the issues of public repositories.</p>
+          <button type="button" class="btn  btn-xs" id="redirectToPublicBtn"> OK </button>
         </div>
       </div>
     </div>
+  </div>
 
 
 
-    <!--[if lt IE 9]>
+  <!--[if lt IE 9]>
       <script src="/bower_components/es5-shim/es5-shim.js"></script>
       <script src="/bower_components/es5-shim/es5-sham.js"></script>
       <![endif]-->
-      <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
+  <script src="/bower_components/requirejs/require.js" data-main="dist/main"></script>
 
-      <!-- Google Analytics -->
-      <!--
+  <!-- Google Analytics -->
+  <!--
         <script>
 (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
                                                         function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -168,8 +170,9 @@ ga('create','');ga('send','pageview');
         </script>
         -->
 
-        <div id="clipboard-container" style='position fixed; left: 0px;top: 0px;width: 0px;height: 0px; opacity: 0;'>
-          <textarea id="clipboard" style="width: 1px; height: 1px;"></textarea>
-        </div>
-  </body>
+  <div id="clipboard-container" style='position fixed; left: 0px;top: 0px;width: 0px;height: 0px; opacity: 0;'>
+    <textarea id="clipboard" style="width: 1px; height: 1px;"></textarea>
+  </div>
+</body>
+
 </html>

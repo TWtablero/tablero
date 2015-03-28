@@ -4,20 +4,28 @@ describeComponent('component/data/prioritization_manager', function () {
     this.setupComponent();
   });
 
-  
+
   it('first element priority should be next priority / 2 ', function () {
     var spyEvent = spyOnEvent(document, 'data:issue:priorityChanged');
 
-    var params = { 
-      element : { priority : 5 } ,
-      nextElement : { priority : 1},
-      previousElement : { priority : 0}
+    var params = {
+      element: {
+        priority: 5
+      },
+      nextElement: {
+        priority: 1
+      },
+      previousElement: {
+        priority: 0
+      }
     };
 
-    this.component.changePriority(null,params);
+    this.component.changePriority(null, params);
 
 
-    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, { priority : 0.5});
+    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {
+      priority: 0.5
+    });
 
 
   });
@@ -25,17 +33,25 @@ describeComponent('component/data/prioritization_manager', function () {
   it('last element priority should be previous priority + 1 ', function () {
     var spyEvent = spyOnEvent(document, 'data:issue:priorityChanged');
 
-    var params = { 
-      element : { priority : 5 } ,
-      previousElement : { priority : 1},
-      nextElement : { priority : 0}
+    var params = {
+      element: {
+        priority: 5
+      },
+      previousElement: {
+        priority: 1
+      },
+      nextElement: {
+        priority: 0
+      }
     };
 
-    this.component.changePriority(null,params);
+    this.component.changePriority(null, params);
 
 
-    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, { priority : 2});
+    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {
+      priority: 2
+    });
 
   });
-  
+
 });

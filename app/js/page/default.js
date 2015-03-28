@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- define(
+define(
   [
     'component/data/github_user',
     'component/data/issues_exporter',
@@ -27,15 +27,15 @@
     'component/ui/columns_render'
   ],
   function (githubUser,
-            issuesExporter,
-            prioritizationManager,
-            issuesFilter,
-            newIssue,
-            permissionsGateway,
-            authToken,
-            columnsModal,
-            columnsManager,
-            columnsRender) {
+    issuesExporter,
+    prioritizationManager,
+    issuesFilter,
+    newIssue,
+    permissionsGateway,
+    authToken,
+    columnsModal,
+    columnsManager,
+    columnsRender) {
     'use strict';
 
     return initialize;
@@ -57,27 +57,26 @@
 
       columnsRender.attachTo(document);
 
-      $('.backlog-column .hide-icon').first().click(function() {
+      $('.backlog-column .hide-icon').first().click(function () {
         $('.backlog-column').toggle('slide');
         $('.backlog-sidebar').toggle('slide');
       });
-      $('.backlog-sidebar .hide-icon-sidebar').first().click(function() {
+      $('.backlog-sidebar .hide-icon-sidebar').first().click(function () {
         $('.backlog-column').toggle('slide');
         $('.backlog-sidebar').toggle('slide');
       });
 
       $(document).trigger('ui:needs:columns');
 
-      $(document).on('ui:show:messageFailConnection', function(event){
+      $(document).on('ui:show:messageFailConnection', function (event) {
         $.unblockUI();
         $('#failConnectionModal').modal('toggle');
       });
 
-      $('#redirectToPublicBtn').click(function(){
+      $('#redirectToPublicBtn').click(function () {
         var token = window.location.hash.slice(1);
 
-        window.location = '/?access=repo#'+token;
+        window.location = '/?access=repo#' + token;
       }.bind(this));
     }
   });
-
