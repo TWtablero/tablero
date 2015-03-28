@@ -39,7 +39,8 @@
     "watch": "npm run start > server.log & npm run livereload",
     "watch-test": "karma start",
     "watch-server-test": "jasmine-node --autotest test/config test/lib --watch lib",
-    "postinstall": "bower --allow-root install; gulp rjs"
+    "postinstall": "bower --allow-root install; gulp rjs",
+    "beautify": "git ls-files '**/*.js' | grep -vf .jshintignore | xargs ./node_modules/js-beautify/js/bin/js-beautify.js -s 2 -r -j --good-stuff"
   },
   "dependencies": {
     "body-parser": "^1.10.0",
