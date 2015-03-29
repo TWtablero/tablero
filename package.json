@@ -31,7 +31,7 @@
     "livereload": "gulp livereload",
     "start": "node app.js",
     "test": "npm run client-test; npm run server-test",
-    "send-coverage": "node_modules/codeclimate-test-reporter/bin/codeclimate.js coverage/report-lcov/lcov.info",
+    "send-coverage": "node node_modules/codeclimate-test-reporter/bin/codeclimate.js coverage/report-lcov/lcov.info",
     "client-test": "karma start --single-run",
     "server-test": "jasmine-node test/config test/lib",
     "functional-test": "REPOS=\"TWtablero/repoTest1;TWtablero/repoTest2\" mvn -f test/spec/functionalTest/rocketboard/pom.xml -Dtest=rocketboard.* test",
