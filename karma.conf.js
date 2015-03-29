@@ -41,5 +41,11 @@ module.exports = function (config) {
     preprocessors : {
       'app/js/**/*.js' : 'coverage'
     },
+    coverageReporter:{
+      dir: 'coverage',
+      reporters:[
+        { type: 'lcov', subdir: 'report-lcov'}
+      ]
+    }
   });
 };
