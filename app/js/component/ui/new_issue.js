@@ -15,13 +15,16 @@
 */
 define([
   'flight/lib/component',
-  'config/config_bootstrap'
+  'config/config_bootstrap',
+  'component/mixins/repositories_urls',
+  'component/mixins/with_auth_token_from_hash'
   ],
-  function (defineComponent, config) {
+  function (defineComponent, config, repositoriesURLs, withAuthTokeFromHash) {
     var labels = config.getLabels();
 
-    return defineComponent(component);
+    return defineComponent(component, repositoriesURLs, withAuthTokeFromHash);
     function component() {
+
 
       this.setUp = function (){
         var context = this;
@@ -32,14 +35,22 @@ define([
             return;
           }
 
+          var selectedLabels = $("#labels").val();
+          selectedLabels = ((selectedLabels != "") ? selectedLabels.split(",") : ["0 - Backlog"]);
+
           $(document).trigger('ui:create:issue', {
             'issueTitle': $("#issueTitle").val(),
             'issueBody': $("#issueBody").val(),
+            'issueLabels': selectedLabels,
             'projectName': $("#projects").val()
           });
 
-          $("#myModal").modal('hide')
-          $("#myModal input, textarea").val('')
+          $("#myModal").modal('hide');
+          $("#myModal input, textarea").val('');
+          _(selectedLabels).each(function(label) { 
+            $('#labels').tagEditor('removeTag', label); 
+          });
+          $("#issueTitle").removeClass('missing');
         });
 
         $("#projects").change(function () {
@@ -57,14 +68,13 @@ define([
       };
 
       this.addProjects = function() {
-
+        
         var template = Hogan.compile('<option value="{{name}}">{{label}}</option>');
         $('#projects').empty();
         _(labels).each(function (label, name) {
             $("#projects").append(template.render({name: name, label: label}));
         }.bind(this));
       };
-
 
       this.after('initialize', function () {
         this.addProjects();

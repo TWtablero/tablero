@@ -10,8 +10,7 @@ public class AssigneTests extends AbstractRocketboardTests {
 
 	@Test
 	public void AssignMeCard() throws Exception{
-		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, getRandomProject().getName());
+		rocketboardPage.createIssue(title, desc, getRandomProject().getName(), tag);
 		rocketboardPage.waitCreatedIssue(title);
 		String idCard = rocketboardPage.getInfo(title, "id");
 		rocketboardPage.assignMe(idCard);
@@ -21,8 +20,7 @@ public class AssigneTests extends AbstractRocketboardTests {
 	@Test
 	@Ignore
 	public void UnassignLabel() throws Exception {
-		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, getRandomProject().getName());
+		rocketboardPage.createIssue(title, desc, getRandomProject().getName(), tag);
 		String href = rocketboardPage.getInfo(title, "href");
 		String idCard = rocketboardPage.getInfo(title, "id");
 		rocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
@@ -41,7 +39,7 @@ public class AssigneTests extends AbstractRocketboardTests {
 	public void CancelUnassignAction() throws Exception {
 		String repoCreateIssue = getRandomProject().getName();
 		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, repoCreateIssue);
+		rocketboardPage.createIssue(title, desc, repoCreateIssue, tag);
 		String href = rocketboardPage.getInfo(title, "href");
 		String idCard = rocketboardPage.getInfo(title, "id");
 		rocketboardPage.restAssign(href, "{\"assignee\":\"nayaramoura\"}");
@@ -56,8 +54,7 @@ public class AssigneTests extends AbstractRocketboardTests {
 
 	@Test
 	public void UnassignOwnUser() throws Exception{
-		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, getRandomProject().getName());
+		rocketboardPage.createIssue(title, desc, getRandomProject().getName(), tag);
 		rocketboardPage.waitCreatedIssue(title);
 		String idCard = rocketboardPage.getInfo(title, "id");
 		rocketboardPage.assignMe(idCard);

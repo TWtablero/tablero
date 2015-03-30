@@ -27,8 +27,18 @@ define(['config/config_bootstrap'],
             }.bind(this));
 
             return [name, hasData.promise() ];
-          }.bind(this)));
+        }.bind(this)));
 
+      }
+
+      this.getAllTagsFromProjects = function() {
+        var repos = config.getRepos();
+
+        return _.map(repos, function (url, name) {
+          var issueURL = url + "/labels?" + this.accessToken();
+          return $.getJSON(issueURL);
+
+        }.bind(this));
       }
 
 
@@ -70,8 +80,6 @@ define(['config/config_bootstrap'],
           return projectUrl.slice(19).match(/.*?\/.*?(?=\/)/)[0];
         }
       };
-
-
 
       this.getAllProjectsIdentifiers = function(projectNames) {
         var projectUrls = _.map(projectNames, this.getURLFromProject);

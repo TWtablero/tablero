@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/bower_components/tipsy/src/stylesheets/tipsy.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/bower_components/jquery-tag-editor/jquery.tag-editor.css">
     <link href='//fonts.googleapis.com/css?family=Teko:300,400,500,600,700|Anton' rel='stylesheet' type='text/css'>
   </head>
   <body role="document">
     <header>
       <a href="/" title="Tablero" class="logo"><h1>TABLERO</h1></a>
       <button id="open_modal_issue" class="btn btn-success btn-xs right" data-toggle="modal" data-target="#myModal">
-        + CREATE ISSUE
+              + CREATE ISSUE
       </button>
       <a id="export_csv" class="btn btn-success btn-xs right" href="javascript:void(0)">EXPORT TO CSV </a>
       <a id="changeAccess" class="btn btn-success btn-xs right" href="javascript:void(0)">CHANGE ACCESS</a>
@@ -40,6 +41,8 @@
             <label for="projects">Project</label>
             <select id="projects" class="form-control">
             </select>
+            <label for="labels">Label</label>
+            <input id="labels" class="form-control tag-autocomplete"></input>
           </div>
           <div class="modal-footer">
             <button id="create_issue" type="button" class="btn btn-primary">Create</button>

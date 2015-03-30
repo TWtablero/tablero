@@ -1,9 +1,10 @@
 package rocketboard;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -12,8 +13,7 @@ public class UpdateIssueTests extends AbstractRocketboardTests {
 
 	@Test
 	public void moveCheckingValues() throws Exception {
-		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, getRandomProject().getName());
+		rocketboardPage.createIssue(title, desc, getRandomProject().getName(), tag);
 		checkValue = rocketboardPage.moveIssueGettingValue(title, "2");
 		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));
 		checkValue = rocketboardPage.moveIssueGettingValue(title, "3");
@@ -27,8 +27,7 @@ public class UpdateIssueTests extends AbstractRocketboardTests {
 	@Test
 	public void setLabel() throws Exception {
 		String repoCreateIssue = getRandomProject().getName();
-		rocketboardPage.waitingLoading();
-		rocketboardPage.createIssue(title, desc, repoCreateIssue);
+		rocketboardPage.createIssue(title, desc, repoCreateIssue, tag);
 		String href = rocketboardPage.getInfo(title, "href");
 		String id = rocketboardPage.getInfo(title, "id");
 		rocketboardPage.restRequest(href, "[\"bug\"]");
