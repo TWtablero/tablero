@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([], function(template, compiler) {
-	return popoverTemplate;
+define([], function (template, compiler) {
+  return popoverTemplate;
 
-	function popoverTemplate() {
-		this.popover = function(popover){
-			return this.template.render(popover);
-		}
+  function popoverTemplate() {
+    this.popover = function (popover) {
+      return this.template.render(popover);
+    }
 
-		this.before('initialize', function(){
-			this.template = Hogan.compile(
-				'<div class="popover">' +
-					'<div class="popover-header">' + 
-						'<h2>{{title}}</h2>' +
-					'</div>' +
-					'<div class="popover-body">{{body}}</div>' +
-				'</div>'
-			);
-		});
-	}
+    this.before('initialize', function () {
+      this.template = Hogan.compile(
+        '<div class="popover">' +
+        '<div class="popover-header">' +
+        '<h2>{{title}}</h2>' +
+        '</div>' +
+        '<div class="popover-body">{{body}}</div>' +
+        '</div>'
+      );
+    });
+  }
 });

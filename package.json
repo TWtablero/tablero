@@ -1,5 +1,5 @@
 {
-  "name": "rocketboard",
+  "name": "tablero",
   "version": "0.1.0",
   "devDependencies": {
     "codeclimate-test-reporter": "0.0.4",
@@ -7,6 +7,8 @@
     "gulp-livereload": "~0.2.0",
     "jasmine": "^2.1.1",
     "jasmine-node": "^1.14.5",
+    "js-beautify": "^1.5.5",
+    "jshint": "^2.6.3",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.0",
     "karma-cli": "~0.0.4",
@@ -24,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RocketBoard/rocketboard/"
+    "url": "https://github.com/twtablero/tablero/"
   },
   "scripts": {
     "build": "gulp rjs",
@@ -38,8 +40,14 @@
     "watch": "npm run start > server.log & npm run livereload",
     "watch-test": "karma start",
     "watch-server-test": "jasmine-node --autotest test/config test/lib --watch lib",
-    "postinstall": "bower --allow-root install; gulp rjs"
-  },
+    "postinstall": "bower --allow-root install; gulp rjs",
+    "pretest": "npm run beautify && npm run jshint",
+    "hint": "./node_modules/jshint/bin/jshint .",
+    "beautify": "npm run beautify:js && npm run beautify:html",
+    "beautify:js": "git ls-files '**/*.js' | grep -vf .jshintignore | xargs ./node_modules/js-beautify/js/bin/js-beautify.js -s 2 -r -j --good-stuff",
+    "beautify:css": "git ls-files '**/*.css' | grep -vf .jshintignore | xargs ./node_modules/js-beautify/js/bin/css-beautify.js -s 2 -r",
+    "beautify:html": "git ls-files '**/*.html' | grep -vf .jshintignore | xargs ./node_modules/js-beautify/js/bin/html-beautify.js -s 2 -r"
+      },
   "dependencies": {
     "body-parser": "^1.10.0",
     "bower": "^1.3.9",

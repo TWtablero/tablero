@@ -14,7 +14,7 @@ requirejs.config({
     'page': '../js/page',
     'flight': '../bower_components/flight',
     'with-request': '../bower_components/flight-request/lib/with_request',
-    'clipboard' : '../js/page/clipboard'
+    'clipboard': '../js/page/clipboard'
   },
 
   // ask Require.js to load these files (all our tests)

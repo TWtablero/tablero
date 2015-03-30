@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- define([
+define([
    'flight/lib/component',
    'component/mixins/with_auth_token_from_hash',
   'jquery-cookie/jquery.cookie'
@@ -25,21 +25,23 @@
       this.getCurrentGithubUser = function (ev, previousData) {
         var token = this.getCurrentAuthToken();
 
-        if(!token){
+        if (!token) {
           var selectedAccess = $.cookie('access');
-          if(selectedAccess) {
+          if (selectedAccess) {
             $(document).trigger('ui:show:permissionSelected', [selectedAccess]);
           } else {
             $(document).trigger('ui:show:permissionsModal');
           }
-    		} else {
-          $.getJSON('https://api.github.com/user', {access_token: token}, function (userData, textStatus, request) {
+        } else {
+          $.getJSON('https://api.github.com/user', {
+            access_token: token
+          }, function (userData, textStatus, request) {
             var newData = _.clone(previousData.data);
             if (newData != undefined) {
               newData.user = userData;
             }
 
-            if(previousData.callback){
+            if (previousData.callback) {
               previousData.callback.call(previousData.context, ev, newData);
             }
           }.bind(this));
@@ -47,8 +49,8 @@
       };
 
       this.after('initialize', function () {
-        this.on(document,'ui:needs:githubUser', this.getCurrentGithubUser);
+        this.on(document, 'ui:needs:githubUser', this.getCurrentGithubUser);
       });
     }
   }
-  );
+);

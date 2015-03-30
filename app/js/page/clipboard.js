@@ -3,7 +3,7 @@ define([], function () {
     hidden: "#clipboard"
   };
 
-  $(document).keydown(function(e) {
+  $(document).keydown(function (e) {
     var _ref, _ref2;
     if (!(e.ctrlKey || e.metaKey)) {
       return;
@@ -18,7 +18,7 @@ define([], function () {
       return;
     }
   });
-  $(document).keyup(function(e) {
+  $(document).keyup(function (e) {
     if ($(e.target).is("#clipboard")) {
       return $("#clipboard").text('');
     }

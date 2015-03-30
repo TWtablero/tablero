@@ -2,24 +2,24 @@ var mockery = require('mockery');
 var nconf = require('nconf');
 
 
-describe("Configurable", function() {
+describe("Configurable", function () {
   var configurable = require('../../lib/configurable');
 
   var value = 'VALUE',
     key = 'KEY',
     callback;
 
-  beforeEach(function() {
+  beforeEach(function () {
     callback = jasmine.createSpy('callback');
   })
-  afterEach(function() {
+  afterEach(function () {
     nconf.remove(key);
   });
 
-  describe("Get", function() {
+  describe("Get", function () {
 
-    describe('when value does not exist', function() {
-      it("returns undefined", function() {
+    describe('when value does not exist', function () {
+      it("returns undefined", function () {
         configurable.setSilentMode(true);
         var actual = configurable.get(key, callback);
 
@@ -28,9 +28,9 @@ describe("Configurable", function() {
       });
     });
 
-    describe('when value exists', function() {
-      it("executes callback", function() {
-        nconf.set(key,value);
+    describe('when value exists', function () {
+      it("executes callback", function () {
+        nconf.set(key, value);
 
         var actual = configurable.get(key, callback);
 

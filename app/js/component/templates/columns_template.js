@@ -16,29 +16,29 @@
 define([
   'config/config_bootstrap'
   ], function (config) {
-      return columnTemplate;
+  return columnTemplate;
 
-      function columnTemplate() {
-        this.render = function (column) {
-          var columnNameParametized = column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
-          return this.template.render({
-            columnName: column.column,
-            columnId: column.order + '-' + columnNameParametized,
-            columnClass: columnNameParametized
-          });
-        };
+  function columnTemplate() {
+    this.render = function (column) {
+      var columnNameParametized = column.column.trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+      return this.template.render({
+        columnName: column.column,
+        columnId: column.order + '-' + columnNameParametized,
+        columnClass: columnNameParametized
+      });
+    };
 
-        this.before('initialize', function () {
-          this.template = Hogan.compile(
-            '<div class="column">'+
-              '<div class="panel panel-default">'+
-                '<div class="panel-heading {{columnClass}}-header"><h3>{{columnName}}</h3><span class="issues-count"></div>'+
-                '<div class="cards-place">'+
-                  '<div class="panel-body issue-track {{columnClass}} list-group" id="{{columnId}}"> </div>'+
-                '</div>'+
-              '</div>'+
-            '</div>'
-          );
-        });
-      };
-  });
+    this.before('initialize', function () {
+      this.template = Hogan.compile(
+        '<div class="column">' +
+        '<div class="panel panel-default">' +
+        '<div class="panel-heading {{columnClass}}-header"><h3>{{columnName}}</h3><span class="issues-count"></div>' +
+        '<div class="cards-place">' +
+        '<div class="panel-body issue-track {{columnClass}} list-group" id="{{columnId}}"> </div>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+      );
+    });
+  };
+});
