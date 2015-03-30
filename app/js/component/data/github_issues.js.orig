@@ -207,12 +207,8 @@ define([
           }
           return;
         }
-<<<<<<< HEAD
-=======
-        return;
-      }
 
-      url = issue.url + "?access_token=" + this.getCurrentAuthToken();
+        url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
       $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
       $('#' + issue.id + ' .empty-avatar-label').hide();
@@ -239,33 +235,6 @@ define([
         }
       });
     };
->>>>>>> fix bug when try to move or assign/unassign issues without permission
-
-        url = issue.url + "?access_token=" + this.getCurrentAuthToken();
-
-        $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
-        $('#' + issue.id + ' .empty-avatar-label').hide();
-
-        $.ajax({
-          type: 'PATCH',
-          url: url,
-          data: JSON.stringify({
-            assignee: user.login
-          }),
-          success: function (response, status, xhr) {
-            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-            $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
-            $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
-            $('#' + issue.id + ' .assignee-avatar').show();
-            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-label').hide();
-          },
-          error: function () {
-            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-avatar-label').show();
-          }
-        });
-      };
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
@@ -294,32 +263,6 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
-        $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
-        $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
-
-        $.ajax({
-          type: 'PATCH',
-          url: url,
-          data: JSON.stringify({
-            assignee: ''
-          }),
-          success: function (response, status, xhr) {
-            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-            $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
-            $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
-            $('#' + issue.id + ' .empty-avatar').show();
-            $('#' + issue.id + ' .empty-avatar-label').show();
-            $('#' + issue.id + ' .empty-label').show();
-          },
-          error: function () {
-            $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
-            $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
-          }
-        });
-      };
-
-<<<<<<< HEAD
-=======
       $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
       $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
       var that = this;
@@ -345,7 +288,7 @@ define([
         }
       });
     };
->>>>>>> fix bug when try to move or assign/unassign issues without permission
+
 
       this.updateDraggable = function (event, ui) {
 
@@ -358,6 +301,7 @@ define([
           nextElement: this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
         };
 
+<<<<<<< HEAD
         this.trigger(document, 'data:issues:issueMoved', issueMovedParam);
       };
 
@@ -389,6 +333,49 @@ define([
 
             _.each(customColumns, function (draggable) {
               $('.panel-heading' + draggable + '-header .issues-count').text(' (' + $('.issue-track' + draggable + ' .issue').length + ')');
+=======
+    this.draggable = function (ev, data) {
+      var customColumns = _.map(data.boardColumns, function(column){ return '.'+column; });
+      var draggables = ['.backlog', '.done'].concat(customColumns);
+      $(draggables.join(', ')).sortable({
+        items: '.issue',
+        connectWith: '.list-group',
+        cancel: '.popover',
+        update : this.updateDraggable.bind(this),
+        receive: function (event, ui) {
+          var label, url , oldLabel, state, origin, issueItem;
+
+          if (!this.getCurrentAuthToken()) {
+            this.trigger(document, 'ui:needs:githubUser');
+            return;
+          }
+
+          url = this.getIssueUrlFromDraggable(ui);
+          label = this.parseLabel(event.target.id);
+          oldLabel = this.parseLabel(ui.sender[0].id);
+          state = this.getState(event.target.className);
+          origin = ui.sender[0];
+          issueItem = ui.item[0];
+
+          var that = this;
+
+          if (label == "4 - Done") {
+            $.ajax({
+              type: 'PATCH',
+              url: url + this.getAccessTokenParam(),
+              data: JSON.stringify({
+                state: "closed"
+              }),
+              success: function() {
+                that.triggerRocketAnimation();
+              }
+            });
+          }else{
+            $.ajax({
+              type: 'POST',
+              url: url + "/labels" + this.getAccessTokenParam(),
+              data: JSON.stringify([label])
+>>>>>>> makes issue go back to the original position
             });
 
             if (label == "4 - Done") {
@@ -408,13 +395,20 @@ define([
               });
             }
 
-            $.ajax({
-              type: 'DELETE',
-              url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
-            });
-          }.bind(this)
-        }).disableSelection();
-      };
+          $.ajax({
+            type: 'DELETE',
+            url: url + "/labels/" + oldLabel + this.getAccessTokenParam(),
+            success: function() {
+              that.updateLabelCount(customColumns, draggable);
+            },
+            error: function() {
+              $(issueItem).prependTo(origin);
+              that.trigger('ui:show:permissionErrorModal');
+            }
+          });
+        }.bind(this)
+      }).disableSelection();
+    };
 
 <<<<<<< HEAD
       this.triggerRocketAnimation = function () {
@@ -429,19 +423,13 @@ define([
           $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
           $(".panel-heading.done h3").css('color', '#5dc66c');
 =======
-          var that = this;
-          $.ajax({
-            type: 'DELETE',
-            url: url + "/labels/" + oldLabel + this.getAccessTokenParam(),
-            error: function() {
-              $('#closeModalBtn').click(function(){
-                location.reload(true);
-              });
-              that.trigger('ui:show:permissionErrorModal');
-            }
-          });
-        }.bind(this)
-      }).disableSelection();
+    this.updateLabelCount = function(customColumns, draggable){
+      $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+      $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+
+      _.each(customColumns, function(draggable) {
+        $('.panel-heading'+draggable+'-header .issues-count').text(' (' + $('.issue-track'+draggable+' .issue').length + ')');
+      });
     };
 
     this.triggerRocketAnimation = function () {
@@ -467,7 +455,7 @@ define([
           $(".panel-heading.done h3").css('color', '#aaa');
 
           $(".panel-heading.done img.plain").fadeIn(600);
->>>>>>> fix bug when try to move or assign/unassign issues without permission
+>>>>>>> makes issue go back to the original position
           $(".panel-heading.done h3").animate({
             opacity: 1
           }, 2000);
@@ -553,96 +541,16 @@ define([
         this.attr.issues = [];
       };
 
-
-      this.after('initialize', function () {
-        this.on('ui:needs:issues', this.fetchIssues);
-        this.on('ui:add:issue', this.addIssue);
-        this.on('ui:create:issue', this.createIssue);
-        this.on('ui:assigns:user', this.assignMyselfToIssue);
-        this.on('data:githubUser:here', this.assignMyselfToIssue);
-        this.on('ui:draggable', this.draggable);
-        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-        this.on('#export_csv', 'click', this.mountExportClick);
-        this.on('ui:unassign:user', this.unassignMyselfToIssue);
-        this.on('ui:blockUI', this.blockUI);
-        this.on('ui:unblockUI', this.unblockUI);
-        this.on('ui:clear:issue', this.clearIssues);
-
-      });
-<<<<<<< HEAD
-    }
-=======
-    };
-
-    this.DOMObjectToIssueMovedParam = function(element) {
-      var returnObject = { id : 0 , priority : 0 };
-      if(element && element.id){
-        returnObject.id = element.id;
-        returnObject.priority = element.dataset.priority;
-      }
-      var projectUrl =  $(element).find('.issue-header a')[1];
-      if(projectUrl){
-        returnObject.project =  this.getProjectIdentifier(projectUrl.href) || '';
-      }
-      return returnObject;
-    };
-
-    this.parseLabel = function (label) {
-      var fullLabel = '';
-      label = label.split('-');
-
-      for (var i = 1; i < label.length; i++) {
-        var firstLetter = label[i][0];
-        fullLabel = fullLabel + firstLetter.toUpperCase() + label[i].substring(1) + ' ';
-      }
-
-      fullLabel = label[0] + ' - ' + fullLabel;
-      return fullLabel.trim();
-    };
-
-    this.getIssueUrlFromDraggable = function (ui) {
-      return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
-    };
-
-    this.getAccessTokenParam = function () {
-      return "?access_token=" + this.getCurrentAuthToken();
-    };
-
-    this.getState = function (className) {
-      return className.search('done') != -1 ? 'closed' : 'open';
-    };
-
-    this.changeNewIssueLink = function (event, projectName) {
-      $(".link").attr("href", this.newIssueURL(projectName));
-    };
-
-    this.blockUI = function () {
-      $.blockUI();
-    };
-
-    this.unblockUI = function (e, timeout) {
-      setTimeout($.unblockUI, (timeout || 0));
-    };
-
-    this.mountExportClick =  function(ev,data){
-      this.trigger('data:issues:mountExportCsvLink', {
-        issues: this.attr.issues
-      });
-    };
-
-    this.clearIssues = function(){
-      this.attr.issues = [];
-    };
-
     this.showMessage = function(message){
       $('#messageModal').modal('toggle');
-      $('#messageModal .modal-title').text(message.title);
+      if (message.title != undefined) {
+        $('#messageModal .modal-title').text(message.title);
+      }
       $('#messageModal .modal-body p').text(message.body);
     };
 
     this.showPermissonErrorMessage = function(){
       this.showMessage({
-        title: 'Error',
         body: 'There was an error in your request. Maybe you don\'t have permission to change this issue. Please contact the repository owner.'
       });
     };
@@ -662,7 +570,7 @@ define([
       this.on('ui:clear:issue', this.clearIssues);
       this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
 
-    });
->>>>>>> fix bug when try to move or assign/unassign issues without permission
+      });
+    }
   }
 );
