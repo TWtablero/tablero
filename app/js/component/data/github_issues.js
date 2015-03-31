@@ -311,56 +311,55 @@ define([
         items: '.issue',
         connectWith: '.list-group',
         cancel: '.popover',
-        update : this.updateDraggable.bind(this),
-        receive: function (event, ui) {
-          var label, url , oldLabel, state, origin, issueItem;
+        update: this.updateDraggable.bind(this),
+       receive: this.updateDraggedIssue.bind(this, customColumns, draggables)
+      }).disableSelection();
+    };
 
-            if (!this.getCurrentAuthToken()) {
-              this.trigger(document, 'ui:needs:githubUser');
-              return;
-            }
+    this.updateDraggedIssue = function(customColumns, draggable, event, ui){
+      var label, url , oldLabel, state, origin, issueItem;
 
-          url = this.getIssueUrlFromDraggable(ui);
-          label = this.parseLabel(event.target.id);
-          oldLabel = this.parseLabel(ui.sender[0].id);
-          state = this.getState(event.target.className);
-          origin = ui.sender[0];
-          issueItem = ui.item[0];
-
-          var that = this;
-
-          if (label == "4 - Done") {
-            $.ajax({
-              type: 'PATCH',
-              url: url + this.getAccessTokenParam(),
-              data: JSON.stringify({
-                state: "closed"
-              }),
-              success: function() {
-                that.triggerRocketAnimation();
-              }
-            });
-          }else{
-            $.ajax({
-              type: 'POST',
-              url: url + "/labels" + this.getAccessTokenParam(),
-              data: JSON.stringify([label])
-            });
+          if (!this.getCurrentAuthToken()) {
+            this.trigger(document, 'ui:needs:githubUser');
+            return;
           }
 
-          $.ajax({
-            type: 'DELETE',
-            url: url + "/labels/" + oldLabel + this.getAccessTokenParam(),
-            success: function() {
-              that.updateLabelCount(customColumns, draggable);
-            },
-            error: function() {
-              $(issueItem).prependTo(origin);
-              that.trigger('ui:show:permissionErrorModal');
-            }
-          });
-        }.bind(this)
-      }).disableSelection();
+      url = this.getIssueUrlFromDraggable(ui);
+      label = this.parseLabel(event.target.id);
+      oldLabel = this.parseLabel(ui.sender[0].id);
+      state = this.getState(event.target.className);
+      origin = ui.sender[0];
+      issueItem = ui.item[0];
+
+      var that = this;
+
+      if (label == "4 - Done") {
+        $.ajax({
+          type: 'PATCH',
+          url: url + this.getAccessTokenParam(),
+          data: JSON.stringify({
+            state: "closed"
+          })
+        }).done( function() {
+          that.trigger('ui:rocket:animate');
+        });
+      }else{
+        $.ajax({
+          type: 'POST',
+          url: url + "/labels" + this.getAccessTokenParam(),
+          data: JSON.stringify([label])
+        });
+      }
+
+      $.ajax({
+        type: 'DELETE',
+        url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+      }).done( function() {
+        that.updateLabelCount(customColumns, draggable);
+      }).fail( function() {
+        $(issueItem).prependTo(origin);
+        that.trigger('ui:show:permissionErrorModal');
+      });
     };
 
     this.updateLabelCount = function(customColumns, draggable){
@@ -496,6 +495,7 @@ define([
       this.on('ui:unblockUI', this.unblockUI);
       this.on('ui:clear:issue', this.clearIssues);
       this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
+      this.on('ui:rocket:animate', this.triggerRocketAnimation);
 
       });
     }

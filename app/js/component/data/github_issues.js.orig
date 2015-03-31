@@ -301,39 +301,9 @@ define([
           nextElement: this.DOMObjectToIssueMovedParam(ui.item[0].nextElementSibling)
         };
 
-<<<<<<< HEAD
         this.trigger(document, 'data:issues:issueMoved', issueMovedParam);
       };
 
-      this.draggable = function (ev, data) {
-        var customColumns = _.map(data.boardColumns, function (column) {
-          return '.' + column;
-        });
-        var draggables = ['.backlog', '.done'].concat(customColumns);
-        $(draggables.join(', ')).sortable({
-          items: '.issue',
-          connectWith: '.list-group',
-          cancel: '.popover',
-          update: this.updateDraggable.bind(this),
-          receive: function (event, ui) {
-            var label, url, oldLabel, state;
-
-            if (!this.getCurrentAuthToken()) {
-              this.trigger(document, 'ui:needs:githubUser');
-              return;
-            }
-
-            url = this.getIssueUrlFromDraggable(ui);
-            label = this.parseLabel(event.target.id);
-            oldLabel = this.parseLabel(ui.sender[0].id);
-            state = this.getState(event.target.className);
-
-            $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-            $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-
-            _.each(customColumns, function (draggable) {
-              $('.panel-heading' + draggable + '-header .issues-count').text(' (' + $('.issue-track' + draggable + ' .issue').length + ')');
-=======
     this.draggable = function (ev, data) {
       var customColumns = _.map(data.boardColumns, function(column){ return '.'+column; });
       var draggables = ['.backlog', '.done'].concat(customColumns);
@@ -341,88 +311,64 @@ define([
         items: '.issue',
         connectWith: '.list-group',
         cancel: '.popover',
-        update : this.updateDraggable.bind(this),
-        receive: function (event, ui) {
-          var label, url , oldLabel, state, origin, issueItem;
-
-          if (!this.getCurrentAuthToken()) {
-            this.trigger(document, 'ui:needs:githubUser');
-            return;
-          }
-
-          url = this.getIssueUrlFromDraggable(ui);
-          label = this.parseLabel(event.target.id);
-          oldLabel = this.parseLabel(ui.sender[0].id);
-          state = this.getState(event.target.className);
-          origin = ui.sender[0];
-          issueItem = ui.item[0];
-
-          var that = this;
-
-          if (label == "4 - Done") {
-            $.ajax({
-              type: 'PATCH',
-              url: url + this.getAccessTokenParam(),
-              data: JSON.stringify({
-                state: "closed"
-              }),
-              success: function() {
-                that.triggerRocketAnimation();
-              }
-            });
-          }else{
-            $.ajax({
-              type: 'POST',
-              url: url + "/labels" + this.getAccessTokenParam(),
-              data: JSON.stringify([label])
->>>>>>> makes issue go back to the original position
-            });
-
-            if (label == "4 - Done") {
-              this.triggerRocketAnimation();
-              $.ajax({
-                type: 'PATCH',
-                url: url + this.getAccessTokenParam(),
-                data: JSON.stringify({
-                  state: "closed"
-                })
-              });
-            } else {
-              $.ajax({
-                type: 'POST',
-                url: url + "/labels" + this.getAccessTokenParam(),
-                data: JSON.stringify([label])
-              });
-            }
-
-          $.ajax({
-            type: 'DELETE',
-            url: url + "/labels/" + oldLabel + this.getAccessTokenParam(),
-            success: function() {
-              that.updateLabelCount(customColumns, draggable);
-            },
-            error: function() {
-              $(issueItem).prependTo(origin);
-              that.trigger('ui:show:permissionErrorModal');
-            }
-          });
-        }.bind(this)
+        update: this.updateDraggable.bind(this),
+       receive: this.updateDraggedIssue.bind(this, customColumns, draggables)
       }).disableSelection();
     };
 
 <<<<<<< HEAD
-      this.triggerRocketAnimation = function () {
-        $(".panel-heading.done img.plain").hide();
-        $(".panel-heading.done h3").css('opacity', 0);
-        $(".panel-heading.done .issues-count").css('opacity', 0);
-        $(".panel-heading.done img.colored").show().animate({
-          top: '-650px'
-        }, 2000, 'easeInBack', function () {
-          $(".panel-heading.done img.colored").hide().css('top', 0);
-
-          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
-          $(".panel-heading.done h3").css('color', '#5dc66c');
+            if (!this.getCurrentAuthToken()) {
+              this.trigger(document, 'ui:needs:githubUser');
+              return;
+            }
 =======
+    this.updateDraggedIssue = function(customColumns, draggable, event, ui){
+      var label, url , oldLabel, state, origin, issueItem;
+>>>>>>> Fix in the title and create jasmine tests
+
+      if (!this.getCurrentAuthToken()) {
+        this.trigger(document, 'ui:needs:githubUser');
+        return;
+      }
+
+      url = this.getIssueUrlFromDraggable(ui);
+      label = this.parseLabel(event.target.id);
+      oldLabel = this.parseLabel(ui.sender[0].id);
+      state = this.getState(event.target.className);
+      origin = ui.sender[0];
+      issueItem = ui.item[0];
+
+      var that = this;
+
+      if (label == "4 - Done") {
+        $.ajax({
+          type: 'PATCH',
+          url: url + this.getAccessTokenParam(),
+          data: JSON.stringify({
+            state: "closed"
+          })
+        }).done( function() {
+          that.trigger('ui:rocket:animate');
+        });
+      }else{
+        $.ajax({
+          type: 'POST',
+          url: url + "/labels" + this.getAccessTokenParam(),
+          data: JSON.stringify([label])
+        });
+      }
+
+      $.ajax({
+        type: 'DELETE',
+        url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+      }).done( function() {
+        that.updateLabelCount(customColumns, draggable);
+      }).fail( function() {
+        $(issueItem).prependTo(origin);
+        that.trigger('ui:show:permissionErrorModal');
+      });
+    };
+
     this.updateLabelCount = function(customColumns, draggable){
       $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
       $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
@@ -441,21 +387,8 @@ define([
       }, 2000, 'easeInBack', function () {
         $(".panel-heading.done img.colored").hide().css('top', 0);
 
-        $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
-        $(".panel-heading.done h3").css('color', '#5dc66c');
-        $(".panel-heading.done h3").animate({
-          opacity: 1
-        }, 2000);
-
-        $(".panel-heading.done .check-done").fadeIn(2000, function () {
-          $(".panel-heading.done .check-done").hide();
-
-          $(".panel-heading.done h3").css('opacity', 0);
-          $(".panel-heading.done h3").text('Drop here to launch');
-          $(".panel-heading.done h3").css('color', '#aaa');
-
-          $(".panel-heading.done img.plain").fadeIn(600);
->>>>>>> makes issue go back to the original position
+          $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
+          $(".panel-heading.done h3").css('color', '#5dc66c');
           $(".panel-heading.done h3").animate({
             opacity: 1
           }, 2000);
@@ -569,6 +502,7 @@ define([
       this.on('ui:unblockUI', this.unblockUI);
       this.on('ui:clear:issue', this.clearIssues);
       this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
+      this.on('ui:rocket:animate', this.triggerRocketAnimation);
 
       });
     }

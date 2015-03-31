@@ -93,12 +93,19 @@ describeComponent('component/data/github_issues', function () {
   });
 
 
+<<<<<<< HEAD
   it('DOM Object should be turned in a issue param', function () {
     var element = {
       id: 1,
       dataset: {
         priority: 1
       }
+=======
+  it('DOM Object should be turned in a issue param', function() {
+    var element = {
+      id : 1,
+      dataset : { priority : 1}
+>>>>>>> Fix in the title and create jasmine tests
     };
 
     $(sandbox({
@@ -129,8 +136,13 @@ describeComponent('component/data/github_issues', function () {
   });
 
 
+<<<<<<< HEAD
   it('GetRepoURLFromIssue should return repository url from all url types', function () {
     var urls = [
+=======
+  it('GetRepoURLFromIssue should return repository url from all url types', function(){
+    var  urls = [
+>>>>>>> Fix in the title and create jasmine tests
     'https://api.github.com/repos/rodrigomaia17/try_git/issues/1',
     'https://api.github.com/repos/rodrigomaia17/try_git./issues/1',
     'https://api.github.com/repos/rodrigomaia17/try_git2/issues/1',
