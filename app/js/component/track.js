@@ -121,7 +121,7 @@
         };
 
       this.renderIssue = function (issue) {
-        issue.hideClass = !this.usingUserAuthToken() ? 'hide' : ''; 
+        issue.hideClass = !this.usingUserAuthToken() ? 'hide' : '';
         var renderedIssue = $(this.render(issue));
         if (renderedIssue.find('.assignee-avatar').attr('src') != "" ) {
           renderedIssue.find('.assigns-myself').addClass('assigned');

@@ -23,14 +23,12 @@ define([
 
     function githubUser() {
       this.getCurrentGithubUser = function (ev, previousData) {
-        var token = this.getCurrentAuthToken();
+        var token = this.getURLToken();
 
         if (!token) {
           var selectedAccess = $.cookie('access');
           if (selectedAccess) {
             $(document).trigger('ui:show:permissionSelected', [selectedAccess]);
-          } else {
-            $(document).trigger('ui:show:permissionsModal');
           }
         } else {
           $.getJSON('https://api.github.com/user', {

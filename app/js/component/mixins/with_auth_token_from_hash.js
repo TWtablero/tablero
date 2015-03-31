@@ -7,6 +7,10 @@ define([
         return window.location.hash.slice(1) || configBootstrap.getReadOnlyAccessToken();
       };
 
+      this.getURLToken = function() {
+        return window.location.hash.slice(1);
+      };
+
       this.usingUserAuthToken = function(){
       	return !!window.location.hash.slice(1);
       };

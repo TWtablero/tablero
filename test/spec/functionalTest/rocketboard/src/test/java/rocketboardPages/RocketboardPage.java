@@ -662,6 +662,15 @@ public class RocketboardPage {
         waitingObject(saveColumnsButton);
         saveColumnsButton.click();
     }
+
+    public boolean createIssueButtonPresent() {
+        try {
+            btnOpenModalCreateIssue.isDisplayed();
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
+    }
 	
 }
 
