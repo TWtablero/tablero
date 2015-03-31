@@ -55,16 +55,23 @@ describeComponent('component/data/github_issues', function () {
   });
 
   describe('draggable', function(){
-    it('triggers rocket animation', function(){
-      var deferred = $.Deferred();
-      var spyEvent = spyOnEvent(document, 'ui:rocket:animate');
-      var ev = { target : { id : '1', className : ''}};
-      var ui = { item : [ {} ], boardColumns : ['ready', 'test'], sender : [{id: '1'}]};
+    var deferred, ev, ui;
+
+    beforeEach(function () {
+      deferred = $.Deferred();
+      ev = { target : { id : '1', className : ''}};
+      ui = { item : [ {} ], boardColumns : ['ready', 'test'], sender : [{id: '1'}]};
 
       spyOn(this.component, 'getCurrentAuthToken').and.returnValue('true');
       spyOn(this.component, 'getIssueUrlFromDraggable');
-      spyOn(this.component, 'parseLabel').and.returnValue('4 - Done');
       spyOn($, 'ajax').and.returnValue(deferred);
+
+    });
+
+    it('triggers rocket animation', function(){
+      var spyEvent = spyOnEvent(document, 'ui:rocket:animate');
+
+      spyOn(this.component, 'parseLabel').and.returnValue('4 - Done');
 
       this.component.updateDraggedIssue({}, {}, ev, ui);
       deferred.resolve();
@@ -73,17 +80,11 @@ describeComponent('component/data/github_issues', function () {
     });
 
     it('triggers permission modal', function(){
-      var deferred = $.Deferred();
       var spyEvent = spyOnEvent(document, 'ui:show:permissionErrorModal');
-      var ev = { target : { id : '', className : ''}};
-      var ui = { item : [ {id: '1'} ], boardColumns : ['ready', 'test'], sender : [{id: '1'}]};
 
-      spyOn(this.component, 'getCurrentAuthToken').and.returnValue('true');
-      spyOn(this.component, 'getIssueUrlFromDraggable');
       spyOn(this.component, 'parseLabel').and.returnValue('0 - Backlog');
       spyOn(this.component, 'showMessage');
       spyOn($.prototype, "prependTo");
-      spyOn($, 'ajax').and.returnValue(deferred);
 
       this.component.updateDraggedIssue({}, {}, ev, ui);
       deferred.reject();
