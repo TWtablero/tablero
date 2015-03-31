@@ -92,7 +92,9 @@ After the installation, you'll need to proceed with the Tablero [configuration](
   Authorization callback URL: http://localhost:3000/request_auth_token
   ```
 
-2. Create a __config.json__ file with application's values generated in the last step:
+2. Generate a [personal access token](https://github.com/settings/tokens/new) for users without a Github account to be able to view your board. We encourage you to uncheck all scope options to make your board readonly to external viewers.
+
+3. Create a __config.json__ file with application's values generated in the last step:
   ![image of applications variable]
   (http://www.sumoware.com/images/temp/xzqgemqimmkkdcrr.png )
 
@@ -103,7 +105,7 @@ After the installation, you'll need to proceed with the Tablero [configuration](
     "REPOS" : "",
     "PX_CLIENT_SECRET" : "your_client_secret",
     "PX_CLIENT_ID" : "your_client_id",
-
+    "DEFAULT_ACCESS_TOKEN" : "your_personal_access_token",
     "REDISCLOUD_URL" : ""
   }
   ```

@@ -17,7 +17,8 @@ define([
   'flight/lib/component',
   'component/templates/columns_template',
   'component/track',
-  'component/data/github_issues'
+  'component/data/github_issues',
+  'component/data/github_user'
   ], function (defineComponent, withColumnTemplate, track, githubIssues) {
   'use strict';
   return defineComponent(columnsRender, withColumnTemplate);
@@ -75,17 +76,21 @@ define([
 
       githubIssues.attachTo(document);
 
-      var mountBoard = function () {
-        $(document).trigger('ui:needs:issues', {});
-        $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
-        $(document).trigger('ui:draggable', {
-          boardColumns: extraClasses
-        });
+        var mountBoard = function(){
+          $(document).trigger('ui:needs:issues', {});
+          $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
+          $(document).trigger('ui:draggable', {boardColumns: extraClasses});
+        };
+
+        if (!window.location.hash.slice(1) && !$.cookie('access')) {
+          $(document).trigger('ui:needs:issues', {});
+          $('#open_modal_issue').remove();
+          $('#changeColumns').remove();
+          $('#changeAccess').text('GET ACCESS');
+        } else {
+          $(document).trigger('ui:needs:githubUser', {callback : mountBoard});
+        }
       };
-      $(document).trigger('ui:needs:githubUser', {
-        callback: mountBoard
-      });
-    };
 
     this.renderColumn = function (extraClasses, extraColumns) {
       var that = this;

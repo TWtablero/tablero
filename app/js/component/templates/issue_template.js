@@ -67,24 +67,24 @@ define(['config/config_bootstrap'],
       this.before('initialize', function () {
         this.template = Hogan.compile(
           '<div class="issue list-group-item {{repoName}} {{colorClass}}" id="{{id}}" data-priority="{{priority}}">' +
-          '<div class="issue-header">' +
-          '<a class="assigns-myself">' +
-          '<span class="empty-avatar">+</span>' +
-          '<span class="empty-avatar-label">ASSIGN ME</span>' +
-          '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
-          '</a>' +
-          '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
-          '</div>' +
-          '<div class="issue-body">' +
-          '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}" data-hint="Ctrl+C to Copy">' +
-          '{{title}}' +
-          '</a>' +
-          '</div>' +
-          '<div class="labels">' +
-          '{{#labelsName}}' +
-          '<span class="label" style="background: #{{color}};">{{name}}</span>' +
-          '{{/labelsName}}' +
-          '</div>' +
+            '<div class="issue-header">'+
+              '<a class="assigns-myself">' +
+                '<span class="empty-avatar {{hideClass}}">+</span>' +
+                '<span class="empty-avatar-label {{hideClass}}">ASSIGN ME</span>' +
+                '<img class="assignee-avatar" title="{{assignee.login}}" src="{{assignee.avatar_url}}" />' +
+              '</a>' +
+              '<a href="{{html_url}}" target="_blank"><span class="issue-number right">#{{number}}</span></a>' +
+            '</div>' +
+            '<div class="issue-body">' +
+              '<a class="title list-group-item-heading" href="{{html_url}}" target="_blank" data-toggle="tooltip" title="{{body}}" data-hint="Ctrl+C to Copy">' +
+                '{{title}}' +
+              '</a>'+
+            '</div>' +
+            '<div class="labels">'+
+              '{{#labelsName}}' +
+                '<span class="label" style="background: #{{color}};">{{name}}</span>' +
+              '{{/labelsName}}' +
+            '</div>' +
           '</div>'
         );
       });

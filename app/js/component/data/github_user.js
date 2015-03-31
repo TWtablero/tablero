@@ -16,21 +16,19 @@
 define([
    'flight/lib/component',
    'component/mixins/with_auth_token_from_hash',
-  'jquery-cookie/jquery.cookie'
+   'jquery-cookie/jquery.cookie'
   ],
   function (defineComponent, withAuthTokeFromHash) {
     return defineComponent(githubUser, withAuthTokeFromHash);
 
     function githubUser() {
       this.getCurrentGithubUser = function (ev, previousData) {
-        var token = this.getCurrentAuthToken();
+        var token = this.getURLToken();
 
         if (!token) {
           var selectedAccess = $.cookie('access');
           if (selectedAccess) {
             $(document).trigger('ui:show:permissionSelected', [selectedAccess]);
-          } else {
-            $(document).trigger('ui:show:permissionsModal');
           }
         } else {
           $.getJSON('https://api.github.com/user', {

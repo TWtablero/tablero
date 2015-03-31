@@ -77,6 +77,8 @@ public abstract class AbstractRocketboardTests {
         List<Repository> repos = getRepos();
         assertThat("there isnt any configured repos ", repos.size(), greaterThan(0));
 
+        rocketboardPage.waitingLoading();
+        rocketboardPage.openChangeAccess();
         rocketboardPage.accessRepo(privateRepo, credentials.getUserName(), credentials.getPassword());
         rocketboardPage.waitingLoading();
     }
