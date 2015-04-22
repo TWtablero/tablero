@@ -16,18 +16,18 @@
   define(
   ['flight/lib/component',
     'component/templates/issue_template',
-    'component/ui/copyable'],
-    function (defineComponent, withIssueTemplate, copyable) {
-      return defineComponent(track, withIssueTemplate, copyable);
+    'component/ui/copyable',
+    'component/ui/issue'],
+  function (defineComponent, withIssueTemplate, copyable, issueComponent) {
+    return defineComponent(track, withIssueTemplate, copyable);
 
-      function track() {
-        this.defaultAttrs({
-          issueItemSelector: '.issue',
-          issuesCount: 0,
-          extraAllowedTags: ['1 - Ready', '2 - Development', '3 - Quality Assurance'],
-          columns: ['ready', 'development', 'quality-assurance']
-        });
-
+    function track() {
+      this.defaultAttrs({
+        issueItemSelector: '.issue',
+        issuesCount: 0,
+        extraAllowedTags: ['1 - Ready', '2 - Development', '3 - Quality Assurance'],
+        columns: ['ready', 'development', 'quality-assurance']
+      });
 
         this.isIssueOnThisTrack = function (issue) {
           var allowedTags = this.attr.extraAllowedTags.concat(['0 - Backlog', '4 - Done']);
@@ -95,8 +95,11 @@
             $('.panel-heading.' + column + '-header .issues-count').text(' (' + $('.issue-track.' + column + ' .issue').length + ')');
           });
 
-          if (this.attr.trackType === "4 - Done") {
-            $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
+        issues.forEach(function (issue) {
+          if(issue.labels[0].name != "4 - Done") {
+            var renderedIssue = this.renderIssue(issue);
+            this.$node.prepend(renderedIssue);
+            issueComponent.attachTo(renderedIssue, {issue: issue});
           }
 
           this.trigger('ui:issues:displayed');

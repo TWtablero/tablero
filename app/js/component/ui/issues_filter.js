@@ -24,39 +24,22 @@ define([
     return defineComponent(issuesFilter, issueFilterTemplate);
 
     function issuesFilter() {
-
-      this.setUp = function () {
-        $('.filter-repo').change(function () {
-          $('.issue').remove();
-          var reposToFilter = [];
-          $(document).trigger("data:issues:cleanCount");
-
-          $('.filter-repo').each(function () {
-            if ($(this).find('input').is(":checked")) {
-              reposToFilter.push($(this).find('input').attr('repo'));
+      this.addFilters = function() {
+        repoNames.forEach(function (name, idx) {
+          var renderedFilter = $(this.renderFilter({name: name, index: idx}));
+          this.$node.append(renderedFilter);
+          renderedFilter.change(function () {
+            if ($(this).find('input').prop('checked')) {
+              $(document).trigger('ui:showRepoIssues', {repo: name});
+            } else {
+              $(document).trigger('ui:dontShowRepoIssues', {repo: name});
             }
           });
-
-          $(document).trigger('ui:clear:issue');
-
-          $(document).trigger('ui:needs:issues', {
-            projectName: reposToFilter
-          });
-        });
-      }
-
-      this.addFilters = function () {
-        repoNames.forEach(function (name, idx) {
-          this.$node.append(this.renderFilter({
-            name: name,
-            index: idx
-          }));
         }.bind(this));
       }
 
       this.after('initialize', function () {
         this.addFilters();
-        this.setUp();
       });
     }
   }
