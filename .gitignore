@@ -8,6 +8,7 @@ app/css/main.css
 app/dist/*.js
 coverage
 .vagrant/
+.java-version
 config.json
 *.iml
 **/.idea
