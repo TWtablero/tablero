@@ -18,16 +18,17 @@
     'component/templates/issue_template',
     'component/ui/copyable',
     'component/ui/issue'],
-  function (defineComponent, withIssueTemplate, copyable, issueComponent) {
-    return defineComponent(track, withIssueTemplate, copyable);
+    function (defineComponent, withIssueTemplate, copyable, issueComponent) {
+      return defineComponent(track, withIssueTemplate, copyable);
 
-    function track() {
-      this.defaultAttrs({
-        issueItemSelector: '.issue',
-        issuesCount: 0,
-        extraAllowedTags: ['1 - Ready', '2 - Development', '3 - Quality Assurance'],
-        columns: ['ready', 'development', 'quality-assurance']
-      });
+      function track() {
+        this.defaultAttrs({
+          issueItemSelector: '.issue',
+          issuesCount: 0,
+          extraAllowedTags: ['1 - Ready', '2 - Development', '3 - Quality Assurance'],
+          columns: ['ready', 'development', 'quality-assurance']
+        });
+
 
         this.isIssueOnThisTrack = function (issue) {
           var allowedTags = this.attr.extraAllowedTags.concat(['0 - Backlog', '4 - Done']);
@@ -84,7 +85,9 @@
 
           issues.forEach(function (issue) {
             if (issue.labels[0].name != "4 - Done") {
-              this.$node.prepend(this.renderIssue(issue));
+              var renderedIssue = this.renderIssue(issue);
+              this.$node.prepend(renderedIssue);
+              issueComponent.attachTo(renderedIssue, { issue: issue });
             }
           }.bind(this));
 
@@ -95,11 +98,8 @@
             $('.panel-heading.' + column + '-header .issues-count').text(' (' + $('.issue-track.' + column + ' .issue').length + ')');
           });
 
-        issues.forEach(function (issue) {
-          if(issue.labels[0].name != "4 - Done") {
-            var renderedIssue = this.renderIssue(issue);
-            this.$node.prepend(renderedIssue);
-            issueComponent.attachTo(renderedIssue, {issue: issue});
+          if (this.attr.trackType === "4 - Done") {
+            $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
           }
 
           this.trigger('ui:issues:displayed');
