@@ -103,7 +103,6 @@ After the installation, you'll need to proceed with the Tablero [configuration](
     "REPOS" : "",
     "PX_CLIENT_SECRET" : "your_client_secret",
     "PX_CLIENT_ID" : "your_client_id",
-
     "REDISCLOUD_URL" : ""
   }
   ```
