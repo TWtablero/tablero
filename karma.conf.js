@@ -9,7 +9,7 @@ module.exports = function (config) {
   config.set({
     autoWatch: true,
     basePath: '',
-    browsers: [process.env.TRAVIS ? 'Firefox' : 'Chrome'],
+    browsers: ['Chrome'],
     captureTimeout: 5000,
     exclude: [
       'app/js/main.js'
@@ -34,7 +34,7 @@ module.exports = function (config) {
       'jasmine',
       'requirejs'
     ],
-    reporters: [process.env.TRAVIS ? 'dots' : 'progress' ,  'coverage'],
+    reporters: ['progress' ,  'coverage'],
     reportSlowerThan: 500,
     singleRun: false,
 
@@ -42,10 +42,8 @@ module.exports = function (config) {
       'app/js/**/*.js' : 'coverage'
     },
     coverageReporter:{
-      dir: 'coverage',
-      reporters:[
-        { type: 'lcov', subdir: 'report-lcov'}
-      ]
+      dir: 'test/test-coverage-reports',
+      type: 'html'
     }
   });
 };

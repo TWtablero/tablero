@@ -6,7 +6,7 @@ app/bower_components
 app/.DS_Store
 app/css/main.css
 app/dist/*.js
-coverage
+test/test-coverage-reports
 .vagrant/
 .java-version
 config.json
