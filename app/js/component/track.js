@@ -16,8 +16,9 @@
   define(
   ['flight/lib/component',
     'component/templates/issue_template',
-    'component/ui/copyable'],
-    function (defineComponent, withIssueTemplate, copyable) {
+    'component/ui/copyable',
+    'component/ui/issue'],
+    function (defineComponent, withIssueTemplate, copyable, issueComponent) {
       return defineComponent(track, withIssueTemplate, copyable);
 
       function track() {
@@ -84,7 +85,9 @@
 
           issues.forEach(function (issue) {
             if (issue.labels[0].name != "4 - Done") {
-              this.$node.prepend(this.renderIssue(issue));
+              var renderedIssue = this.renderIssue(issue);
+              this.$node.prepend(renderedIssue);
+              issueComponent.attachTo(renderedIssue, { issue: issue });
             }
           }.bind(this));
 
