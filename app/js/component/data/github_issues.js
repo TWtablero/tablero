@@ -61,10 +61,8 @@ define([
 
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
-        _.filter(projects, function (project) {
-          return project.issues
-        }).
-        forEach(function (project, index) {
+        
+        projects.forEach(function (project, index) {
           var issuesArrayJson = project.issues || [];
 
           _.each(issuesArrayJson, function (issue, index) {
