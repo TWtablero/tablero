@@ -5,35 +5,31 @@ define(['config/config_bootstrap'],
       this.fetchAllIssues = function (page) {
         var MAX_WAITING_TIME = 2000;
         var DATA_TYPE = "json";
+
         var repos = config.getRepos();
 
         return _.object(
           _.map(repos, function (url, name) {
-            var deffered = $.Deferred();
-
-            var request = $.ajax({
+            
+            var config = {
               dataType: DATA_TYPE,
               url: this.repoIssuesURL(url, page),
               timeout: MAX_WAITING_TIME
-            }).
-            
-            done(function (data) {
-              deffered.resolve(data);
-            }).
-            
-            fail(function (xhr, status) {
-              $.unblockUI;
-              this.trigger(document, 'ui:show:messageFailConnection');
-              deffered.fail();
-            }.bind(this));
+            };
+
+            var deffered = $.Deferred();
+            $.ajax(config)
+              .done(function (data) {
+                deffered.resolve(data);
+              })
+              .fail(function (xhr, status) {
+                this.trigger(document, 'ui:show:messageFailConnection');
+                deffered.fail();
+              }.bind(this));
+
             return [name, deffered.promise()];
           }.bind(this))
           );
-
-        function isRepositoryPrivate() {
-          return window.location.search.slice(14) == "repo";
-        }
-
       }
 
 
