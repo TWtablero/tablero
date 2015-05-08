@@ -6,26 +6,28 @@ define(['config/config_bootstrap'],
         var repos = config.getRepos();
 
         return _.object(_(repos).map(function (url, name) {
-          var hasData = $.Deferred();
+          var deffered = $.Deferred();
 
           var request = $.ajax({
             dataType: "json",
             url: this.repoIssuesURL(url, page),
             timeout: 2000
           }).
+          
           done(function (data) {
-            hasData.resolve(data);
+            deffered.resolve(data);
           }).
+          
           fail(function (xhr, status) {
             if (xhr.status === 404 && isRepositoryPrivate()) {
               this.trigger(document, 'ui:show:messageFailConnection');
-              hasData.fail();
+              deffered.fail();
             } else {
-              hasData.resolve();
+              deffered.resolve();
             };
           });
 
-          return [name, hasData.promise()];
+          return [name, deffered.promise()];
         }.bind(this)));
 
         function isRepositoryPrivate() {
