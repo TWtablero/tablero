@@ -6,7 +6,6 @@ define(['config/config_bootstrap'],
         var repos = config.getRepos();
 
         return _.object(_(repos).map(function (url, name) {
-          var private_repo = window.location.search.slice(14) == "repo";
           var hasData = $.Deferred();
 
           var request = $.ajax({
@@ -18,7 +17,7 @@ define(['config/config_bootstrap'],
             hasData.resolve(data);
           }).
           fail(function (xhr, status) {
-            if (xhr.status === 404 && private_repo) {
+            if (xhr.status === 404 && isRepositoryPrivate()) {
               this.trigger(document, 'ui:show:messageFailConnection');
               hasData.fail();
             } else {
@@ -28,6 +27,10 @@ define(['config/config_bootstrap'],
 
           return [name, hasData.promise()];
         }.bind(this)));
+
+        function isRepositoryPrivate() {
+          return window.location.search.slice(14) == "repo";
+        }
 
       }
 
