@@ -23,7 +23,7 @@ define(['config/config_bootstrap'],
             } else {
               hasData.resolve();
             };
-          }.bind(this));
+          });
 
           return [name, hasData.promise()];
         }.bind(this)));
