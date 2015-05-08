@@ -22,14 +22,10 @@ define(['config/config_bootstrap'],
             }).
             
             fail(function (xhr, status) {
-              if (xhr.status === 404 && isRepositoryPrivate()) {
-                this.trigger(document, 'ui:show:messageFailConnection');
-                deffered.fail();
-              } else {
-                deffered.resolve();
-              };
-            });
-
+              $.unblockUI;
+              this.trigger(document, 'ui:show:messageFailConnection');
+              deffered.fail();
+            }.bind(this));
             return [name, deffered.promise()];
           }.bind(this))
           );

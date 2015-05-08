@@ -70,7 +70,7 @@ define(
 
       $(document).on('ui:show:messageFailConnection', function (event) {
         $.unblockUI();
-        $('#failConnectionModal').modal('toggle');
+        $('#failConnectionModal').modal('show');
       });
 
       $('#redirectToPublicBtn').click(function () {
