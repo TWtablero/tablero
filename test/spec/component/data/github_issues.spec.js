@@ -32,8 +32,8 @@ describeComponent('component/data/github_issues', function () {
       'issues': [pullRequest, issue]
     }
 
-    expect(this.component.getIssuesFromProjects([project])).not.toContain(pullRequest);
-    expect(this.component.getIssuesFromProjects([project])).toContain(issue);
+    expect(this.component.prepareAllIssues([project])).not.toContain(pullRequest);
+    expect(this.component.prepareAllIssues([project])).toContain(issue);
   });
 
   it('update draggable issue should trigger event', function () {

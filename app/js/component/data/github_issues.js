@@ -59,13 +59,11 @@ define([
         });
       };
 
-      this.getIssuesFromProjects = function (projects) {
+      this.prepareAllIssues = function (projects) {
         var allIssues = [];
         
         projects.forEach(function (project, index) {
-          var issuesArrayJson = project.issues || [];
-
-          _.each(issuesArrayJson, function (issue, index) {
+          project.issues.forEach(function (issue, index) {
             if (!issue.pull_request) {
               issue.projectName = project.projectName;
               issue.repoUrl = this.getRepoURLFromIssue(issue.url);
@@ -74,8 +72,8 @@ define([
           }.bind(this));
 
         }.bind(this));
-        return allIssues;
 
+        return allIssues;
       };
 
       this.getRepoURLFromIssue = function (issueUrl) {
@@ -108,19 +106,19 @@ define([
             };
           });
 
-          var issuesFromProjects = this.getIssuesFromProjects(projects);
+          var allIssues = this.prepareAllIssues(projects);
 
           this.trigger('data:issues:refreshed', {
-            issues: issuesFromProjects
+            issues: allIssues
           });
 
-          this.attr.issues = this.attr.issues.concat(issuesFromProjects);
+          this.attr.issues = this.attr.issues.concat(allIssues);
 
           if (data.page == 1) {
             this.trigger('data:issues:clearExportCsvLink');
           }
 
-          if (issuesFromProjects.length > 0) {
+          if (allIssues.length > 0) {
             this.trigger('ui:needs:issues', data);
           } else {
             var projectIdentifiers = {
