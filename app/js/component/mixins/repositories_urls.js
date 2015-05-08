@@ -18,18 +18,23 @@ define(['config/config_bootstrap'],
             };
 
             var deffered = $.Deferred();
+
+            var success = function(data) {
+              deffered.resolve(data);
+            };
+
+            var failure = function() {
+              this.trigger(document, 'ui:show:messageFailConnection');
+              deffered.fail();
+            };
+
             $.ajax(config)
-              .done(function (data) {
-                deffered.resolve(data);
-              })
-              .fail(function (xhr, status) {
-                this.trigger(document, 'ui:show:messageFailConnection');
-                deffered.fail();
-              }.bind(this));
+              .done(success)
+              .fail(failure.bind(this));
 
             return [name, deffered.promise()];
           }.bind(this))
-          );
+        );
       }
 
 
