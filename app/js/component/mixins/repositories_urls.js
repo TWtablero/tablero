@@ -3,32 +3,36 @@ define(['config/config_bootstrap'],
     return function () {
 
       this.fetchAllIssues = function (page) {
+        var MAX_WAITING_TIME = 2000;
+        var DATA_TYPE = "json";
         var repos = config.getRepos();
 
-        return _.object(_(repos).map(function (url, name) {
-          var deffered = $.Deferred();
+        return _.object(
+          _.map(repos, function (url, name) {
+            var deffered = $.Deferred();
 
-          var request = $.ajax({
-            dataType: "json",
-            url: this.repoIssuesURL(url, page),
-            timeout: 2000
-          }).
-          
-          done(function (data) {
-            deffered.resolve(data);
-          }).
-          
-          fail(function (xhr, status) {
-            if (xhr.status === 404 && isRepositoryPrivate()) {
-              this.trigger(document, 'ui:show:messageFailConnection');
-              deffered.fail();
-            } else {
-              deffered.resolve();
-            };
-          });
+            var request = $.ajax({
+              dataType: DATA_TYPE,
+              url: this.repoIssuesURL(url, page),
+              timeout: MAX_WAITING_TIME
+            }).
+            
+            done(function (data) {
+              deffered.resolve(data);
+            }).
+            
+            fail(function (xhr, status) {
+              if (xhr.status === 404 && isRepositoryPrivate()) {
+                this.trigger(document, 'ui:show:messageFailConnection');
+                deffered.fail();
+              } else {
+                deffered.resolve();
+              };
+            });
 
-          return [name, deffered.promise()];
-        }.bind(this)));
+            return [name, deffered.promise()];
+          }.bind(this))
+          );
 
         function isRepositoryPrivate() {
           return window.location.search.slice(14) == "repo";
