@@ -7,10 +7,9 @@ define(['config/config_bootstrap'],
 
         return _.object(_(repos).map(function (url, name) {
           var private_repo = window.location.search.slice(14) == "repo";
-          var request = $.getJSON(this.repoIssuesURL(url, page));
           var hasData = $.Deferred();
 
-          var request2 = $.ajax({
+          var request = $.ajax({
             dataType: "json",
             url: this.repoIssuesURL(url, page),
             timeout: 2000
