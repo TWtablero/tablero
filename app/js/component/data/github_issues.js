@@ -59,22 +59,6 @@ define([
         });
       };
 
-      this.filterProjectsByName = function (projects, projectNames) {
-        if (!projectNames) {
-          return projects;
-        }
-
-        var filteredRepos = [];
-
-        _.each(projects, function (project) {
-          if ($.inArray(project.projectName, projectNames) > -1) {
-            filteredRepos.push(project);
-          }
-        });
-
-        return filteredRepos;
-      };
-
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
         _.filter(projects, function (project) {
@@ -126,8 +110,7 @@ define([
             };
           });
 
-          var filteredProjects = this.filterProjectsByName(projects, data.projectName),
-            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
+          var issuesFromProjects = this.getIssuesFromProjects(projects);
 
           this.trigger('data:issues:refreshed', {
             issues: issuesFromProjects
@@ -143,7 +126,7 @@ define([
             this.trigger('ui:needs:issues', data);
           } else {
             var projectIdentifiers = {
-              projects: this.getAllProjectsIdentifiers(_.map(filteredProjects, function (proj) {
+              projects: this.getAllProjectsIdentifiers(_.map(projects, function (proj) {
                 return proj.projectName;
               }))
             };
