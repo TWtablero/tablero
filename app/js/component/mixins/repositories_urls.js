@@ -2,41 +2,37 @@ define(['config/config_bootstrap'],
   function (config) {
     return function () {
 
-      this.fetchAllIssues = function (page) {
+      this.fetchAllIssues = function (repositoryUrl, cb) {
         var MAX_WAITING_TIME = 2000;
         var DATA_TYPE = "json";
+        var FIRST_PAGE = 1;
 
-        var repos = config.getRepos();
+        var iterate = function(page) {
+          var config = {
+            dataType: DATA_TYPE,
+            url: this.repoIssuesURL(repositoryUrl, page),
+            timeout: MAX_WAITING_TIME
+          };
 
-        return _.object(
-          _.map(repos, function (url, name) {
-            
-            var config = {
-              dataType: DATA_TYPE,
-              url: this.repoIssuesURL(url, page),
-              timeout: MAX_WAITING_TIME
-            };
+          var success = function(data, status, xhr) {
+            cb(data);
+            if(data.length != 0) {
+              iterate(++page);
+            }
+          };
 
-            var deffered = $.Deferred();
+          var failure = function() {
+            this.trigger(document, 'ui:show:messageFailConnection');
+          };
 
-            var success = function(data) {
-              deffered.resolve(data);
-            };
+          $.ajax(config)
+            .done(success)
+            .fail(failure.bind(this));
 
-            var failure = function() {
-              this.trigger(document, 'ui:show:messageFailConnection');
-              deffered.fail();
-            };
+        }.bind(this);
 
-            $.ajax(config)
-              .done(success)
-              .fail(failure.bind(this));
-
-            return [name, deffered.promise()];
-          }.bind(this))
-        );
+        iterate(FIRST_PAGE);
       }
-
 
       this.defaultOptions = function () {
         return "per_page=100&state=all&";

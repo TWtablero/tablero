@@ -17,9 +17,10 @@ define([
     'flight/lib/component',
     'component/mixins/with_auth_token_from_hash',
     'component/mixins/repositories_urls',
-    'component/templates/popover_template'
+    'component/templates/popover_template',
+    'config/config_bootstrap'
 ],
-  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate, config) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
@@ -59,20 +60,16 @@ define([
         });
       };
 
-      this.prepareAllIssues = function (projects) {
+      this.prepareAllIssues = function (issues, projectName) {
         var allIssues = [];
         
-        projects.forEach(function (project, index) {
-          project.issues.forEach(function (issue, index) {
-            if (!issue.pull_request) {
-              issue.projectName = project.projectName;
-              issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-              allIssues.push(issue);
-            }
-          }.bind(this));
-
+        issues.forEach(function (issue, index) {
+          if (!issue.pull_request) {
+            issue.projectName = projectName;
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+            allIssues.push(issue);
+          }
         }.bind(this));
-
         return allIssues;
       };
 
@@ -87,45 +84,24 @@ define([
       this.fetchIssues = function (ev, data) {
         $(document).trigger('ui:blockUI');
 
-        data.page = ('page' in data) ? (data.page + 1) : 1;
+        var repositories = config.getRepos();
 
-        var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
-        var queries = [];
-        var projectNames = [];
+        _.each(repositories, function (url, name) {
+          this.fetchAllIssues(url, function(issues) {
+            var allIssues = this.prepareAllIssues(issues, name);
+            this.attr.issues = this.attr.issues.concat(allIssues);
 
-        _.each(issuesPromises, function (query, projectName) {
-          queries.push(query);
-          projectNames.push(projectName);
-        });
-        
-        $.when.apply(this, queries).done(function () {
-
-          var issuesResults = arguments;
-          var projects = _.map(projectNames, function (name, idx) {
-            return {
-              'projectName': name,
-              'issues': issuesResults[idx]
-            };
-          });
-
-          var allIssues = this.prepareAllIssues(projects);
-
-          this.trigger('data:issues:refreshed', {
-            issues: allIssues
-          });
-
-          this.attr.issues = this.attr.issues.concat(allIssues);
-
-          if (allIssues.length > 0) {
-            this.trigger('ui:needs:issues', data);
-          } else {
+            this.trigger('data:issues:refreshed', {
+              issues: allIssues
+            });
+            
+            var projectNames = Object.keys(repositories);
             var projectIdentifiers = {
               projects: this.getAllProjectsIdentifiers(projectNames)
             };
             this.trigger('ui:needs:priority', projectIdentifiers);
-          }
-        }.bind(this));
-
+          }.bind(this));
+        }.bind(this));   
       };
 
       this.assignMyselfToIssue = function (ev, assignData) {
