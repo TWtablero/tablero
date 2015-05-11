@@ -90,16 +90,18 @@ define([
         data.page = ('page' in data) ? (data.page + 1) : 1;
 
         var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
-        var queries = _(issuesPromises).map(function (v, k) {
-          return v;
+        var queries = [];
+        var projectNames = [];
+
+        _.each(issuesPromises, function (query, projectName) {
+          queries.push(query);
+          projectNames.push(projectName);
         });
-        var names = _(issuesPromises).map(function (v, k) {
-          return k;
-        });
+        
         $.when.apply(this, queries).done(function () {
-          //var issuesResults = names.length > 1 ? arguments : [arguments];
+
           var issuesResults = arguments;
-          var projects = _(names).map(function (name, idx) {
+          var projects = _.map(projectNames, function (name, idx) {
             return {
               'projectName': name,
               'issues': issuesResults[idx]
@@ -114,17 +116,11 @@ define([
 
           this.attr.issues = this.attr.issues.concat(allIssues);
 
-          if (data.page == 1) {
-            this.trigger('data:issues:clearExportCsvLink');
-          }
-
           if (allIssues.length > 0) {
             this.trigger('ui:needs:issues', data);
           } else {
             var projectIdentifiers = {
-              projects: this.getAllProjectsIdentifiers(_.map(projects, function (proj) {
-                return proj.projectName;
-              }))
+              projects: this.getAllProjectsIdentifiers(projectNames)
             };
             this.trigger('ui:needs:priority', projectIdentifiers);
           }
