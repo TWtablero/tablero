@@ -4,6 +4,37 @@ describeComponent('component/data/github_issues', function () {
     this.setupComponent();
   });
 
+  describe('prepareAllIssues', function() {
+    var issue, issues, pullRequest;
+    beforeEach(function () {
+      pullRequest = {
+        pull_request: true
+      };
+
+      issue = {
+        url: 'https://api.github.com/repos/rodrigomaia17/try_git/issues/1'
+      };
+
+      issues = [pullRequest, issue];
+    });
+
+    it('should not add pull request issues', function() {
+      expect(this.component.prepareAllIssues(issues, 'project1')).not.toContain(pullRequest);
+    });
+
+    it('should contain issue', function() {
+      expect(this.component.prepareAllIssues(issues, 'project2')).toContain(issue);
+    });
+
+    it('should have the projectName attribute', function() {
+      expect(this.component.prepareAllIssues(issues, 'project3')[0].projectName).toBe('project3');  
+    });
+
+    it('should call getRepoURLFromIssue', function() {
+      expect(this.component.prepareAllIssues(issues, 'project3')[0].repoUrl).toBeTruthy();
+    });
+  });
+
   describe("create a issue", function () {
     it('trigger event data:issues:refreshed', function () {
       var eventSpy = spyOnEvent(document, "data:issues:refreshed");
@@ -19,21 +50,6 @@ describeComponent('component/data/github_issues', function () {
         }
       });
     });
-  });
-
-
-  it('does not get pull requests from project', function () {
-    var pullRequest = {
-      pull_request: true
-    };
-    var issue = {};
-
-    var project = {
-      'issues': [pullRequest, issue]
-    }
-
-    expect(this.component.prepareAllIssues([project])).not.toContain(pullRequest);
-    expect(this.component.prepareAllIssues([project])).toContain(issue);
   });
 
   it('update draggable issue should trigger event', function () {

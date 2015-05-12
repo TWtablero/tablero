@@ -81,7 +81,7 @@ define([
         }
       };
 
-      this.fetchIssues = function (ev, data) {
+      this.loadAndPrioritizeAllIssues = function (ev, data) {
         $(document).trigger('ui:blockUI');
 
         var repositories = config.getRepos();
@@ -404,7 +404,7 @@ define([
 
 
       this.after('initialize', function () {
-        this.on('ui:needs:issues', this.fetchIssues);
+        this.on('ui:needs:issues', this.loadAndPrioritizeAllIssues);
         this.on('ui:add:issue', this.addIssue);
         this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
