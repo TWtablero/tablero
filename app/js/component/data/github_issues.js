@@ -75,8 +75,9 @@ define([
 
       this.getRepoURLFromIssue = function (issueUrl) {
         var delimeter = '/';
+        var shallNotPass = '/issues/';
         if (issueUrl) {
-          var result = issueUrl.split(delimeter).reverse().slice(2).reverse().join(delimeter) + delimeter;
+          var result = issueUrl.substring(0, issueUrl.indexOf(shallNotPass)) + delimeter;
           return result;
         }
       };
