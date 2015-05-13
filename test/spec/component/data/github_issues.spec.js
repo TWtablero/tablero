@@ -126,9 +126,11 @@ describeComponent('component/data/github_issues', function () {
 
   describe('addIssuesToBoard', function(){
     var spyPrepareAllIssues;
+    var sampleObject;
 
     beforeEach(function(){
-      spyPrepareAllIssues = spyOn(this.component, 'prepareAllIssues');
+      sampleObject = {name: 'Otavio'}
+      spyPrepareAllIssues = spyOn(this.component, 'prepareAllIssues').and.returnValue([sampleObject]);
     });
 
     it('should call prepareAllIssues', function(){
@@ -136,6 +138,11 @@ describeComponent('component/data/github_issues', function () {
       expect(spyPrepareAllIssues).toHaveBeenCalled();
     });
 
+    it('shouldAdd sampleObject to issues', function(){
+      this.component.addIssuesToBoard({}, '');
+      expect(this.component.attr.issues).toContain(sampleObject);
+    });
+    
     it('should trigger data:issues:refreshed', function(){
       var spyEvent = spyOnEvent(document, 'data:issues:refreshed');
       this.component.addIssuesToBoard({}, '');
