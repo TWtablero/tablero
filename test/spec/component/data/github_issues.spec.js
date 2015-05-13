@@ -142,7 +142,7 @@ describeComponent('component/data/github_issues', function () {
       this.component.addIssuesToBoard({}, '');
       expect(this.component.attr.issues).toContain(sampleObject);
     });
-    
+
     it('should trigger data:issues:refreshed', function(){
       var spyEvent = spyOnEvent(document, 'data:issues:refreshed');
       this.component.addIssuesToBoard({}, '');
@@ -189,5 +189,4 @@ describeComponent('component/data/github_issues', function () {
       priority: 0
     });
   });
-
 });
