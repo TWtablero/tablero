@@ -26,7 +26,8 @@ define([
     function githubIssues() {
 
       this.defaultAttrs({
-        issues: []
+        issues: [],
+        repositories: config.getRepos()
       });
 
 
@@ -85,24 +86,24 @@ define([
       this.loadAndPrioritizeAllIssues = function (ev, data) {
         $(document).trigger('ui:blockUI');
 
-        var repositories = config.getRepos();
+        _.each(this.attr.repositories, function (url, projectName) {
+          this.fetchAllIssues(url, projectName, this.addIssuesToBoard.bind(this));
+        }.bind(this));
+      };
 
-        _.each(repositories, function (url, name) {
-          this.fetchAllIssues(url, function(issues) {
-            var allIssues = this.prepareAllIssues(issues, name);
-            this.attr.issues = this.attr.issues.concat(allIssues);
+      this.addIssuesToBoard = function(issues, projectName) {
+        var allIssues = this.prepareAllIssues(issues, projectName);
+        this.attr.issues = this.attr.issues.concat(allIssues);
 
-            this.trigger('data:issues:refreshed', {
-              issues: allIssues
-            });
-            
-            var projectNames = Object.keys(repositories);
-            var projectIdentifiers = {
-              projects: this.getAllProjectsIdentifiers(projectNames)
-            };
-            this.trigger('ui:needs:priority', projectIdentifiers);
-          }.bind(this));
-        }.bind(this));   
+        this.trigger('data:issues:refreshed', {
+          issues: allIssues
+        });
+
+        var projectNames = Object.keys(this.attr.repositories);
+        var projectIdentifiers = {
+          projects: this.getAllProjectsIdentifiers(projectNames)
+        };
+        this.trigger('ui:needs:priority', projectIdentifiers);
       };
 
       this.assignMyselfToIssue = function (ev, assignData) {

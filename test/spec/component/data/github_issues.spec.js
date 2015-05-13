@@ -6,11 +6,11 @@ describeComponent('component/data/github_issues', function () {
 
   describe('prepareAllIssues', function() {
     var issue, issues, pullRequest;
+
     beforeEach(function () {
       pullRequest = {
         pull_request: true
       };
-
       issue = {
         url: 'https://api.github.com/repos/rodrigomaia17/try_git/issues/1'
       };
@@ -52,60 +52,6 @@ describeComponent('component/data/github_issues', function () {
     });
   });
 
-  it('update draggable issue should trigger event', function () {
-    var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');
-
-    var event = {
-      target: {
-        id: '0 - Backlog'
-      }
-    };
-
-    var ui = {
-      item: [{}]
-    };
-
-    this.component.updateDraggable(event, ui);
-
-    expect(spyEvent).toHaveBeenTriggeredOn(document);
-  });
-
-
-  it('DOM Object should be turned in a issue param', function () {
-    var element = {
-      id: 1,
-      dataset: {
-        priority: 1
-      }
-    };
-
-    $(sandbox({
-      id: 1,
-      dataset: {
-        priority: 1
-      },
-    })).append(sandbox());
-
-    var result = this.component.DOMObjectToIssueMovedParam(element);
-
-    expect(result).toEqual({
-      id: 1,
-      priority: 1
-    });
-
-  });
-
-  it('DOM Object undefined should be turned in a issue param', function () {
-
-    var result = this.component.DOMObjectToIssueMovedParam(undefined);
-
-    expect(result).toEqual({
-      id: 0,
-      priority: 0
-    });
-
-  });
-
   describe('getRepoURLFromIssue', function() {
     it('getRepoURLFromIssue should return repository url from all url types', function () {
       var issueUrls = [
@@ -140,7 +86,101 @@ describeComponent('component/data/github_issues', function () {
         var expected = this.component.getRepoURLFromIssue(issueUrls[i]);
         expect(expected).toBe(repositoryUrl[i]);
       }
-
     });
   });
+
+  describe('loadAndPrioritizeAllIssues', function() {
+   var readRequest, deferred;
+
+   it('should trigger blockUI event', function() {
+     var spyEvent = spyOnEvent(document, 'ui:blockUI');
+     this.component.loadAndPrioritizeAllIssues();
+     expect(spyEvent).toHaveBeenTriggeredOn(document);
+   });
+
+   it('should call fetchAllIssues once per repository', function() {
+    this.component.attr.repositories = ['repotest1', 'repotest2'];
+     spyOn(this.component, 'fetchAllIssues');
+     this.component.loadAndPrioritizeAllIssues();
+     expect(this.component.fetchAllIssues.calls.count()).toEqual(2);
+   });
+
+  it('update draggable issue should trigger event', function () {
+    var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');
+
+    var event = {
+      target: {
+        id: '0 - Backlog'
+      }
+    };
+
+    var ui = {
+      item: [{}]
+    };
+
+    this.component.updateDraggable(event, ui);
+
+    expect(spyEvent).toHaveBeenTriggeredOn(document);
+  });
+  });
+
+  describe('addIssuesToBoard', function(){
+    var spyPrepareAllIssues;
+
+    beforeEach(function(){
+      spyPrepareAllIssues = spyOn(this.component, 'prepareAllIssues');
+    });
+
+    it('should call prepareAllIssues', function(){
+      this.component.addIssuesToBoard({}, '');
+      expect(spyPrepareAllIssues).toHaveBeenCalled();
+    });
+
+    it('should trigger data:issues:refreshed', function(){
+      var spyEvent = spyOnEvent(document, 'data:issues:refreshed');
+      this.component.addIssuesToBoard({}, '');
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
+
+    it('should trigger ui:needs:priority', function(){
+      var spyEvent = spyOnEvent(document, 'ui:needs:priority');
+      this.component.addIssuesToBoard({}, '');
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
+  });
+
+  it('DOM Object should be turned in a issue param', function () {
+    var element = {
+      id: 1,
+      dataset: {
+        priority: 1
+      }
+    };
+
+    $(sandbox({
+      id: 1,
+      dataset: {
+        priority: 1
+      },
+    })).append(sandbox());
+
+    var result = this.component.DOMObjectToIssueMovedParam(element);
+
+    expect(result).toEqual({
+      id: 1,
+      priority: 1
+    });
+
+  });
+
+  it('DOM Object undefined should be turned in a issue param', function () {
+
+    var result = this.component.DOMObjectToIssueMovedParam(undefined);
+
+    expect(result).toEqual({
+      id: 0,
+      priority: 0
+    });
+  });
+
 });

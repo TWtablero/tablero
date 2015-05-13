@@ -2,7 +2,7 @@ define(['config/config_bootstrap'],
   function (config) {
     return function () {
 
-      this.fetchAllIssues = function (repositoryUrl, cb) {
+      this.fetchAllIssues = function (repositoryUrl, projectName, cb) {
         var MAX_WAITING_TIME = 2000;
         var DATA_TYPE = "json";
         var FIRST_PAGE = 1;
@@ -15,7 +15,7 @@ define(['config/config_bootstrap'],
           };
 
           var success = function(data, status, xhr) {
-            cb(data);
+            cb(data, projectName);
             if(data.length != 0) {
               iterate(++page);
             }
