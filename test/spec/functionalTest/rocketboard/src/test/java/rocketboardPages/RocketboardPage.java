@@ -632,6 +632,12 @@ public class RocketboardPage {
         addNewColumnLink.click();
     }
 
+		public void clickRemoveColumnLink() throws Exception {
+				waitingObject(saveColumnsButton);
+        WebElement removeColumn = driver.findElement(By.xpath("//*[@id='columnsModal']/div/div/div[2]/ul/li[4]/a"));
+        removeColumn.click();
+    }    
+
     public void saveColumnsChanges() throws Exception {
         waitingObject(saveColumnsButton);
         saveColumnsButton.click();
