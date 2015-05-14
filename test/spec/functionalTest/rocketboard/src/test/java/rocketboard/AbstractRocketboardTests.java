@@ -52,7 +52,14 @@ public abstract class AbstractRocketboardTests {
         this.driver = managerDriver.getDriver();
         rocketboardPage = new RocketboardPage(this.driver, "http://localhost:3000/");
         PageFactory.initElements(this.driver, (Object) rocketboardPage);
-//        setUpDefaultColumnsOnBoard();
+
+        boolean privateRepo = true;
+        GithubCredentials credentials = getGithubCredentials();
+        List<Repository> repos = getRepos();
+        assertThat("there isnt any configured repos ", repos.size(), greaterThan(0));
+
+        rocketboardPage.accessRepo(privateRepo, credentials.getUserName(), credentials.getPassword());
+        rocketboardPage.waitingLoading();
     }
 
     @Before
@@ -70,16 +77,10 @@ public abstract class AbstractRocketboardTests {
         client.disconnect();
     }
 
-    @Before
-    public void accessRepo() throws Exception {
-        boolean privateRepo = true;
-        GithubCredentials credentials = getGithubCredentials();
-        List<Repository> repos = getRepos();
-        assertThat("there isnt any configured repos ", repos.size(), greaterThan(0));
-
-        rocketboardPage.accessRepo(privateRepo, credentials.getUserName(), credentials.getPassword());
-        rocketboardPage.waitingLoading();
-    }
+    // @Before
+    // public void accessRepo() throws Exception {
+        
+    // }
 
     @After
     public void tearDown() {
@@ -122,6 +123,11 @@ public abstract class AbstractRocketboardTests {
 
     }
 
+    protected String getRandomTitle() {
+        return "title_" + RandomStringUtils.randomAlphabetic(6);
+    }
 
-
+    protected String getRandomDescription() {
+        return "desc_" + RandomStringUtils.randomAlphabetic(6);
+    }
 }

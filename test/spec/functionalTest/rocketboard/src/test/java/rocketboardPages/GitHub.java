@@ -27,12 +27,10 @@ public class GitHub {
             this.driver = driver;
         }
 
-        public AuthorizePage login(String usernameGithub, String passwordGithub) {
+        public void login(String usernameGithub, String passwordGithub) {
             username.sendKeys(usernameGithub);
             password.sendKeys(passwordGithub);
             submit.click();
-
-            return PageFactory.initElements(driver, AuthorizePage.class);
 		}
     }
 

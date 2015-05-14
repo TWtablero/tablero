@@ -25,7 +25,7 @@ public class ChangeAccessLevelTests extends AbstractRocketboardTests {
 	}
 
 	private void givenTableroAccessToPrivateRepositories()
-			throws InterruptedException {
+			throws Exception {
 		rocketboardPage.waitingLoading();
 	}
 }

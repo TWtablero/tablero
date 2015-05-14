@@ -24,6 +24,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import rocketboard.EndToEndTests;
 import rocketboardPages.GitHub.AuthorizePage;
+import rocketboardPages.GitHub.AuthenticatePage;
+
+import java.util.concurrent.TimeUnit;
 
 public class RocketboardPage {
 	private WebDriver driver;
@@ -99,11 +102,8 @@ public class RocketboardPage {
 	 * @throws InterruptedException 
 	 */	
 	public void setIssueTitle(String value) throws InterruptedException {
-		waitingLoading();
 		frameCreateIssueDisplayed();
 		waitingObject(editIssueTitle);
-		editIssueTitle.clear();
-		editIssueTitle.click();
 		editIssueTitle.sendKeys(value);
 	}
 
@@ -121,7 +121,6 @@ public class RocketboardPage {
 	 * click at element CreateIssue
 	 */	
 	public void openModelCreateIssue() throws Exception {
-		waitingLoading();
 		waitingObject(btnOpenModalCreateIssue);
 		btnOpenModalCreateIssue.click();
 	}
@@ -151,7 +150,6 @@ public class RocketboardPage {
 	}
 
 	public void createIssue(String titleTxt, String descTxt, String repoName) throws Exception {
-		waitingLoading();
 		openModelCreateIssue();
 		setIssueTitle(titleTxt);
 		setIssueDesc(descTxt);
@@ -348,9 +346,18 @@ public class RocketboardPage {
 	 * waiting load issues!
 	 * @throws InterruptedException 
 	 */
-	public void waitingLoading() throws InterruptedException{
-		while(driver.getPageSource().contains(EndToEndTests.messageLoading)){
-		}
+	public void waitingLoading() throws Exception{
+		Boolean present = true;
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+
+		while(present) {
+			try {
+				driver.findElement(By.id("loading"));
+        present = true;
+      } catch (org.openqa.selenium.NoSuchElementException e) {
+        present = false;
+      }
+		};
 	}
 
 	/**
@@ -382,49 +389,14 @@ public class RocketboardPage {
 
 
 	public String getInfo(String nameIssue, String info) throws Exception {		
-		/** Create array with WebElement options*/
-		List<WebElement> l = driver.findElements(By.xpath("//div[contains(@class, 'issue list-group-item')]"));
-		List<WebElement> name = driver.findElements(By.xpath("//*[@class='title list-group-item-heading']"));
-
-
-		/** Create array with WebElement options - ID */
-		ArrayList<String> actual_role = new ArrayList<String>( );
-		for (int a = 0; a < l.size(); a++){
-			String varA = l.get(a).getAttribute("id");
-			actual_role.add(varA);
+		if(info.equals("id")) {
+			WebElement issueText = driver.findElement(By.xpath("//a[contains(text(),'" + nameIssue +"')]"));
+			WebElement issue = issueText.findElement(By.xpath("../.."));
+			return issue.getAttribute("id");	
+		} else {
+			WebElement issueText = driver.findElement(By.xpath("//a[contains(text(),'" + nameIssue +"')]"));
+			return issueText.getAttribute("href");
 		}
-
-		/** Create array with WebElement options - Value */
-		ArrayList<String> actual_name = new ArrayList<String>( );
-		for (int a = 0; a < name.size(); a++){
-			String varB = name.get(a).getText();
-			actual_name.add(varB);
-		}
-
-		/** Create array with WebElement options - Href */
-		ArrayList<String> actual_href = new ArrayList<String>( );
-		for (int a = 0; a < name.size(); a++){
-			String varC = name.get(a).getAttribute("href");
-			actual_href.add(varC);
-		}
-
-		/** Find index based the value */
-		if(actual_name.contains(nameIssue)) {  
-			nameID = actual_name.indexOf(nameIssue); 
-		}
-
-		/**Find value/href based in the index */
-		String value = actual_role.get(nameID);
-		String href = actual_href.get(nameID);
-
-		/** Check witch info should return */
-		if (info =="href"){
-			getInfo =  href.substring(19);
-		} else if (info =="id") {
-			getInfo =  value;
-		}
-
-		return getInfo.toString();
 	}
 
 	public void assignMe(String id) throws Exception {
@@ -596,8 +568,7 @@ public class RocketboardPage {
 		
 		selectRepositoryAccess(privateRepo);
 
-		authenticate(usernameGithub, passwordGithub).
-				authorizeIfNeeded();
+		authenticate(usernameGithub, passwordGithub);
 
 		try {
 			boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
@@ -614,14 +585,17 @@ public class RocketboardPage {
 		catch (NoSuchElementException e) {
 			permission = true;
 		}
-
 		return permission;
 	}
 
-	private AuthorizePage authenticate(String userNameGithub,
+	private void authenticate(String userNameGithub,
 			String passwordGithub) {
-		return PageFactory.initElements(driver, GitHub.AuthenticatePage.class).
-				login(userNameGithub,passwordGithub);
+
+		AuthenticatePage authenticatePage = PageFactory.initElements(driver, GitHub.AuthenticatePage.class);
+		authenticatePage.login(userNameGithub,passwordGithub);
+
+		// AuthorizePage authorizePage = PageFactory.initElements(driver, GitHub.AuthorizePage.class);
+		// authorizePage.authorizeIfNeeded();
 	}
 
 	public void selectRepositoryAccess(boolean privateRepo) {
