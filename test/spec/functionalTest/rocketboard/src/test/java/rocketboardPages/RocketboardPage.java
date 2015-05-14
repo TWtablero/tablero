@@ -22,13 +22,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import rocketboard.EndToEndTests;
 import rocketboardPages.GitHub.AuthorizePage;
 import rocketboardPages.GitHub.AuthenticatePage;
 
 import java.util.concurrent.TimeUnit;
 
 public class RocketboardPage {
+
+	private String messageSucessRocket = "Liftoff! We Have a Liftoff!";
+  private String messageDone = "Drop here to launch";
+  private String messageLoading = "Please wait...";
+
 	private WebDriver driver;
 	Integer repoId = null;
 	int[] values = new int[2];
@@ -266,8 +270,8 @@ public class RocketboardPage {
 				present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
 				timeout++;
 			}
-			waitMessage(EndToEndTests.messageSucessRocket);
-			waitMessage(EndToEndTests.messageDone);
+			waitMessage(messageSucessRocket);
+			waitMessage(messageDone);
 		}
 		Thread.sleep(800);
 		values[1] = getCount(getColumn);

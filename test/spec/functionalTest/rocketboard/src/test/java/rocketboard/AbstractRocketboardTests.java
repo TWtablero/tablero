@@ -34,9 +34,6 @@ public abstract class AbstractRocketboardTests {
     int[] checkValue = null;
     String selectedOption = "";
     protected RocketboardPage rocketboardPage;
-    public static String messageSucessRocket = "Liftoff! We Have a Liftoff!";
-    public static String messageDone = "Drop here to launch";
-    public static String messageLoading = "Please wait...";
 
     /**
      * DriverManager instance
