@@ -48,11 +48,12 @@ define([
             response.projectName = data.projectName;
             this.trigger("ui:add:issue", {
               "issue": response
-            })
+            });
+          }.bind(this),
+          error: function() {
+            this.trigger(document, 'ui:show:messageFailConnection');
           }.bind(this)
         });
-
-
       };
 
       this.addIssue = function (ev, data) {

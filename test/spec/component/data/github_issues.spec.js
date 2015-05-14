@@ -4,6 +4,38 @@ describeComponent('component/data/github_issues', function () {
     this.setupComponent();
   });
 
+  describe('createIssue', function() {
+    var issues = {
+      data: {
+        projectName: "lala",
+        issueTitle: "Best issue",
+        issueBody: "iojfioadas"
+      }
+    };
+
+    it('If it is able to create an issue on GitHub, trigger ui:add:issue', function(){
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.success('');
+      });
+      var spyEvent = spyOnEvent(document, "ui:add:issue");
+
+      this.component.trigger('ui:create:issue', issues);
+
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
+
+    it('If it is not able to create issue on GitHub, show error', function(){
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.error('');
+      });
+      var errorEvent = spyOnEvent(document, "ui:show:messageFailConnection")
+
+      this.component.trigger('ui:create:issue', issues);
+
+      expect(errorEvent).toHaveBeenTriggeredOn(document);
+    });
+  });
+
   describe('prepareAllIssues', function() {
     var issue, issues, pullRequest;
 
@@ -35,10 +67,10 @@ describeComponent('component/data/github_issues', function () {
     });
   });
 
-  describe("create a issue", function () {
+// TODO: revisar
+  describe("addIssue", function () {
     it('trigger event data:issues:refreshed', function () {
       var eventSpy = spyOnEvent(document, "data:issues:refreshed");
-
       this.component.trigger("ui:add:issue", {
         'issue': 'data'
       });
@@ -90,38 +122,36 @@ describeComponent('component/data/github_issues', function () {
   });
 
   describe('loadAndPrioritizeAllIssues', function() {
-   var readRequest, deferred;
+    var readRequest;
 
-   it('should trigger blockUI event', function() {
-     var spyEvent = spyOnEvent(document, 'ui:blockUI');
-     this.component.loadAndPrioritizeAllIssues();
-     expect(spyEvent).toHaveBeenTriggeredOn(document);
-   });
+    it('should trigger blockUI event', function() {
+      var spyEvent = spyOnEvent(document, 'ui:blockUI');
+      this.component.loadAndPrioritizeAllIssues();
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
 
-   it('should call fetchAllIssues once per repository', function() {
-    this.component.attr.repositories = ['repotest1', 'repotest2'];
-     spyOn(this.component, 'fetchAllIssues');
-     this.component.loadAndPrioritizeAllIssues();
-     expect(this.component.fetchAllIssues.calls.count()).toEqual(2);
-   });
+    it('should call fetchAllIssues once per repository', function() {
+      this.component.attr.repositories = ['repotest1', 'repotest2'];
+      spyOn(this.component, 'fetchAllIssues');
+      this.component.loadAndPrioritizeAllIssues();
+      expect(this.component.fetchAllIssues.calls.count()).toEqual(2);
+    });
 
-  it('update draggable issue should trigger event', function () {
-    var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');
+    it('update draggable issue should trigger event', function () {
+      var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');
+      var event = {
+        target: {
+          id: '0 - Backlog'
+        }
+      };
 
-    var event = {
-      target: {
-        id: '0 - Backlog'
-      }
-    };
+      var ui = {
+        item: [{}]
+      };
 
-    var ui = {
-      item: [{}]
-    };
-
-    this.component.updateDraggable(event, ui);
-
-    expect(spyEvent).toHaveBeenTriggeredOn(document);
-  });
+      this.component.updateDraggable(event, ui);
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
   });
 
   describe('addIssuesToBoard', function(){
