@@ -9,10 +9,9 @@ import rocketboardPages.GitHub;
 import rocketboardPages.GitHub.AuthorizePage;
 
 public class ChangeAccessLevelTests extends AbstractRocketboardTests {
+	
 	@Test
 	public void changeAccessLevel() throws Exception {
-		givenTableroAccessToPrivateRepositories();
-
 		assertTrue(whenChangesAccessToOnlyPublic().isAuthorizePage());
 	}
 
@@ -22,10 +21,5 @@ public class ChangeAccessLevelTests extends AbstractRocketboardTests {
 		rocketboardPage.selectAccessToPublicReposOnly();
 
 		return PageFactory.initElements(driver, GitHub.AuthorizePage.class);
-	}
-
-	private void givenTableroAccessToPrivateRepositories()
-			throws Exception {
-		rocketboardPage.waitingLoading();
 	}
 }
