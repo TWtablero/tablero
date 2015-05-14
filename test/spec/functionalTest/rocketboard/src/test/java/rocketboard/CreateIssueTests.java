@@ -22,12 +22,6 @@ public class CreateIssueTests extends AbstractRocketboardTests {
 		rocketboardPage.createIssue(title,"", getRandomProject().getName());
 		rocketboardPage.waitCreatedIssue(title);
 		assertThat(rocketboardPage.checkTitleFrame(title), equalTo(Boolean.TRUE));
-
-		rocketboardPage.openModelCreateIssue();
-		rocketboardPage.waitingFrameCreateIssueOpen();
-		assertThat(rocketboardPage.modelOpened(), equalTo(Boolean.TRUE));
-		rocketboardPage.closeButton();
-		assertThat(rocketboardPage.modelOpened(), equalTo(Boolean.FALSE));
 	}
 	
 }

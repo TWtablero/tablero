@@ -42,14 +42,6 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 			assertThat(rocketboardPage.isRepoSelected(repo.getKey()), equalTo(Boolean.TRUE));
 		}
 
-	}
-
-	@Test
-	public void toggleBacklog() throws Exception {
-		WebDriverWait wait = new WebDriverWait(this.driver, 30);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[class*='panel-heading backlog'] > span.issues-count")));
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.blockUI.blockMsg.blockPage h1#loading.loading")));
-		
 		Integer backlogCount = rocketboardPage.getCount("backlog");
 		rocketboardPage.hideBacklog();
 
