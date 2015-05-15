@@ -193,6 +193,7 @@ describeComponent('component/data/github_issues', function () {
       var element = $('<div><div><a href="' + actualUrl + '"/></div></div>')[0];
 
       var resultUrl = this.component.getIssueUrlFromElement(element);
+
       expect(resultUrl).toBe('http://api.github.com/repos/lalala')
     })
   });
@@ -202,7 +203,41 @@ describeComponent('component/data/github_issues', function () {
       spyOn(this.component, 'getCurrentAuthToken').and.returnValue('0201fc4dee77f5e0453b350549926f25de403904');
 
       var result = this.component.getAccessTokenParam();
+
       expect(result).toBe('?access_token=0201fc4dee77f5e0453b350549926f25de403904');
+    });
+  });
+
+  describe('changeNewIssueLink', function() {
+    it('should return the right link for a new issue given the project name.', function(){
+      var sampleUrl ='http://www.github.com/twtablero/repotest1/issues/new';
+      this.setupComponent('<a class="link"></a>', {});
+      spyOn(this.component, 'newIssueURL').and.returnValue(sampleUrl);
+
+      this.component.changeNewIssueLink({}, 'repotest1');
+
+      expect($(document).find(".link").attr('href')).toBe(sampleUrl);
+    });
+  });
+
+  describe('mountExportClick', function() {
+    it('should trigger event with the issues from the component', function() {
+      var eventSpy = spyOnEvent(document, "data:issues:mountExportCsvLink");
+      this.component.attr.issues = ['issue1', 'issue2'];
+      this.component.mountExportClick();
+
+      expect(eventSpy).toHaveBeenTriggeredOn(document);
+      expect(eventSpy.mostRecentCall.data).toEqual({ issues: ['issue1', 'issue2'] });
+
+    });
+  });
+
+  describe('clearIssues', function() {
+    it('should clear attribute issues from component', function() {
+      this.component.attr.issues = ['issue1', 'issue2'];
+      this.component.clearIssues();
+
+      expect(this.component.attr.issues.length).toBe(0);
     });
   });
 
