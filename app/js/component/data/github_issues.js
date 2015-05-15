@@ -32,18 +32,20 @@ define([
 
 
       this.createIssue = function (ev, data) {
-        var url, repositoryURL;
+        var url, repositoryURL, newIssueData;
         repositoryURL = this.getURLFromProject(data.projectName);
         url = this.repoIssuesURL(repositoryURL);
+        
+        newIssueData = JSON.stringify({
+          'title': data.issueTitle,
+          'body': data.issueBody,
+          'labels': ["0 - Backlog"]
+        });
 
         $.ajax({
           type: 'POST',
           url: url,
-          data: JSON.stringify({
-            'title': data.issueTitle,
-            'body': data.issueBody,
-            'labels': ["0 - Backlog"]
-          }),
+          data: newIssueData,
           success: function (response, status, xhr) {
             response.projectName = data.projectName;
             this.trigger("ui:add:issue", {
@@ -265,17 +267,16 @@ define([
           cancel: '.popover',
           update: this.updateDraggable.bind(this),
           receive: function (event, ui) {
-            var label, url, oldLabel, state;
+            var label, url, oldLabel;
 
             if (!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
 
-            url = this.getIssueUrlFromDraggable(ui);
+            url = this.getIssueUrlFromElement(ui.item[0]);
             label = this.parseLabel(event.target.id);
             oldLabel = this.parseLabel(ui.sender[0].id);
-            state = this.getState(event.target.className);
 
             $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
             $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
@@ -371,16 +372,12 @@ define([
         return fullLabel.trim();
       };
 
-      this.getIssueUrlFromDraggable = function (ui) {
-        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
+      this.getIssueUrlFromElement = function (element) {
+        return element.querySelector("a[href]").href.replace('github.com/', 'api.github.com/repos/');
       };
 
       this.getAccessTokenParam = function () {
         return "?access_token=" + this.getCurrentAuthToken();
-      };
-
-      this.getState = function (className) {
-        return className.search('done') != -1 ? 'closed' : 'open';
       };
 
       this.changeNewIssueLink = function (event, projectName) {

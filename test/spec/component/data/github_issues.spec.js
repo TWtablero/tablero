@@ -67,9 +67,8 @@ describeComponent('component/data/github_issues', function () {
     });
   });
 
-// TODO: revisar
   describe("addIssue", function () {
-    it('trigger event data:issues:refreshed', function () {
+    it('trigger event data:issues:refreshed with the expected params', function () {
       var eventSpy = spyOnEvent(document, "data:issues:refreshed");
       this.component.trigger("ui:add:issue", {
         'issue': 'data'
@@ -97,7 +96,8 @@ describeComponent('component/data/github_issues', function () {
         'https://api.github.com/repos/pixelated-project/pixelated-user-agent/issues/123',
         'https://api.github.com/repos/pixelated-project/pixelated-dispatcher/issues/412312',
         'https://api.github.com/repos/pixelated-project/project-issues/issues/123',
-        'https://api.github.com/repos/pixelated-project/pixelated-platform/issues/14444'
+        'https://api.github.com/repos/pixelated-project/pixelated-platform/issues/14444',
+        undefined
       ];
 
       var repositoryUrl = [
@@ -111,7 +111,8 @@ describeComponent('component/data/github_issues', function () {
         'https://api.github.com/repos/pixelated-project/pixelated-user-agent/',
         'https://api.github.com/repos/pixelated-project/pixelated-dispatcher/',
         'https://api.github.com/repos/pixelated-project/project-issues/',
-        'https://api.github.com/repos/pixelated-project/pixelated-platform/'
+        'https://api.github.com/repos/pixelated-project/pixelated-platform/',
+        undefined
       ];
 
       for (var i = 0; i < issueUrls.length; i++) {
@@ -183,6 +184,25 @@ describeComponent('component/data/github_issues', function () {
       var spyEvent = spyOnEvent(document, 'ui:needs:priority');
       this.component.addIssuesToBoard({}, '');
       expect(spyEvent).toHaveBeenTriggeredOn(document);
+    });
+  });
+
+  describe('getIssueUrlFromElement', function() {
+    it('should return expected URL', function() {
+      var actualUrl = "http://github.com/lalala"
+      var element = $('<div><div><a href="' + actualUrl + '"/></div></div>')[0];
+
+      var resultUrl = this.component.getIssueUrlFromElement(element);
+      expect(resultUrl).toBe('http://api.github.com/repos/lalala')
+    })
+  });
+
+  describe('getAccessTokenParam', function () {
+    it('should return access_token param and value', function() {
+      spyOn(this.component, 'getCurrentAuthToken').and.returnValue('0201fc4dee77f5e0453b350549926f25de403904');
+
+      var result = this.component.getAccessTokenParam();
+      expect(result).toBe('?access_token=0201fc4dee77f5e0453b350549926f25de403904');
     });
   });
 
