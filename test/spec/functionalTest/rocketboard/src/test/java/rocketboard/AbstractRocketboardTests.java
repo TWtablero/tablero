@@ -74,11 +74,6 @@ public abstract class AbstractRocketboardTests {
         client.disconnect();
     }
 
-    // @Before
-    // public void accessRepo() throws Exception {
-        
-    // }
-
     @After
     public void tearDown() {
         driver.quit();

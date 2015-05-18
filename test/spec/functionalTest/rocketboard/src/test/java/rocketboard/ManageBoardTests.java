@@ -25,19 +25,16 @@ public class ManageBoardTests extends AbstractRocketboardTests {
 
 		List<Repository> repositoryList = getRepos();
 
-		//check each repository
 		for(Repository repo : repositoryList) {
 			rocketboardPage.clickRepo(repo.getKey());
 			assertTrue(rocketboardPage.isRepoSelected(repo.getKey()));
 			rocketboardPage.clickRepo(repo.getKey());
 		}
 
-		//click in all repositories
 		for(Repository repo : repositoryList) {
 			rocketboardPage.clickRepo(repo.getKey());
 		}
 
-		//check if all repositories are selected
 		for(Repository repo : repositoryList) {
 			assertThat(rocketboardPage.isRepoSelected(repo.getKey()), equalTo(Boolean.TRUE));
 		}

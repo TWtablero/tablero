@@ -22,7 +22,7 @@ public class AssignTest extends AbstractRocketboardTests {
 		rocketboardPage.unassignMe(idCard);
 		assertEquals((driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a[1]/img")).isDisplayed()), Boolean.FALSE);
 
-		idCard = "57508484"; //This id is from an issue already created. 
+		idCard = "57510020"; //This id is from an issue already created. 
 		rocketboardPage.alreadyAssignee(idCard);
 		String btn1 = driver.findElement(
 				By.xpath("//*[@id='" + idCard + "']/div[1]/div/div[2]/div/button[1]")).getText();

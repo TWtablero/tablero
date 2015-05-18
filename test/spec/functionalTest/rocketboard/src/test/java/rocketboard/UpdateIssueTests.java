@@ -26,19 +26,10 @@ public class UpdateIssueTests extends AbstractRocketboardTests {
 		
 		checkValue = rocketboardPage.moveIssueGettingValue(title, "5");
 		assertThat(Integer.valueOf(checkValue[0]+1), equalTo(Integer.valueOf(checkValue[1])));		
-	}
 
-	// @Test
-	// public void setLabel() throws Exception {
-	// 	String repoCreateIssue = getRandomProject().getName();
-	// 	rocketboardPage.waitingLoading();
-	// 	rocketboardPage.createIssue(title, desc, repoCreateIssue);
-	// 	String href = rocketboardPage.getInfo(title, "href");
-	// 	String id = rocketboardPage.getInfo(title, "id");
-	// 	rocketboardPage.restRequest(href, "[\"bug\"]");
-	// 	rocketboardPage.visible(id);
-	// 	String label = driver.findElement(By.xpath("//*[@id='"+id+"']/div[3]/span")).getText();
-	// 	assertEquals(label.equals("bug"), Boolean.TRUE);
-	// }
+		String idCard = "57511445"; //This ID is from a specific issue previously created for the test.
+		String label = driver.findElement(By.xpath("//*[@id='"+ idCard +"']/div[3]/span")).getText();
+		assertEquals(label.equals("bug"), Boolean.TRUE);
+	}
 	
 }

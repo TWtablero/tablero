@@ -598,8 +598,9 @@ public class RocketboardPage {
 		AuthenticatePage authenticatePage = PageFactory.initElements(driver, GitHub.AuthenticatePage.class);
 		authenticatePage.login(userNameGithub,passwordGithub);
 
-		// AuthorizePage authorizePage = PageFactory.initElements(driver, GitHub.AuthorizePage.class);
-		// authorizePage.authorizeIfNeeded();
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		AuthorizePage authorizePage = PageFactory.initElements(driver, GitHub.AuthorizePage.class);
+		authorizePage.authorizeIfNeeded();
 	}
 
 	public void selectRepositoryAccess(boolean privateRepo) {
