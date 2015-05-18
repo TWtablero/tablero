@@ -298,6 +298,65 @@ describeComponent('component/data/github_issues', function () {
       expect(issue_header.children('.popover').length).toBe(0);
       expect(result).toBe(undefined);
     });
+
+    it('should make unassign window appear', function() {
+      var issue = $(' \
+        <div id="1234569"> \
+          <div class="issue-header"> </div> \
+          <span class="empty-avatar" style="display: none;"></span> \
+          <img class="assignee-avatar" title="ddetoni"/> \
+        </div>');
+      $('body').append(issue);
+      var data = {user: {login: 'OtavioRMachado'}, issue: {id: '1234569'}};
+
+      var result = this.component.assignMyselfToIssue({}, data);
+      var issue_header = $('#' + '1234569' + ' .issue-header');
+      expect(issue_header.children('.popover').length).toBe(1);
+    });
+
+    it('should assign myself to issue', function(){
+      var issue = $(' \
+        <div id="1234570"> \
+          <div class="issue-header"> \
+            <a class="assigns-myself"/> \
+          </div> \
+          <span class="empty-avatar" style="display: block;"></span> \
+        </div>');
+      $('body').append(issue);
+      var data = {user: {login: 'OtavioRMachado'}, issue: {id: '1234570'}};
+
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.success('');
+      });
+
+      var result = this.component.assignMyselfToIssue({}, data);
+      var assignedIssue = $('#1234570 .assigned');
+
+      expect(assignedIssue.length).toBe(1);
+    });
+
+    it('should show empty avatar label', function(){
+      var issue = $(' \
+        <div id="1234571"> \
+          <div class="issue-header"> \
+            <a class="assigns-myself"> \
+              <span class="empty-avatar" style="display: block;"></span> \
+              <span class="empty-avatar-label"></span> \
+            </a> \
+          </div> \
+        </div>');
+      $('body').append(issue);
+      var data = {user: {login: 'OtavioRMachado'}, issue: {id: '1234571'}};
+
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.error('');
+      });
+
+      var result = this.component.assignMyselfToIssue({}, data);
+      var emptyLabelIssue = $('#1234571 .empty-avatar-label');
+
+      expect(emptyLabelIssue.is(':visible')).toBe(false);
+    });
   });
 
   it('DOM Object should be turned in a issue param', function () {

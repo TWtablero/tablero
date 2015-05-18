@@ -163,7 +163,6 @@ define([
           }
           return;
         }
-
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
         $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
