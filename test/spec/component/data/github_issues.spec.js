@@ -241,6 +241,65 @@ describeComponent('component/data/github_issues', function () {
     });
   });
 
+  describe('assignMyselfToIssue', function() {
+    it('should return nothing if data is falsy.', function() {
+      var result = this.component.assignMyselfToIssue({}, undefined);
+      expect(result).toBe(undefined);
+    });
+
+    it('should return nothing if attribute issue is falsy', function() {
+      var data = {user: 'ddetoni', issue: undefined};
+
+      var result = this.component.assignMyselfToIssue({}, data);
+      expect(result).toBe(undefined);
+    });
+
+    it('should call ui:needs:githubUser when the user is not logged in', function(){
+      var data = {user: undefined, issue: {}};
+      var spyEvent = spyOnEvent(document, 'ui:needs:githubUser');
+
+      var result = this.component.assignMyselfToIssue({}, data);
+
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+      expect(result).toBe(undefined);
+    });
+
+    it('should trigger ui:unassign:user if the user is assigned to the issue', function() {
+      var issue = $(' \
+        <div id="1234567"> \
+          <span class="empty-avatar" style="display: none;"></span> \
+          <img class="assignee-avatar" title="ddetoni"/> \
+        </div>');
+      $('body').append(issue);
+
+      var data = {user: {login: 'ddetoni'}, issue: {id: '1234567'}};
+      var spyEvent = spyOnEvent(document, 'ui:unassign:user');
+
+      var result = this.component.assignMyselfToIssue({}, data);
+
+      expect(spyEvent).toHaveBeenTriggeredOn(document);
+      expect(result).toBe(undefined);
+    });
+
+    it('should make unassign window disappear if it exists.', function() {
+      var issue = $(' \
+        <div id="1234568"> \
+          <div class="issue-header"> \
+            <div class="popover"></div> \
+          </div> \
+          <span class="empty-avatar" style="display: none;"></span> \
+          <img class="assignee-avatar" title="ddetoni"/> \
+        </div>');
+      $('body').append(issue);
+      var data = {user: {login: 'OtavioRMachado'}, issue: {id: '1234568'}};
+
+      var result = this.component.assignMyselfToIssue({}, data);
+      var issue_header = $('#' + '1234568' + ' .issue-header');
+      expect(issue_header.children('.popover').length).toBe(0);
+      expect(result).toBe(undefined);
+    });
+  });
+
   it('DOM Object should be turned in a issue param', function () {
     var element = {
       id: 1,
