@@ -529,7 +529,7 @@ public class RocketboardPage {
 
 	public void hideBacklog() throws InterruptedException {
 		getColumn("backlog").
-			indElement(By.cssSelector(".hide-icon")).
+			findElement(By.cssSelector(".hide-icon")).
 			click();
 		Thread.sleep(2000);
 	}
