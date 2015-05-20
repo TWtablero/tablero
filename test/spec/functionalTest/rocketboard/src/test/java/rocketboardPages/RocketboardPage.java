@@ -30,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 public class RocketboardPage {
 
 	private String messageSucessRocket = "Liftoff! We Have a Liftoff!";
-  private String messageDone = "Drop here to launch";
-  private String messageLoading = "Please wait...";
+	private String messageDone = "Drop here to launch";
+	private String messageLoading = "Please wait...";
 
 	private WebDriver driver;
 	Integer repoId = null;
@@ -85,14 +85,14 @@ public class RocketboardPage {
 	@FindBy(id = "changeAccess")
 	WebElement btChangeAccess;
 
-    @FindBy(id = "changeColumns")
-    WebElement changeColumnsButton;
+	@FindBy(id = "changeColumns")
+	WebElement changeColumnsButton;
 
-    @FindBy(id = "addColumn")
-    WebElement addNewColumnLink;
+	@FindBy(id = "addColumn")
+	WebElement addNewColumnLink;
 
-    @FindBy(id = "saveColumnsChanges")
-    WebElement saveColumnsButton;
+	@FindBy(id = "saveColumnsChanges")
+	WebElement saveColumnsButton;
 
 	public RocketboardPage(WebDriver driver , String baseUrl) {
 		super();
@@ -165,24 +165,23 @@ public class RocketboardPage {
 	public void clickRepo(String repoKey) throws Exception {
 		waitingLoading();
 		WebElement element = driver.findElement(By.cssSelector("input[repo='"+repoKey+"'] + label > i"));
-		if (element != null)
+		if (element != null) {
 			checkRepositoryPosition(element);
-		else
+		} else {
 			throw new IllegalArgumentException("cant find the repository");
-
+		}
 	}
 
 	public boolean isPrivatePresent () {
 		boolean privatePresent = true;		
 
-			try { 
-				driver.findElement(By.id("repository-4"));
-				privatePresent = true;
-			} 
-			catch (org.openqa.selenium.NoSuchElementException e) {
-				privatePresent = false;
-			}
-			return privatePresent;
+		try { 
+			driver.findElement(By.id("repository-4"));
+			privatePresent = true;
+		} catch (org.openqa.selenium.NoSuchElementException e) {
+			privatePresent = false;
+		}
+		return privatePresent;
 	}
 	
 	public void checkRepositoryPosition(WebElement object) throws InterruptedException{
@@ -198,9 +197,9 @@ public class RocketboardPage {
 	}
 
 	public void uncheckAllRepo(boolean privateRepo) throws InterruptedException{
-		for(WebElement repo : repoFilters)
+		for(WebElement repo : repoFilters) {
 			uncheckRepositoryPosition(repo);
-
+		}
 	}
 
 
@@ -232,15 +231,14 @@ public class RocketboardPage {
 	}
 
 	public void moveIssue(String issueTitle, String column) throws Exception {
-		if(column.length()<=2){
+		if(column.length()<=2) {
 			column=columnName(column);
 		}
 		WebElement d1 = driver.findElement(By.linkText(issueTitle));
 		WebElement d2;
-		if (column == "done" || column =="5"){
+		if (column == "done" || column =="5") {
 			d2 = driver.findElement(By.id("4-done"));
-		}
-		else {
+		} else {
 			d2 = driver.findElement(By.cssSelector("div[id$='"+column+"']"));
 		}
 		Actions builder = new Actions(driver);
@@ -258,12 +256,12 @@ public class RocketboardPage {
 		String getColumn = columnName(column);
 		values[0] = getCount(getColumn);
 		
-		if (column =="5" || column =="done"){
+		if (column =="5" || column =="done") {
 			idCard = getInfo(issueTitle, "id");
 		}
 		
 		moveIssue(issueTitle, column);
-		if (column =="5" || column =="done"){
+		if (column =="5" || column =="done") {
 			boolean present = driver.findElement(By.xpath("//*[@id='"+idCard+"']/div[1]/a")).isDisplayed();
 			while(present == true && timeout <= 10){
 				moveIssue(issueTitle, column);
@@ -287,19 +285,15 @@ public class RocketboardPage {
 	}
 
 	public String columnName (String column) {
-		if ( column == "1"){
+		if (column == "1") {
 			column = "backlog";
-		}
-		else if (column == "2"){
+		} else if (column == "2") {
 			column = "ready";
-		}
-		else if (column == "3"){
+		} else if (column == "3") {
 			column = "development";
-		}
-		else if (column == "4"){
+		} else if (column == "4") {
 			column = "quality-assurance";
-		}
-		else if (column == "5"){
+		} else if (column == "5") {
 			column = "done";
 		}
 		return column;
@@ -357,10 +351,10 @@ public class RocketboardPage {
 		while(present) {
 			try {
 				driver.findElement(By.id("loading"));
-        present = true;
-      } catch (org.openqa.selenium.NoSuchElementException e) {
-        present = false;
-      }
+				present = true;
+			} catch (org.openqa.selenium.NoSuchElementException e) {
+				present = false;
+			}
 		};
 	}
 
@@ -408,15 +402,14 @@ public class RocketboardPage {
 		assign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
+				ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
 	
 	public void unassignMe(String id) throws Exception {
 		WebElement unassign = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/a[1]/img"));
 		unassign.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[2]")));
 	}
 	
 	public void alreadyAssignee(String id) throws Exception {
@@ -500,10 +493,10 @@ public class RocketboardPage {
 			waitingLoading();
 			try {
 				driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]"));
-	            present = true;
-	        } catch (org.openqa.selenium.NoSuchElementException e) {
-	        	present = false;
-	        }
+				present = true;
+			} catch (org.openqa.selenium.NoSuchElementException e) {
+				present = false;
+			}
 			i++;
 		}
 		return present;
@@ -524,22 +517,20 @@ public class RocketboardPage {
 		WebElement unassignCancelBtn = driver.findElement(By.xpath("//*[@id='"+id+"']/div[1]/div/div[2]/div/button[2]"));
 		unassignCancelBtn.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/img")));
 	}
 	
 	public void unassignConfirm(String id) throws Exception {
 		WebElement unassignConfirmBtn = driver.findElement(By.xpath("//*[@id='" + id + "']/div[1]/div/div[2]/div/button[1]"));
 		unassignConfirmBtn.click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		wait.until(
-		        ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='"+id+"']/div[1]/a[1]/span[1]")));
 	}
 
 	public void hideBacklog() throws InterruptedException {
 		getColumn("backlog").
-				findElement(By.cssSelector(".hide-icon")).
-				click();
+			indElement(By.cssSelector(".hide-icon")).
+			click();
 		Thread.sleep(2000);
 	}
 
@@ -553,15 +544,15 @@ public class RocketboardPage {
 
 	public void showBacklog() throws InterruptedException {
 		getSidebar("backlog").
-				findElement(By.cssSelector(".hide-icon-sidebar")).
-				click();
+			findElement(By.cssSelector(".hide-icon-sidebar")).
+			click();
 		Thread.sleep(200);
 	}
 
 	public Integer getSidebarCount(String name) {
 		String value = getSidebar(name).
-				findElement(By.cssSelector(".issues-count")).
-				getText();
+			findElement(By.cssSelector(".issues-count")).
+			getText();
 
 		return parseCount(value);
 
@@ -576,25 +567,19 @@ public class RocketboardPage {
 
 		try {
 			boolean button = driver.findElement(By.id("redirectToPublicBtn")).isDisplayed();
-			if (button == true)
-				{
-					driver.findElement(By.id("redirectToPublicBtn")).click();
-					permission = false;
-				}
-			else
-				{
-					permission = true;
-				}
-		}
-		catch (NoSuchElementException e) {
+			if (button == true){
+				driver.findElement(By.id("redirectToPublicBtn")).click();
+				permission = false;
+			} else {
+				permission = true;
+			}
+		} catch (NoSuchElementException e) {
 			permission = true;
 		}
 		return permission;
 	}
 
-	private void authenticate(String userNameGithub,
-			String passwordGithub) {
-
+	private void authenticate(String userNameGithub, String passwordGithub) {
 		AuthenticatePage authenticatePage = PageFactory.initElements(driver, GitHub.AuthenticatePage.class);
 		authenticatePage.login(userNameGithub,passwordGithub);
 
@@ -606,9 +591,7 @@ public class RocketboardPage {
 	public void selectRepositoryAccess(boolean privateRepo) {
 		if (privateRepo == false) { 
 			btPublicRepo.click();
-		}
-		
-		else {
+		} else {
 			btAllRepo.click();
 		}
 	}
@@ -618,35 +601,35 @@ public class RocketboardPage {
 	}
 
 	protected static String getEnv(String key) {
-          String value = System.getenv(key);
+		String value = System.getenv(key);
 
-          if(value == null) {
-              throw new IllegalStateException(String.format("Could not find environment variable value: %s", key));
-          }
+		if(value == null) {
+		  throw new IllegalStateException(String.format("Could not find environment variable value: %s", key));
+		}
 
-          return value;
-    }
+		return value;
+	}
 
-    public void openColumnsModal() throws Exception {
-        waitingObject(changeColumnsButton);
-        changeColumnsButton.click();
-    }
+	public void openColumnsModal() throws Exception {
+		waitingObject(changeColumnsButton);
+		changeColumnsButton.click();
+	}
 
-    public void clickAddNewColumnLink() throws Exception {
-        waitingObject(addNewColumnLink);
-        addNewColumnLink.click();
-    }
+	public void clickAddNewColumnLink() throws Exception {
+		waitingObject(addNewColumnLink);
+		addNewColumnLink.click();
+	}
 
-		public void clickRemoveColumnLink() throws Exception {
-				waitingObject(saveColumnsButton);
-        WebElement removeColumn = driver.findElement(By.xpath("//*[@id='columnsModal']/div/div/div[2]/ul/li[4]/a"));
-        removeColumn.click();
-    }    
+	public void clickRemoveColumnLink() throws Exception {
+		waitingObject(saveColumnsButton);
+		WebElement removeColumn = driver.findElement(By.xpath("//*[@id='columnsModal']/div/div/div[2]/ul/li[4]/a"));
+		removeColumn.click();
+	}    
 
-    public void saveColumnsChanges() throws Exception {
-        waitingObject(saveColumnsButton);
-        saveColumnsButton.click();
-    }
+	public void saveColumnsChanges() throws Exception {
+		waitingObject(saveColumnsButton);
+		saveColumnsButton.click();
+	}
 	
 }
 

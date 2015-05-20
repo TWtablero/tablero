@@ -3,10 +3,8 @@ package rocketboard;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.openqa.selenium.By;
-
 
 public class UpdateIssueTests extends AbstractRocketboardTests {
 
@@ -31,5 +29,4 @@ public class UpdateIssueTests extends AbstractRocketboardTests {
 		String label = driver.findElement(By.xpath("//*[@id='"+ idCard +"']/div[3]/span")).getText();
 		assertEquals(label.equals("bug"), Boolean.TRUE);
 	}
-	
 }

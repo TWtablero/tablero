@@ -11,42 +11,43 @@ import org.openqa.selenium.support.PageFactory;
  * Created by gmatheu on 16/01/15.
  */
 public class GitHub {
-    public static class AuthenticatePage {
-        private WebDriver driver;
+	public static class AuthenticatePage {
+		private WebDriver driver;
 
-        @FindBy(id = "login_field")
-        WebElement username;
+		@FindBy(id = "login_field")
+		WebElement username;
 
-        @FindBy(id = "password")
-        WebElement password;
+		@FindBy(id = "password")
+		WebElement password;
 
-        @FindBy(name = "commit")
-        WebElement submit;
-     
+		@FindBy(name = "commit")
+		WebElement submit;
+
 		public AuthenticatePage(WebDriver driver) {
-            this.driver = driver;
-        }
-
-        public void login(String usernameGithub, String passwordGithub) {
-            username.sendKeys(usernameGithub);
-            password.sendKeys(passwordGithub);
-            submit.click();
+			this.driver = driver;
 		}
-    }
 
-    public static class AuthorizePage {
-        private WebDriver driver;
+		public void login(String usernameGithub, String passwordGithub) {
+			username.sendKeys(usernameGithub);
+			password.sendKeys(passwordGithub);
+			submit.click();
+		}
+	}
 
-        public AuthorizePage(WebDriver driver) {
-            this.driver = driver;
-        }
+	public static class AuthorizePage {
+		private WebDriver driver;
 
-        public void authorizeIfNeeded(){
-            try {
-                authorize();
+		public AuthorizePage(WebDriver driver) {
+			this.driver = driver;
+		}
+
+		public void authorizeIfNeeded(){
+			try {
+				authorize();
 			} catch (NoSuchElementException notAuthorizationRequired) {
-            }
-        }
+				//NOTHING?
+			}
+		}
 
 		public boolean isAuthorizePage() {
 			try {
@@ -57,12 +58,12 @@ public class GitHub {
 			}
 		}
 
-        private void authorize() {
+		private void authorize() {
 			getAuthorizeButton().click();
-        }
+		}
 
 		private WebElement getAuthorizeButton() {
 			return driver.findElement(By.name("authorize"));
 		}
-    }
+	}
 }
