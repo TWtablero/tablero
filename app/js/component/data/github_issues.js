@@ -191,23 +191,8 @@ define([
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
-        if (assignData != undefined) {
-          user = assignData.user;
-          issue = assignData.issue;
-        }
-
-        if (!issue) {
-          return;
-        }
-
-        if (!user) {
-          this.trigger(document, 'ui:needs:githubUser', {
-            data: assignData,
-            callback: this.assignMyselfToIssue,
-            context: this
-          });
-          return;
-        }
+        user = assignData.user;
+        issue = assignData.issue;
 
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
