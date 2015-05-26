@@ -48,19 +48,13 @@ define([
           data: newIssueData,
           success: function (response, status, xhr) {
             response.projectName = data.projectName;
-            this.trigger("ui:add:issue", {
-              "issue": response
+            this.trigger('data:issues:refreshed', {
+              issues: response
             });
           }.bind(this),
           error: function() {
             this.trigger(document, 'ui:show:messageFailConnection');
           }.bind(this)
-        });
-      };
-
-      this.addIssue = function (ev, data) {
-        this.trigger('data:issues:refreshed', {
-          issues: data
         });
       };
 
@@ -390,7 +384,6 @@ define([
 
       this.after('initialize', function () {
         this.on('ui:needs:issues', this.loadAndPrioritizeAllIssues);
-        this.on('ui:add:issue', this.addIssue);
         this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);

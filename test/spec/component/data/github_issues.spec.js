@@ -13,11 +13,11 @@ describeComponent('component/data/github_issues', function () {
       }
     };
 
-    it('If it is able to create an issue on GitHub, trigger ui:add:issue', function(){
+    it('If it is able to create an issue on GitHub, trigger data:issues:refreshed', function(){
       var spy = spyOn($, 'ajax').and.callFake(function(e) {
         e.success('');
       });
-      var spyEvent = spyOnEvent(document, "ui:add:issue");
+      var spyEvent = spyOnEvent(document, "data:issues:refreshed");
 
       this.component.trigger('ui:create:issue', issues);
 
@@ -64,22 +64,6 @@ describeComponent('component/data/github_issues', function () {
 
     it('should call getRepoURLFromIssue', function() {
       expect(this.component.prepareAllIssues(issues, 'project3')[0].repoUrl).toBeTruthy();
-    });
-  });
-
-  describe("addIssue", function () {
-    it('trigger event data:issues:refreshed with the expected params', function () {
-      var eventSpy = spyOnEvent(document, "data:issues:refreshed");
-      this.component.trigger("ui:add:issue", {
-        'issue': 'data'
-      });
-
-      expect(eventSpy).toHaveBeenTriggeredOn(document);
-      expect(eventSpy.mostRecentCall.data).toEqual({
-        'issues': {
-          'issue': 'data'
-        }
-      });
     });
   });
 
