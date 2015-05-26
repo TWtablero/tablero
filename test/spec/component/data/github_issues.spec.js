@@ -355,8 +355,66 @@ describeComponent('component/data/github_issues', function () {
       var result = this.component.assignMyselfToIssue({}, data);
       var emptyLabelIssue = $('#1234571 .empty-avatar-label');
 
-      expect(emptyLabelIssue.is(':visible')).toBe(false);
+      expect(emptyLabelIssue.css('display')).not.toBe('none');
     });
+  });
+
+  describe('unassignMyselfToIssue', function() {
+    var issue, data;
+    beforeEach(function() {
+      var issue = $(' \
+        <div id="1234574"> \
+          <div class="issue-header"> \
+            <a class="assigns-myself assigned"> \
+              <span class="empty-avatar" style="display: none;"></span> \
+              <span class="empty-avatar-label"></span> \
+              <img class="assignee-avatar" title="OtavioRMachado" src="http://github.avatar.com"> \
+            </a> \
+          </div> \
+        </div>');
+      $('body').append(issue);
+      data = {user: {login: 'OtavioRMachado'}, issue: {id: '1234574'}};
+    });
+
+    afterEach(function(){
+      $('#1234574').remove();
+    });
+
+    it('should show empty avatar when success unassign', function() {
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.success('');
+      });
+
+      this.component.unassignMyselfToIssue({}, data);
+      var emptyAvatarIssue = $('#1234574 .empty-avatar');
+      var emptyAvatarLabelIssue = $('#1234574 .empty-avatar-label');
+
+      expect(emptyAvatarIssue.css('display')).not.toBe('none');
+      expect(emptyAvatarLabelIssue.css('display')).not.toBe('none');
+    });
+
+    it('issue should not be of class .assigned when success unassign', function(){
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.success('');
+      });
+
+      this.component.unassignMyselfToIssue({}, data);
+      var assignMyselfIssue = $('#1234574 .assigns-myself');
+
+      expect(assignMyselfIssue.hasClass('assigned')).toBe(false);
+    });
+
+    it('issue keeps current person assigned when ajax returns an error', function() {
+      var spy = spyOn($, 'ajax').and.callFake(function(e) {
+        e.error('');
+      });
+
+      this.component.unassignMyselfToIssue({}, data);
+      var assigneeAvatar = $('#1234574 .assignee-avatar');
+      expect(assigneeAvatar.attr('src')).toBe('http://github.avatar.com');
+      expect(assigneeAvatar.attr('title')).toBe('OtavioRMachado');
+    });
+
   });
 
   it('DOM Object should be turned in a issue param', function () {

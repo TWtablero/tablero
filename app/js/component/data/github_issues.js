@@ -180,7 +180,6 @@ define([
             $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
             $('#' + issue.id + ' .assignee-avatar').show();
             $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-label').hide();
           },
           error: function () {
             $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
@@ -201,6 +200,7 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
+        //TODO: create a component loading for issues.
         $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
         $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
 
@@ -212,11 +212,12 @@ define([
           }),
           success: function (response, status, xhr) {
             $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            //TODO: trigger hide event for loading component
             $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
             $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
+
             $('#' + issue.id + ' .empty-avatar').show();
             $('#' + issue.id + ' .empty-avatar-label').show();
-            $('#' + issue.id + ' .empty-label').show();
           },
           error: function () {
             $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
