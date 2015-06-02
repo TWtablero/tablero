@@ -16,7 +16,7 @@
 define([
    'flight/lib/component',
    'component/mixins/with_auth_token_from_hash',
-  'jquery-cookie/jquery.cookie'
+   'jquery-cookie/jquery.cookie'
   ],
   function (defineComponent, withAuthTokeFromHash) {
     return defineComponent(githubUser, withAuthTokeFromHash);

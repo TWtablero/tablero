@@ -17,8 +17,9 @@ define([
   'flight/lib/component',
   'component/templates/columns_template',
   'component/track',
-  'component/data/github_issues'
-  ], function (defineComponent, withColumnTemplate, track, githubIssues) {
+  'component/data/github_issues',
+  'config/config_bootstrap'
+  ], function (defineComponent, withColumnTemplate, track, githubIssues, config) {
   'use strict';
   return defineComponent(columnsRender, withColumnTemplate);
 
@@ -76,7 +77,7 @@ define([
       githubIssues.attachTo(document);
 
       var mountBoard = function () {
-        $(document).trigger('ui:needs:issues', {});
+        $(document).trigger('ui:needs:issues', config.getRepos());
         $(document).trigger("ui:issue:createIssuesURL", $("#projects").val());
         $(document).trigger('ui:draggable', {
           boardColumns: extraClasses

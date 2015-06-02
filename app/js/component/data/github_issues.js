@@ -49,7 +49,7 @@ define([
           success: function (response, status, xhr) {
             response.projectName = data.projectName;
             this.trigger('data:issues:refreshed', {
-              issues: response
+              issues: [response]
             });
           }.bind(this),
           error: function() {
@@ -58,50 +58,13 @@ define([
         });
       };
 
-      this.prepareAllIssues = function (issues, projectName) {
-        var allIssues = [];
-        
-        issues.forEach(function (issue, index) {
-          if (!issue.pull_request) {
-            issue.projectName = projectName;
-            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-            allIssues.push(issue);
-          }
-        }.bind(this));
-        return allIssues;
-      };
+      this.getAllIssues = function() {
+        return this.attr.issues;
+      }
 
-      this.getRepoURLFromIssue = function (issueUrl) {
-        var delimeter = '/';
-        var shallNotPass = '/issues/';
-        if (issueUrl) {
-          var result = issueUrl.substring(0, issueUrl.indexOf(shallNotPass)) + delimeter;
-          return result;
-        }
-      };
-
-      this.loadAndPrioritizeAllIssues = function (ev, data) {
-        $(document).trigger('ui:blockUI');
-
-        _.each(this.attr.repositories, function (url, projectName) {
-          this.fetchAllIssues(url, projectName, this.addIssuesToBoard.bind(this));
-        }.bind(this));
-      };
-
-      this.addIssuesToBoard = function(issues, projectName) {
-        var allIssues = this.prepareAllIssues(issues, projectName);
-        this.attr.issues = this.attr.issues.concat(allIssues);
-
-        this.trigger('data:issues:refreshed', {
-          issues: allIssues
-        });
-
-        var projectNames = Object.keys(this.attr.repositories);
-        var projectIdentifiers = {
-          projects: this.getAllProjectsIdentifiers(projectNames)
-        };
-        this.trigger('ui:needs:priority', projectIdentifiers);
-      };
+      this.addIssues = function(newIssues) {
+        this.attr.issues = this.attr.issues.concat(newIssues);
+      }
 
       this.assignMyselfToIssue = function (ev, assignData) {
 
@@ -383,17 +346,17 @@ define([
 
 
       this.after('initialize', function () {
-        this.on('ui:needs:issues', this.loadAndPrioritizeAllIssues);
         this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-        this.on('#export_csv', 'click', this.mountExportClick);
-        this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:blockUI', this.blockUI);
         this.on('ui:unblockUI', this.unblockUI);
         this.on('ui:clear:issue', this.clearIssues);
+        this.on('#export_csv', 'click', this.mountExportClick);
+        this.on('data:issues:add', this.addIssues);
 
       });
     }
