@@ -17,141 +17,54 @@ define([
     'flight/lib/component',
     'component/mixins/with_auth_token_from_hash',
     'component/mixins/repositories_urls',
-    'component/templates/popover_template'
+    'component/templates/popover_template',
+    'config/config_bootstrap'
 ],
-  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate) {
+  function (defineComponent, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate, config) {
     return defineComponent(githubIssues, withAuthTokeFromHash, repositoriesURLs, withPopoverTemplate);
 
     function githubIssues() {
 
       this.defaultAttrs({
-        issues: []
+        issues: [],
+        repositories: config.getRepos()
       });
 
 
       this.createIssue = function (ev, data) {
-        var url, repositoryURL;
+        var url, repositoryURL, newIssueData;
         repositoryURL = this.getURLFromProject(data.projectName);
         url = this.repoIssuesURL(repositoryURL);
+        
+        newIssueData = JSON.stringify({
+          'title': data.issueTitle,
+          'body': data.issueBody,
+          'labels': ["0 - Backlog"]
+        });
 
         $.ajax({
           type: 'POST',
           url: url,
-          data: JSON.stringify({
-            'title': data.issueTitle,
-            'body': data.issueBody,
-            'labels': ["0 - Backlog"]
-          }),
+          data: newIssueData,
           success: function (response, status, xhr) {
             response.projectName = data.projectName;
-            this.trigger("ui:add:issue", {
-              "issue": response
-            })
+            this.trigger('data:issues:refreshed', {
+              issues: [response]
+            });
+          }.bind(this),
+          error: function() {
+            this.trigger(document, 'ui:show:messageFailConnection');
           }.bind(this)
         });
-
-
       };
 
-      this.addIssue = function (ev, data) {
-        this.trigger('data:issues:refreshed', {
-          issues: data
-        });
-      };
+      this.getAllIssues = function() {
+        return this.attr.issues;
+      }
 
-      this.filterProjectsByName = function (projects, projectNames) {
-        if (!projectNames) {
-          return projects;
-        }
-
-        var filteredRepos = [];
-
-        _.each(projects, function (project) {
-          if ($.inArray(project.projectName, projectNames) > -1) {
-            filteredRepos.push(project);
-          }
-        });
-
-        return filteredRepos;
-      };
-
-      this.getIssuesFromProjects = function (projects) {
-        var allIssues = [];
-        _.filter(projects, function (project) {
-          return project.issues
-        }).
-        forEach(function (project, index) {
-          var issuesArrayJson = project.issues || [];
-
-          _.each(issuesArrayJson, function (issue, index) {
-            if (!issue.pull_request) {
-              issue.projectName = project.projectName;
-              issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-              allIssues.push(issue);
-            }
-          }.bind(this));
-
-        }.bind(this));
-        return allIssues;
-
-      };
-
-      this.getRepoURLFromIssue = function (issueUrl) {
-        var delimeter = '/';
-        if (issueUrl) {
-          var result = issueUrl.split(delimeter).reverse().slice(2).reverse().join(delimeter) + delimeter;
-          return result;
-        }
-      };
-
-      this.fetchIssues = function (ev, data) {
-        $(document).trigger('ui:blockUI');
-
-        data.page = ('page' in data) ? (data.page + 1) : 1;
-
-        var issuesPromises = this.fetchAllIssues(data.page, this.attr.blockedRepos);
-        var queries = _(issuesPromises).map(function (v, k) {
-          return v;
-        });
-        var names = _(issuesPromises).map(function (v, k) {
-          return k;
-        });
-        $.when.apply(this, queries).done(function () {
-          //var issuesResults = names.length > 1 ? arguments : [arguments];
-          var issuesResults = arguments;
-          var projects = _(names).map(function (name, idx) {
-            return {
-              'projectName': name,
-              'issues': issuesResults[idx]
-            };
-          });
-
-          var filteredProjects = this.filterProjectsByName(projects, data.projectName),
-            issuesFromProjects = this.getIssuesFromProjects(filteredProjects);
-
-          this.trigger('data:issues:refreshed', {
-            issues: issuesFromProjects
-          });
-
-          this.attr.issues = this.attr.issues.concat(issuesFromProjects);
-
-          if (data.page == 1) {
-            this.trigger('data:issues:clearExportCsvLink');
-          }
-
-          if (issuesFromProjects.length > 0) {
-            this.trigger('ui:needs:issues', data);
-          } else {
-            var projectIdentifiers = {
-              projects: this.getAllProjectsIdentifiers(_.map(filteredProjects, function (proj) {
-                return proj.projectName;
-              }))
-            };
-            this.trigger('ui:needs:priority', projectIdentifiers);
-          }
-        }.bind(this));
-
-      };
+      this.addIssues = function(newIssues) {
+        this.attr.issues = this.attr.issues.concat(newIssues);
+      }
 
       this.assignMyselfToIssue = function (ev, assignData) {
 
@@ -207,7 +120,6 @@ define([
           }
           return;
         }
-
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
         $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
@@ -225,7 +137,6 @@ define([
             $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
             $('#' + issue.id + ' .assignee-avatar').show();
             $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-label').hide();
           },
           error: function () {
             $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
@@ -236,23 +147,8 @@ define([
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
-        if (assignData != undefined) {
-          user = assignData.user;
-          issue = assignData.issue;
-        }
-
-        if (!issue) {
-          return;
-        }
-
-        if (!user) {
-          this.trigger(document, 'ui:needs:githubUser', {
-            data: assignData,
-            callback: this.assignMyselfToIssue,
-            context: this
-          });
-          return;
-        }
+        user = assignData.user;
+        issue = assignData.issue;
 
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
@@ -261,6 +157,7 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
+        //TODO: create a component loading for issues.
         $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
         $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
 
@@ -272,11 +169,12 @@ define([
           }),
           success: function (response, status, xhr) {
             $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+            //TODO: trigger hide event for loading component
             $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
             $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
+
             $('#' + issue.id + ' .empty-avatar').show();
             $('#' + issue.id + ' .empty-avatar-label').show();
-            $('#' + issue.id + ' .empty-label').show();
           },
           error: function () {
             $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
@@ -311,17 +209,16 @@ define([
           cancel: '.popover',
           update: this.updateDraggable.bind(this),
           receive: function (event, ui) {
-            var label, url, oldLabel, state;
+            var label, url, oldLabel;
 
             if (!this.getCurrentAuthToken()) {
               this.trigger(document, 'ui:needs:githubUser');
               return;
             }
 
-            url = this.getIssueUrlFromDraggable(ui);
+            url = this.getIssueUrlFromElement(ui.item[0]);
             label = this.parseLabel(event.target.id);
             oldLabel = this.parseLabel(ui.sender[0].id);
-            state = this.getState(event.target.className);
 
             $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
             $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
@@ -417,16 +314,12 @@ define([
         return fullLabel.trim();
       };
 
-      this.getIssueUrlFromDraggable = function (ui) {
-        return ui.item[0].childNodes[0].childNodes[1].href.replace('github.com/', 'api.github.com/repos/');
+      this.getIssueUrlFromElement = function (element) {
+        return element.querySelector("a[href]").href.replace('github.com/', 'api.github.com/repos/');
       };
 
       this.getAccessTokenParam = function () {
         return "?access_token=" + this.getCurrentAuthToken();
-      };
-
-      this.getState = function (className) {
-        return className.search('done') != -1 ? 'closed' : 'open';
       };
 
       this.changeNewIssueLink = function (event, projectName) {
@@ -453,18 +346,17 @@ define([
 
 
       this.after('initialize', function () {
-        this.on('ui:needs:issues', this.fetchIssues);
-        this.on('ui:add:issue', this.addIssue);
         this.on('ui:create:issue', this.createIssue);
         this.on('ui:assigns:user', this.assignMyselfToIssue);
         this.on('data:githubUser:here', this.assignMyselfToIssue);
+        this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:draggable', this.draggable);
         this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-        this.on('#export_csv', 'click', this.mountExportClick);
-        this.on('ui:unassign:user', this.unassignMyselfToIssue);
         this.on('ui:blockUI', this.blockUI);
         this.on('ui:unblockUI', this.unblockUI);
         this.on('ui:clear:issue', this.clearIssues);
+        this.on('#export_csv', 'click', this.mountExportClick);
+        this.on('data:issues:add', this.addIssues);
 
       });
     }

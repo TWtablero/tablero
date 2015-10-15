@@ -23,10 +23,12 @@ define(
     'component/ui/permissions_gateway',
     'component/mixins/with_auth_token_from_hash',
     'component/ui/columns_modal',
+    'component/data/issues_services',
     'component/data/columns_manager',
     'component/ui/columns_render'
   ],
-  function (githubUser,
+  function (
+    githubUser,
     issuesExporter,
     prioritizationManager,
     issuesFilter,
@@ -34,6 +36,7 @@ define(
     permissionsGateway,
     authToken,
     columnsModal,
+    issuesServices,
     columnsManager,
     columnsRender) {
     'use strict';
@@ -54,7 +57,7 @@ define(
       issuesExporter.attachTo(document);
       prioritizationManager.attachTo(document);
       columnsManager.attachTo(document);
-
+      issuesServices.attachTo(document);
       columnsRender.attachTo(document);
 
       $('.backlog-column .hide-icon').first().click(function () {
@@ -70,7 +73,7 @@ define(
 
       $(document).on('ui:show:messageFailConnection', function (event) {
         $.unblockUI();
-        $('#failConnectionModal').modal('toggle');
+        $('#failConnectionModal').modal('show');
       });
 
       $('#redirectToPublicBtn').click(function () {

@@ -41,7 +41,6 @@
     "watch-test": "karma start",
     "watch-server-test": "jasmine-node --autotest test/config test/lib --watch lib",
     "postinstall": "bower --allow-root install; gulp rjs",
-    "pretest": "npm run beautify && npm run jshint",
     "hint": "./node_modules/jshint/bin/jshint .",
     "beautify": "npm run beautify:js && npm run beautify:html",
     "beautify:js": "git ls-files '**/*.js' | grep -vf .jshintignore | xargs ./node_modules/js-beautify/js/bin/js-beautify.js -s 2 -r -j --good-stuff",

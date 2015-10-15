@@ -2,37 +2,6 @@ define(['config/config_bootstrap'],
   function (config) {
     return function () {
 
-      this.fetchAllIssues = function (page) {
-        var repos = config.getRepos();
-
-        return _.object(_(repos).map(function (url, name) {
-          var private_repo = window.location.search.slice(14) == "repo";
-          var request = $.getJSON(this.repoIssuesURL(url, page));
-          var hasData = $.Deferred();
-
-          var request2 = $.ajax({
-            dataType: "json",
-            url: this.repoIssuesURL(url, page),
-            timeout: 2000
-          }).
-          done(function (data) {
-            hasData.resolve(data);
-          }).
-          fail(function (xhr, status) {
-            if (xhr.status === 404 && private_repo) {
-              this.trigger(document, 'ui:show:messageFailConnection');
-              hasData.fail();
-            } else {
-              hasData.resolve();
-            };
-          }.bind(this));
-
-          return [name, hasData.promise()];
-        }.bind(this)));
-
-      }
-
-
       this.defaultOptions = function () {
         return "per_page=100&state=all&";
       };
@@ -45,6 +14,7 @@ define(['config/config_bootstrap'],
         return url + this.accessToken();
       };
 
+      // TODO: put this in a common place for github_issues and repositories_urls
       this.repoIssuesURL = function (repo, page) {
         return this.authRequest(repo + '/issues?' + this.defaultOptions() + this.getPageParam(page));
       };
@@ -53,6 +23,7 @@ define(['config/config_bootstrap'],
         return "access_token=" + this.getCurrentAuthToken();
       };
 
+      // TODO: put this in a common place for github_issues and repositories_urls
       this.newIssueURL = function (projectName) {
         var repositoryURL = this.getURLFromProject(projectName);
         return repositoryURL.replace("api.github.com/repos", "github.com") + "/issues/new";
@@ -71,14 +42,10 @@ define(['config/config_bootstrap'],
           return projectUrl.slice(19).match(/.*?\/.*?(?=\/)/)[0];
         }
       };
-
-
-
       this.getAllProjectsIdentifiers = function (projectNames) {
         var projectUrls = _.map(projectNames, this.getURLFromProject);
 
         return _.map(projectUrls, this.getProjectIdentifier);
       };
     };
-  }
-);
+  });
