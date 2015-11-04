@@ -21,21 +21,6 @@ describeComponent('component/data/github_issues', function () {
     });
   });
 
-
-  it('does not get pull requests from project', function () {
-    var pullRequest = {
-      pull_request: true
-    };
-    var issue = {};
-
-    var project = {
-      'issues': [pullRequest, issue]
-    }
-
-    expect(this.component.getIssuesFromProjects([project])).not.toContain(pullRequest);
-    expect(this.component.getIssuesFromProjects([project])).toContain(issue);
-  });
-
   it('update draggable issue should trigger event', function () {
     var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');
 

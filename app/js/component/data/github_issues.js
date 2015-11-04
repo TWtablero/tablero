@@ -75,20 +75,17 @@ define([
         return filteredRepos;
       };
 
-      this.getIssuesFromProjects = function (projects) {
-        var allIssues = [];
-        _.filter(projects, function (project) {
-          return project.issues
-        }).
-        forEach(function (project, index) {
+     this.getIssuesFromProjects = function (projects) {
+      var allIssues = [];
+
+      _.filter(projects, function(project){return project.issues}).
+        forEach(function(project,index) {
           var issuesArrayJson = project.issues || [];
 
-          _.each(issuesArrayJson, function (issue, index) {
-            if (!issue.pull_request) {
-              issue.projectName = project.projectName;
-              issue.repoUrl = this.getRepoURLFromIssue(issue.url);
-              allIssues.push(issue);
-            }
+          _.each(issuesArrayJson, function(issue,index) {
+            issue.projectName = project.projectName;
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+            allIssues.push(issue);
           }.bind(this));
 
         }.bind(this));
