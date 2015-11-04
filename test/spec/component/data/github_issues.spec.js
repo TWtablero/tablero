@@ -22,6 +22,7 @@ describeComponent('component/data/github_issues', function () {
   });
 
 
+<<<<<<< HEAD
   it('does not get pull requests from project', function () {
     var pullRequest = {
       pull_request: true
@@ -35,6 +36,8 @@ describeComponent('component/data/github_issues', function () {
     expect(this.component.getIssuesFromProjects([project])).not.toContain(pullRequest);
     expect(this.component.getIssuesFromProjects([project])).toContain(issue);
   });
+=======
+>>>>>>> parent of df2d976... excluding pull requests from backlog
 
   it('update draggable issue should trigger event', function () {
     var spyEvent = spyOnEvent(document, 'data:issues:issueMoved');

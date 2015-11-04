@@ -75,6 +75,7 @@ define([
         return filteredRepos;
       };
 
+<<<<<<< HEAD
       this.getIssuesFromProjects = function (projects) {
         var allIssues = [];
         _.filter(projects, function (project) {
@@ -89,6 +90,19 @@ define([
               issue.repoUrl = this.getRepoURLFromIssue(issue.url);
               allIssues.push(issue);
             }
+=======
+     this.getIssuesFromProjects = function (projects) {
+      var allIssues = [];
+
+      _.filter(projects, function(project){return project.issues}).
+        forEach(function(project,index) {
+          var issuesArrayJson = project.issues || [];
+
+          _.each(issuesArrayJson, function(issue,index) {
+            issue.projectName = project.projectName;
+            issue.repoUrl = this.getRepoURLFromIssue(issue.url);
+            allIssues.push(issue);
+>>>>>>> parent of df2d976... excluding pull requests from backlog
           }.bind(this));
 
         }.bind(this));
