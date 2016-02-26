@@ -10,7 +10,7 @@ function addRepo(name, key, label) {
 configurable.setSilentMode(true);
 addRepo('user-agent', 'PX_USER_AGENT', 'User Agent');
 addRepo('dispatcher', 'PX_DISPATCHER', 'Dispatcher');
-addRepo('platform', 'PX_PLATFORM', 'Platform');
+addRepo('puppet-pixelated', 'PX_PUPPET_PIXELATED', 'Puppet Pixelated');
 addRepo('project-issues', 'PX_PROJECT_ISSUES', 'Project Issues');
 addRepo('website', 'PX_PAGES', 'Website');
 
