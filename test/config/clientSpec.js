@@ -3,7 +3,7 @@ var configurable = require('../../lib/configurable');
 configurable.setSilentMode(true);
 
 var hardcodedVars = ['PX_PROJECT_ISSUES',
-  'PX_PLATFORM',
+  'PX_PUPPET_PIXELATED',
   'PX_DISPATCHER',
   'PX_USER_AGENT',
   'PX_PAGES'];
