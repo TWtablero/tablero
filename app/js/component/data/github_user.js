@@ -19,9 +19,14 @@ define([
   'jquery-cookie/jquery.cookie'
   ],
   function (defineComponent, withAuthTokeFromHash) {
+    'use strict';
     return defineComponent(githubUser, withAuthTokeFromHash);
 
     function githubUser() {
+      this.defaultAttr({
+        token: false
+      });
+
       this.getCurrentGithubUser = function (ev, previousData) {
         var token = this.getCurrentAuthToken();
 
@@ -34,10 +39,10 @@ define([
           }
         } else {
           $.getJSON('https://api.github.com/user', {
-            access_token: token
+            'access_token': token
           }, function (userData, textStatus, request) {
             var newData = _.clone(previousData.data);
-            if (newData != undefined) {
+            if (newData !== undefined) {
               newData.user = userData;
             }
 
@@ -48,8 +53,13 @@ define([
         }
       };
 
+      this.saveGithubToken = function () {
+        // TODO
+      };
+
       this.after('initialize', function () {
         this.on(document, 'ui:needs:githubUser', this.getCurrentGithubUser);
+        this.on(document, 'save:github:token', this.saveGithubToken);
       });
     }
   }

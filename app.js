@@ -1,5 +1,5 @@
 var express = require('express');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var url = require('url');
 var sass = require('node-sass');
 var path = require('path');

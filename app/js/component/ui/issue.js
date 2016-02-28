@@ -10,7 +10,7 @@ define(
         }
       };
       this.showIssue = function (ev, data) {
-        if (this.attr.issue.repoName == data.repo && this.attr.issue.state == "open" )  {
+        if (this.attr.issue.repoName == data.repo && this.attr.issue.state == "open") {
           this.$node.show();
         }
       };

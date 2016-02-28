@@ -24,15 +24,22 @@ define([
     return defineComponent(issuesFilter, issueFilterTemplate);
 
     function issuesFilter() {
-      this.addFilters = function() {
+      this.addFilters = function () {
         repoNames.forEach(function (name, idx) {
-          var renderedFilter = $(this.renderFilter({name: name, index: idx}));
+          var renderedFilter = $(this.renderFilter({
+            name: name,
+            index: idx
+          }));
           this.$node.append(renderedFilter);
           renderedFilter.change(function () {
             if ($(this).find('input').prop('checked')) {
-              $(document).trigger('ui:showRepoIssues', {repo: name});
+              $(document).trigger('ui:showRepoIssues', {
+                repo: name
+              });
             } else {
-              $(document).trigger('ui:dontShowRepoIssues', {repo: name});
+              $(document).trigger('ui:dontShowRepoIssues', {
+                repo: name
+              });
             }
           });
         }.bind(this));
