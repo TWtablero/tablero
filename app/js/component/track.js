@@ -19,6 +19,7 @@
     'component/ui/copyable',
     'component/ui/issue'],
     function (defineComponent, withIssueTemplate, copyable, issueComponent) {
+      'use strict';
       return defineComponent(track, withIssueTemplate, copyable);
 
       function track() {
@@ -34,9 +35,9 @@
           var allowedTags = this.attr.extraAllowedTags.concat(['0 - Backlog', '4 - Done']);
 
           var customName;
-          if (issue.state === "open") {
+          if (issue.state === 'open') {
             if (issue.labels.length === 0) {
-              customName = "0 - Backlog";
+              customName = '0 - Backlog';
             } else {
               var allowed = _.find(issue.labels, function (value, key, list) {
                 return _.contains(allowedTags, value.name);
@@ -47,8 +48,8 @@
                 customName = '0 - Backlog';
               }
             }
-          } else if (issue.state === "closed") {
-            customName = "4 - Done";
+          } else if (issue.state === 'closed') {
+            customName = '4 - Done';
           }
 
           if (issue.labels.length === 0) {
@@ -70,12 +71,11 @@
         };
 
         this.sortIssues = function () {
-          var divList = $(".issue", this.node);
+          var divList = $('.issue', this.node);
           divList.sort(function (a, b) {
-            return $(a).attr('data-priority') - $(b).attr('data-priority')
+            return $(a).attr('data-priority') - $(b).attr('data-priority');
           });
 
-          //$(".issue-track", this.node).html(divList);
           divList.appendTo(this.node);
         };
 
@@ -84,10 +84,12 @@
           this.attr.issuesCount += issues.length;
 
           issues.forEach(function (issue) {
-            if (issue.labels[0].name != "4 - Done") {
+            if (issue.labels[0].name !== '4 - Done') {
               var renderedIssue = this.renderIssue(issue);
               this.$node.prepend(renderedIssue);
-              issueComponent.attachTo(renderedIssue, { issue: issue });
+              issueComponent.attachTo(renderedIssue, {
+                issue: issue
+              });
             }
           }.bind(this));
 
@@ -98,7 +100,7 @@
             $('.panel-heading.' + column + '-header .issues-count').text(' (' + $('.issue-track.' + column + ' .issue').length + ')');
           });
 
-          if (this.attr.trackType === "4 - Done") {
+          if (this.attr.trackType === '4 - Done') {
             $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
           }
 
@@ -110,7 +112,7 @@
         };
 
         this.moveIssue = function (movedToTrackName, params) {
-          var labelDone = "4 - Done";
+          var labelDone = '4 - Done';
           if (this.attr.trackType === labelDone && params.label === labelDone) {
             this.attr.issuesCount++;
             $('.panel-heading.done .issues-count').text(' (' + this.attr.issuesCount + ')');
@@ -118,12 +120,12 @@
         };
 
         this.priorityChanged = function (event, elementChanged) {
-          $("#" + elementChanged.id).attr('data-priority', elementChanged.priority);
+          $('#' + elementChanged.id).attr('data-priority', elementChanged.priority);
         };
 
         this.renderIssue = function (issue) {
           var renderedIssue = $(this.render(issue));
-          if (renderedIssue.find('.assignee-avatar').attr('src') != "") {
+          if (renderedIssue.find('.assignee-avatar').attr('src') !== '') {
             renderedIssue.find('.assigns-myself').addClass('assigned');
             renderedIssue.find('.empty-avatar').hide();
             renderedIssue.find('.empty-avatar-label').hide();
@@ -137,7 +139,7 @@
         };
 
         this.getIssues = function (event, eventCallback) {
-          var issues = $(".issue", this.$node);
+          var issues = $('.issue', this.$node);
 
           var map = {
             track: this.attr.trackType,
@@ -161,11 +163,11 @@
             var objIssue = _.findWhere(issues.issues, {
               id: val.id
             });
-            if (objIssue)
+            if (objIssue) {
               val.dataset.priority = objIssue.priority;
-            else if (!val.dataset.priority)
+            } else if (!val.dataset.priority) {
               val.dataset.priority = val.id;
-
+            }
           });
 
           this.trigger(document, 'ui:issues:ended');
