@@ -207,29 +207,31 @@ define([
 
         url = issue.url + "?access_token=" + this.getCurrentAuthToken();
 
-        $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
-        $('#' + issue.id + ' .empty-avatar-label').hide();
+      $('#' + issue.id + ' .empty-avatar').toggleClass('loading');
+      $('#' + issue.id + ' .empty-avatar-label').hide();
+      var that = this;
 
-        $.ajax({
-          type: 'PATCH',
-          url: url,
-          data: JSON.stringify({
-            assignee: user.login
-          }),
-          success: function (response, status, xhr) {
-            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-            $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
-            $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
-            $('#' + issue.id + ' .assignee-avatar').show();
-            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-label').hide();
-          },
-          error: function () {
-            $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
-            $('#' + issue.id + ' .empty-avatar-label').show();
-          }
-        });
-      };
+      $.ajax({
+        type: 'PATCH',
+        url: url,
+        data: JSON.stringify({
+          assignee: user.login
+        }),
+        success: function (response, status, xhr) {
+          $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+          $('#' + issue.id + ' .assignee-avatar').attr('src', user.avatar_url);
+          $('#' + issue.id + ' .assignee-avatar').attr('title', user.login);
+          $('#' + issue.id + ' .assignee-avatar').show();
+          $('#' + issue.id + ' .empty-avatar').toggleClass('loading').hide();
+          $('#' + issue.id + ' .empty-label').hide();
+        },
+        error: function() {
+          $('#' + issue.id + ' .empty-avatar').toggleClass('loading').show();
+          $('#' + issue.id + ' .empty-avatar-label').show();
+          that.trigger('ui:show:permissionErrorModal');
+        }
+      });
+    };
 
       this.unassignMyselfToIssue = function (ev, assignData) {
         var user, issue, url, currentData;
@@ -258,29 +260,31 @@ define([
           title: $('#' + issue.id + ' .assignee-avatar').attr('title')
         };
 
-        $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
-        $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
+      $('#' + issue.id + ' .assignee-avatar').attr('src', '/img/ajax-loader.gif');
+      $('#' + issue.id + ' .assignee-avatar').attr('title', 'loading...');
+      var that = this;
 
-        $.ajax({
-          type: 'PATCH',
-          url: url,
-          data: JSON.stringify({
-            assignee: ''
-          }),
-          success: function (response, status, xhr) {
-            $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
-            $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
-            $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
-            $('#' + issue.id + ' .empty-avatar').show();
-            $('#' + issue.id + ' .empty-avatar-label').show();
-            $('#' + issue.id + ' .empty-label').show();
-          },
-          error: function () {
-            $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
-            $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
-          }
-        });
-      };
+      $.ajax({
+        type: 'PATCH',
+        url: url,
+        data: JSON.stringify({
+          assignee: ''
+        }),
+        success: function (response, status, xhr) {
+          $('#' + issue.id + ' .assigns-myself').toggleClass('assigned');
+          $('#' + issue.id + ' .assignee-avatar').attr('src', '').hide();
+          $('#' + issue.id + ' .assignee-avatar').attr('title', '').hide();
+          $('#' + issue.id + ' .empty-avatar').show();
+          $('#' + issue.id + ' .empty-avatar-label').show();
+          $('#' + issue.id + ' .empty-label').show();
+        },
+        error: function() {
+          $('#' + issue.id + ' .assignee-avatar').attr('src', currentData.src);
+          $('#' + issue.id + ' .assignee-avatar').attr('title', currentData.title);
+          that.trigger('ui:show:permissionErrorModal');
+        }
+      });
+    };
 
 
       this.updateDraggable = function (event, ui) {
@@ -297,69 +301,81 @@ define([
         this.trigger(document, 'data:issues:issueMoved', issueMovedParam);
       };
 
-      this.draggable = function (ev, data) {
-        var customColumns = _.map(data.boardColumns, function (column) {
-          return '.' + column;
+    this.draggable = function (ev, data) {
+      var customColumns = _.map(data.boardColumns, function(column){ return '.'+column; });
+      var draggables = ['.backlog', '.done'].concat(customColumns);
+      $(draggables.join(', ')).sortable({
+        items: '.issue',
+        connectWith: '.list-group',
+        cancel: '.popover',
+        update: this.updateDraggable.bind(this),
+       receive: this.updateDraggedIssue.bind(this, customColumns, draggables)
+      }).disableSelection();
+    };
+
+    this.updateDraggedIssue = function(customColumns, draggable, event, ui){
+      var label, url , oldLabel, state, origin, issueItem;
+
+          if (!this.getCurrentAuthToken()) {
+            this.trigger(document, 'ui:needs:githubUser');
+            return;
+          }
+
+      url = this.getIssueUrlFromDraggable(ui);
+      label = this.parseLabel(event.target.id);
+      oldLabel = this.parseLabel(ui.sender[0].id);
+      state = this.getState(event.target.className);
+      origin = ui.sender[0];
+      issueItem = ui.item[0];
+
+      var that = this;
+
+      if (label == "4 - Done") {
+        $.ajax({
+          type: 'PATCH',
+          url: url + this.getAccessTokenParam(),
+          data: JSON.stringify({
+            state: "closed"
+          })
+        }).done( function() {
+          that.trigger('ui:rocket:animate');
         });
-        var draggables = ['.backlog', '.done'].concat(customColumns);
-        $(draggables.join(', ')).sortable({
-          items: '.issue',
-          connectWith: '.list-group',
-          cancel: '.popover',
-          update: this.updateDraggable.bind(this),
-          receive: function (event, ui) {
-            var label, url, oldLabel, state;
+      }else{
+        $.ajax({
+          type: 'POST',
+          url: url + "/labels" + this.getAccessTokenParam(),
+          data: JSON.stringify([label])
+        });
+      }
 
-            if (!this.getCurrentAuthToken()) {
-              this.trigger(document, 'ui:needs:githubUser');
-              return;
-            }
+      $.ajax({
+        type: 'DELETE',
+        url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
+      }).done( function() {
+        that.updateLabelCount(customColumns, draggable);
+      }).fail( function() {
+        $(issueItem).prependTo(origin);
+        that.trigger('ui:show:permissionErrorModal');
+      });
+    };
 
-            url = this.getIssueUrlFromDraggable(ui);
-            label = this.parseLabel(event.target.id);
-            oldLabel = this.parseLabel(ui.sender[0].id);
-            state = this.getState(event.target.className);
+    this.updateLabelCount = function(customColumns, draggable){
+      $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+      $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
 
-            $('.panel-heading.backlog-header .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
-            $('.backlog-vertical-title .issues-count').text(' (' + $('.issue-track.backlog .issue').length + ')');
+      _.each(customColumns, function(draggable) {
+        $('.panel-heading'+draggable+'-header .issues-count').text(' (' + $('.issue-track'+draggable+' .issue').length + ')');
+      });
+    };
 
-            _.each(customColumns, function (draggable) {
-              $('.panel-heading' + draggable + '-header .issues-count').text(' (' + $('.issue-track' + draggable + ' .issue').length + ')');
-            });
-
-            if (label == "4 - Done") {
-              this.triggerRocketAnimation();
-              $.ajax({
-                type: 'PATCH',
-                url: url + this.getAccessTokenParam(),
-                data: JSON.stringify({
-                  state: "closed"
-                })
-              });
-            } else {
-              $.ajax({
-                type: 'POST',
-                url: url + "/labels" + this.getAccessTokenParam(),
-                data: JSON.stringify([label])
-              });
-            }
-
-            $.ajax({
-              type: 'DELETE',
-              url: url + "/labels/" + oldLabel + this.getAccessTokenParam()
-            });
-          }.bind(this)
-        }).disableSelection();
-      };
-
-      this.triggerRocketAnimation = function () {
-        $(".panel-heading.done img.plain").hide();
-        $(".panel-heading.done h3").css('opacity', 0);
-        $(".panel-heading.done .issues-count").css('opacity', 0);
-        $(".panel-heading.done img.colored").show().animate({
-          top: '-650px'
-        }, 2000, 'easeInBack', function () {
-          $(".panel-heading.done img.colored").hide().css('top', 0);
+    this.triggerRocketAnimation = function () {
+      $(".panel-heading.done img.plain").hide();
+      $(".panel-heading.done h3").css('opacity', 0);
+      $(".panel-heading.done .issues-count").css('opacity', 0);
+      $(".panel-heading.done img.colored").show().animate({
+        top: '-650px'
+      }, 2000, 'easeInBack', function () {
+        $(".panel-heading.done img.colored").hide().css('top', 0);
 
           $(".panel-heading.done h3").text('Liftoff! We Have a Liftoff!');
           $(".panel-heading.done h3").css('color', '#5dc66c');
@@ -448,20 +464,35 @@ define([
         this.attr.issues = [];
       };
 
+    this.showMessage = function(message){
+      $('#messageModal').modal('toggle');
+      if (message.title != undefined) {
+        $('#messageModal .modal-title').text(message.title);
+      }
+      $('#messageModal .modal-body p').text(message.body);
+    };
 
-      this.after('initialize', function () {
-        this.on('ui:needs:issues', this.fetchIssues);
-        this.on('ui:add:issue', this.addIssue);
-        this.on('ui:create:issue', this.createIssue);
-        this.on('ui:assigns:user', this.assignMyselfToIssue);
-        this.on('data:githubUser:here', this.assignMyselfToIssue);
-        this.on('ui:draggable', this.draggable);
-        this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
-        this.on('#export_csv', 'click', this.mountExportClick);
-        this.on('ui:unassign:user', this.unassignMyselfToIssue);
-        this.on('ui:blockUI', this.blockUI);
-        this.on('ui:unblockUI', this.unblockUI);
-        this.on('ui:clear:issue', this.clearIssues);
+    this.showPermissonErrorMessage = function(){
+      this.showMessage({
+        body: 'There was an error in your request. Maybe you don\'t have permission to change this issue. Please contact the repository owner.'
+      });
+    };
+
+    this.after('initialize', function () {
+      this.on('ui:needs:issues', this.fetchIssues);
+      this.on('ui:add:issue', this.addIssue);
+      this.on('ui:create:issue', this.createIssue);
+      this.on('ui:assigns:user', this.assignMyselfToIssue);
+      this.on('data:githubUser:here', this.assignMyselfToIssue);
+      this.on('ui:draggable', this.draggable);
+      this.on('ui:issue:createIssuesURL', this.changeNewIssueLink);
+      this.on('#export_csv', 'click' , this.mountExportClick);
+      this.on('ui:unassign:user', this.unassignMyselfToIssue);
+      this.on('ui:blockUI', this.blockUI);
+      this.on('ui:unblockUI', this.unblockUI);
+      this.on('ui:clear:issue', this.clearIssues);
+      this.on('ui:show:permissionErrorModal', this.showPermissonErrorMessage);
+      this.on('ui:rocket:animate', this.triggerRocketAnimation);
 
       });
     }
